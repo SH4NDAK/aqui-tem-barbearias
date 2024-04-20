@@ -8,8 +8,8 @@ export default function App() {
   // usestate é bascimente o estado de um elemento
 
   // estado login (valor dele)
-  const [login, setLogin] = useState(null);
-  const [senha, setSenha] = useState(null);
+  const [login, setLogin] = useState();
+  const [senha, setSenha] = useState();
 
   return (
     <div className="flex justify-center items-center w-screen h-dvh bg-[#242222]">
@@ -29,12 +29,12 @@ export default function App() {
           <InputText
             label={'Senha'}
             type={'password'}
-            className=""
             placeholder={'Digite sua senha'}
             value={senha}
+            intent={"icone"}
             onChange={(e) => { setSenha(e.currentTarget.value) }}
+            icon={<Eye />}
           />
-          <Eye/>
         </div>
       </div>
 

@@ -1,26 +1,54 @@
-// exporta o componente pra todos os arquivos do sistema ver
+
 import React from 'react';
 
+// importando a função que deixa adicionar classes personalizadas além do que ja foi definido aqui
+import { cn } from '../utils/cn';
+import { cva } from 'class-variance-authority';
 
 // componente input de texto
 // parametros obrigatorios: label, type (tipo do input), placeholder
 // ...props são as propriedades padrão de input, pra caso precise por nas aplicações ele nao dar erro
-const InputText = ( {label, type, placeholder, ...props} ) => {
+// intent é qual tipo de classe vai ser usada
+const InputText = ({ intent, label, type, placeholder, className, icon, ...props }) => {
     return (
         <div>
-            <label
-                className="font-semibold text-sm"
-            >
-                {label}
-            </label>
-            <input
-                className="w-full border border-[#242222] rounded-sm p-1 font-[#242222] outline-none"
-                placeholder={placeholder}
-                type={type}
-                {...props}
-            />
+            <div>
+                <label
+                    className="font-semibold text-sm"
+                >
+                    {label}
+                </label>
+            </div>
+            <div className='flex'>
+                <input
+                    className={inputVariants({
+                        className,
+                        intent
+                    })}
+                    placeholder={placeholder}
+                    type={type}
+                    {...props}
+                />
+            </div>
         </div>
     )
 }
 
-export default InputText
+// definindo css dinamico pro InputText
+const inputVariants = cva(
+    // Primeiro começamos com o css base que vai ter em todo input
+    "w-full border border-[#242222] rounded-sm p-1 text-[#242222] outline-none",
+    {
+        variants: {
+            intent: {
+                icone: "w-44"
+
+            }
+        }
+    }
+)
+
+
+
+// exporta o componente pra todos os arquivos do sistema ver
+export default InputText;
