@@ -3,11 +3,12 @@ import { useState } from "react";
 import InputText from './components/InputText';
 
 export default function App() {
-
+  
   // usestate é bascimente o estado de um elemento
-
+  
   // estado login (valor dele)
   const [login, setLogin] = useState(null);
+  console.log(login);
 
   return (
     <div className="flex justify-center items-center w-screen h-dvh bg-[#242222]">
@@ -17,7 +18,11 @@ export default function App() {
         </div>
         <div className="w-full flex flex-col">
           <InputText
-            label="Login"
+            label={'Login'}
+            placeholder={'E-mail ou telefone'}
+            type={'text'}
+            value={login}
+            onChange={(e) => {setLogin(e.currentTarget.value)}}
           />
         </div>
       </div>
