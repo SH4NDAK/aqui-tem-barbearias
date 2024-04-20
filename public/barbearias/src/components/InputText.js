@@ -12,24 +12,21 @@ import { cva } from 'class-variance-authority';
 const InputText = ({ intent, label, type, placeholder, className, icon, ...props }) => {
     return (
         <div>
-            <div>
-                <label
-                    className="font-semibold text-sm"
-                >
-                    {label}
-                </label>
-            </div>
-            <div className='flex'>
-                <input
-                    className={inputVariants({
-                        className,
-                        intent
-                    })}
-                    placeholder={placeholder}
-                    type={type}
-                    {...props}
-                />
-            </div>
+            <label
+                className="font-semibold text-sm"
+            >
+                {label}
+            </label>
+            <input
+                className={inputVariants({
+                    className,
+                    intent
+                })}
+                placeholder={placeholder}
+                type={type}
+                {...props}
+            />
+            {icon && icon}
         </div>
     )
 }
@@ -39,10 +36,10 @@ const inputVariants = cva(
     // Primeiro começamos com o css base que vai ter em todo input
     "w-full border border-[#242222] rounded-sm p-1 text-[#242222] outline-none",
     {
+        // caso tenha variantes de estilo, adicionar aqui
         variants: {
             intent: {
-                icone: "w-44"
-
+                icone: "w-5/6"
             }
         }
     }

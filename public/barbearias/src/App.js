@@ -5,9 +5,8 @@ import { Camera, Eye } from 'lucide-react'
 
 export default function App() {
 
-  // usestate é bascimente o estado de um elemento
-
-  // estado login (valor dele)
+  // usestate é usado para setar o estado (valor) de um elemento 
+  // Exemplo: usuário digitou no input de login, o que ele ta digitando ta sendo armazenado em 'login'
   const [login, setLogin] = useState();
   const [senha, setSenha] = useState();
 
@@ -25,7 +24,6 @@ export default function App() {
             value={login}
             onChange={(e) => { setLogin(e.currentTarget.value) }}
           />
-
           <InputText
             label={'Senha'}
             type={'password'}
@@ -33,7 +31,7 @@ export default function App() {
             value={senha}
             intent={"icone"}
             onChange={(e) => { setSenha(e.currentTarget.value) }}
-            icon={<Eye />}
+            icon={<Eye/>}
           />
         </div>
       </div>
