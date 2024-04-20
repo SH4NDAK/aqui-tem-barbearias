@@ -1,0 +1,47 @@
+Como inciar um projeto em react
+
+ -> Tem que ter o node instalado (instala na internet mesmo)
+ -> Instala a dependência do react (geralmente não precisa) - npm install -g create-react-app
+ -> Abre o terminal e digita npx create-react-app nome-do-projeto
+ -> espera ele terminar
+ -> Entra na pasta que ele criou com cd nome-do-projeto
+ -> code .
+ -> Executa npm start pra rodar o servidor (pode ser no terminal do vscode mesmo)
+ -> Deleta tudo que é padrão do react
+	-> public => deixa so o index.html e o manifest.json
+	-> src => Deixa só o app.js, index.css e index.js
+		-> pode apagar tudo que tem no index.css
+		-> app.js deixa só a função app
+		-> index.js tira o reportvitals alguma coisa assim
+
+-> Toda vez que for instalar alguma coisa, tem que fechar o servidor (CTRL C duas vezes)
+
+
+-------------------------------------------------------------------------------------------
+Instalando dependências
+-> Pra instalar uma dependencia, é so escrever no terminal npm i nome-da-dependencia
+	(Ex: tailwind -> npm i tailwindcss) {-d = dev, só vai ser aplicado no servidor localhost}
+
+-------------------------------------------------------------------------------------------
+Instalando e iniciando o tailwind
+
+npm install tailwindcss postcss-cli autoprefixer (postcss e autoprefixer são bibliotecas complementares do tailwind)
+
+npx tailwindcss init -p
+
+o resto é so seguir a documentação deles a partir do passo 2
+https://tailwindcss.com/docs/installation/using-postcss
+
+pra facilitar a vida dos menino, instala no vscode a extensão do Tailwind CSS IntelliSense
+
+-------------------------------------------------------------------------------------------
+Padronização
+
+-> Quando for criado um elemento que vai ser padrão do sistema e que pode ser usado outras vezes, encapsular ele em um componente (barbearias/components/NomeDoComponente.js)
+
+-------------------------------------------------------------------------------------------
+Quando for salvar o projeto, deleta a pasta node_modules se nao vai vim um arquivo gigantrolho
+dai quando baixar e botar no seu pc é so dar npm i no terminal do vscode
+
+
+
