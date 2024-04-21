@@ -1,7 +1,8 @@
 
 import { useState, version } from "react";
 import InputText from './components/InputText';
-import { Camera, Eye } from 'lucide-react'
+import { Eye } from 'lucide-react'
+import { z } from 'zod';
 
 export default function App() {
 
@@ -13,10 +14,21 @@ export default function App() {
   const [verSenha, setVerSenha] = useState(false);
   const [senha, setSenha] = useState();
 
+  // criando o 'schema' de validações do formulário de login usando o zod
+  const formLogin = z.object({
+
+  })
+
+
   // função chamada ao clicar no botão de 'ver senha'
   const handleIconClick = () => {
     // 'ver senha' será o contrario do estado anterior de 'ver senha'
     setVerSenha(!verSenha)
+  }
+
+  // função chamada no envio do formulário de login
+  const handleFormSubmit = (e) => {
+
   }
 
   return (
@@ -26,7 +38,8 @@ export default function App() {
           LOGO
         </div>
         <div className="w-full flex flex-col gap-2">
-          <form>
+          <form
+            onSubmit={handleFormSubmit}>
             <InputText
               label={'Login'}
               placeholder={'E-mail ou telefone'}
