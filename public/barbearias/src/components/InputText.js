@@ -9,7 +9,7 @@ import { cva } from 'class-variance-authority';
 // parametros obrigatorios: label, type (tipo do input), placeholder
 // ...props são as propriedades padrão de input, pra caso precise por nas aplicações ele nao dar erro
 // intent é qual tipo de classe vai ser usada
-const InputText = ({ intent, label, type, placeholder, className, icon, ...props }) => {
+const InputText = ({ intent, label, type, placeholder, className, icon, onIconClick, ...props }) => {
     return (
         <div>
             <label
@@ -17,16 +17,25 @@ const InputText = ({ intent, label, type, placeholder, className, icon, ...props
             >
                 {label}
             </label>
-            <input
-                className={inputVariants({
-                    className,
-                    intent
-                })}
-                placeholder={placeholder}
-                type={type}
-                {...props}
-            />
-            {icon && icon}
+            <div className='flex'>
+                <input
+                    className={inputVariants({
+                        className,
+                        intent
+                    })}
+                    placeholder={placeholder}
+                    type={type}
+                    {...props}
+                />
+                {icon && (
+                    <button
+                        onClick={onIconClick}
+                    >
+                        {icon}
+                    </button>
+                )
+                }
+            </div>
         </div>
     )
 }
