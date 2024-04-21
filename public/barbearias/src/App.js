@@ -36,11 +36,24 @@ export default function App() {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div>
-              <label>Login</label>
+              <label className="font-semibold text-sm">Login</label>
               <input
+                type="text"
                 className="w-full border border-[#242222] rounded-sm p-1 text-[#242222] outline-none"
                 placeholder="E-mail ou telefone"
+                {...register("login", { required: "Campo obrigatório" })}
               />
+            </div>
+            <div>
+              {errors.login && errors.login.message}
+            </div>
+
+            <div>
+              <button
+                type="submit"
+              >
+                Entrar
+              </button>
             </div>
           </form>
         </div>
@@ -48,4 +61,5 @@ export default function App() {
 
     </div>
   );
+
 }
