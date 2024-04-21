@@ -48,7 +48,7 @@ const inputVariants = cva(
         // caso tenha variantes de estilo, adicionar aqui
         variants: {
             intent: {
-                icone: "w-5/6"
+                invalid: "bg-black"
             }
         }
     }

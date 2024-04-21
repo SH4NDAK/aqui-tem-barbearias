@@ -1,23 +1,17 @@
 
 import { useState, version } from "react";
 import InputText from './components/InputText';
-import { Eye } from 'lucide-react'
-import { z } from 'zod';
+import { Eye, LogIn } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 
 export default function App() {
 
-  // usestate é usado para setar o estado (valor) de um elemento 
-  // Exemplo: usuário digitou no input de login, o que ele ta digitando ta sendo armazenado em 'login'
-  const [login, setLogin] = useState();
+  // trazendo algumas funções úteis da biblioteca react-hook-form
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
+  // usestate é usado para setar o estado (valor) de um elemento 
   // estado para definir se o input de senha vai ser password, ou text (nao ver senha ou ver senha)
   const [verSenha, setVerSenha] = useState(false);
-  const [senha, setSenha] = useState();
-
-  // criando o 'schema' de validações do formulário de login usando o zod
-  const formLogin = z.object({
-
-  })
 
 
   // função chamada ao clicar no botão de 'ver senha'
@@ -27,8 +21,8 @@ export default function App() {
   }
 
   // função chamada no envio do formulário de login
-  const handleFormSubmit = (e) => {
-
+  const onSubmit = (data) => {
+    console.log(data);
   }
 
   return (
@@ -39,29 +33,14 @@ export default function App() {
         </div>
         <div className="w-full flex flex-col gap-2">
           <form
-            onSubmit={handleFormSubmit}>
-            <InputText
-              label={'Login'}
-              placeholder={'E-mail ou telefone'}
-              type={'text'}
-              value={login}
-              onChange={(e) => { setLogin(e.currentTarget.value) }}
-            />
-            <InputText
-              label={'Senha'}
-              type={verSenha ? 'text' : 'password'}
-              placeholder={'Digite sua senha'}
-              value={senha}
-              intent={"icone"}
-              onChange={(e) => { setSenha(e.currentTarget.value) }}
-              icon={<Eye />}
-              onIconClick={handleIconClick}
-            />
-
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div>
-              <button type="submit">
-                Entrar
-              </button>
+              <label>Login</label>
+              <input
+                className="w-full border border-[#242222] rounded-sm p-1 text-[#242222] outline-none"
+                placeholder="E-mail ou telefone"
+              />
             </div>
           </form>
         </div>
