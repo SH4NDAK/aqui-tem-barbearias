@@ -1,7 +1,6 @@
-
+''
 import { useState, version } from "react";
-import InputText from './components/InputText';
-import { Eye, LogIn } from 'lucide-react'
+import InputText from '../../components/InputText';
 import { useForm } from 'react-hook-form'
 
 export default function App() {
@@ -40,7 +39,7 @@ export default function App() {
               type={'text'}
               placeholder={'E-mail ou telefone'}
               {...register("login", { required: "Campo obrigatório*" })}
-              variant={errors.login ? 'invalid' : ''}
+              variant={errors.login ? 'invalid' : ''} 
             />
             <div>
               {errors.login && (
@@ -48,6 +47,23 @@ export default function App() {
                   className="font-semibold text-red-600 text-sm"
                 >
                   {errors.login.message}
+                </span>
+              )
+              }
+            </div>
+            <InputText
+              label='Senha'
+              type='password'
+              placeholder={'Digite sua senha'}
+              {...register("password", { required: "Campo obrigatório*" })}
+              variant={errors.password ? 'invalid' : ''} 
+            />
+            <div>
+              {errors.password && (
+                <span
+                  className="font-semibold text-red-600 text-sm"
+                >
+                  {errors.password.message}
                 </span>
               )
               }
