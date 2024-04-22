@@ -35,17 +35,22 @@ export default function App() {
           <form
             onSubmit={handleSubmit(onSubmit)}
           >
+            <InputText
+              label={'Login'}
+              type={'text'}
+              placeholder={'E-mail ou telefone'}
+              {...register("login", { required: "Campo obrigatório*" })}
+              variant={errors.login ? 'invalid' : ''}
+            />
             <div>
-              <label className="font-semibold text-sm">Login</label>
-              <input
-                type="text"
-                className="w-full border border-[#242222] rounded-sm p-1 text-[#242222] outline-none"
-                placeholder="E-mail ou telefone"
-                {...register("login", { required: "Campo obrigatório" })}
-              />
-            </div>
-            <div>
-              {errors.login && errors.login.message}
+              {errors.login && (
+                <span
+                  className="font-semibold text-red-600 text-sm"
+                >
+                  {errors.login.message}
+                </span>
+              )
+              }
             </div>
 
             <div>

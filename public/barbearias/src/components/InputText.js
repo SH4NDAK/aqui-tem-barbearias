@@ -1,34 +1,60 @@
-
 import React from 'react';
-
-// importando a função que deixa adicionar classes personalizadas além do que ja foi definido aqui
+// trazendo a função que mescla o css daqui do componente com css definido na aplicação
 import { cn } from '../utils/cn';
-import { cva } from 'class-variance-authority';
+import { cva } from "class-variance-authority"
+
+
+// criando variações de estilo css para o input
+const inputVariants = cva(
+    // classe padrão dos inputs
+    "w-full border border-[#242222] rounded-sm p-1 text-[#242222] outline-none",
+    {
+        // variações de estilo
+        variants: {
+            variant: {
+                // quando o dado do input esta invalido em um formulário
+                invalid: "border-red-600 text-red-600"
+            }
+        }
+    }
+)
+
+// criando variações de estilo CSS pra label do input
+const labelVariants = cva(
+    "font-semibold text-sm",
+    {
+        variants: {
+            variant: {
+                invalid: "text-red-600"
+            }
+        }
+    }
+)
+
 
 // componente input de texto
-// parametros obrigatorios: label, type (tipo do input), placeholder
-// ...props são as propriedades padrão de input, pra caso precise por nas aplicações ele nao dar erro
-// intent é qual tipo de classe vai ser usada
-const InputText = ({ intent, label, type, placeholder, className, icon, onIconClick, ...props }) => {
+const InputText = React.forwardRef(({ label, type, placeholder, className, icon, variant, onIconClick, ...props }, ref) => {
     return (
         <div>
             <label
-                className="font-semibold text-sm"
+                className={cn(labelVariants({ variant }), className)}
             >
                 {label}
             </label>
-            <div className='flex'>
+            <div
+                className='flex gap-1'
+            >
                 <input
-                    className={inputVariants({
-                        className,
-                        intent
-                    })}
-                    placeholder={placeholder}
-                    type={type}
+                    // esse input aceita todas as propriedades padrão de input
                     {...props}
+                    ref={ref} // Passando a ref para o input
+                    type={type}
+                    placeholder={placeholder}
+                    className={cn(inputVariants({ variant }), className)}// adaptar no classname
                 />
                 {icon && (
                     <button
+                        type='button'
                         onClick={onIconClick}
                     >
                         {icon}
@@ -38,23 +64,7 @@ const InputText = ({ intent, label, type, placeholder, className, icon, onIconCl
             </div>
         </div>
     )
-}
-
-// definindo css dinamico pro InputText
-const inputVariants = cva(
-    // Primeiro começamos com o css base que vai ter em todo input
-    "w-full border border-[#242222] rounded-sm p-1 text-[#242222] outline-none",
-    {
-        // caso tenha variantes de estilo, adicionar aqui
-        variants: {
-            intent: {
-                invalid: ""
-            }
-        }
-    }
-)
-
-
+});
 
 // exporta o componente pra todos os arquivos do sistema ver
 export default InputText;
