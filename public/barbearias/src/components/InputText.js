@@ -21,7 +21,7 @@ const inputVariants = cva(
 
 // criando variações de estilo CSS pra label do input
 const labelVariants = cva(
-    "font-semibold text-sm",
+    "font-semibold text-sm tracking-tighter",
     {
         variants: {
             variant: {
