@@ -4,10 +4,13 @@ import { Button, Form, Input, Table } from 'antd'
 import SideBar from '../../components/SideBar'
 import LayoutPage from '../../components/LayoutPage'
 import TableHeader from '../../components/table/TableHeader' 
-import TableActionsCell from '../../components/table/TableActionsCell'
 
 export default function ServiceTypes() {
-  const dataSource = [
+  const serviceType = [
+    'corte', 'barba', 'corte + barba'
+  ]
+
+  const dataSource = [  // isso é um exemplo
     {
       key: '1',
       name: 'servicos 1',
@@ -53,16 +56,6 @@ export default function ServiceTypes() {
       key: 'name',
     },
     {
-      title: 'Descrição',
-      dataIndex: 'description',
-      key: 'description',
-    },
-    {
-      title: 'Duração',
-      dataIndex: 'duration',
-      key: 'duration',
-    },
-    {
       title: 'Preço',
       dataIndex: 'price',
       key: 'price',
@@ -73,48 +66,15 @@ export default function ServiceTypes() {
       key: 'user',
     },
     {
-      title: 'Ativo',
-      dataIndex: 'active',
-      key: 'active',
-    },
-    {
       title: 'Funcionario',
       dataIndex: 'employeer',
       key: 'employeer',
-    },
-    {
-      title: 'Avaliação',
-      dataIndex: 'serviceRating',
-      key: 'serviceRating',
-    },
-    {
-      title: 'Barbearia',
-      dataIndex: 'barberShop',
-      key: 'barberShop',
-    },
-    {
-      title: '',
-      dataIndex: 'id',
-      render: (_, record) => (
-        <TableActionsCell
-          {...record}
-          autoRoute={false}
-          id={record.key}
-          entity={'i18n.auditor.toLowerCase()'}
-          destroyRoute={`clientes/${record.key}`}
-          successDeleteMessage={'i18n.delete.success'}
-          deleteMenu={true}
-          name={record.idVenda}
-        />
-      ),
-      className: 'table-actions'
     }
   ];
 
   return (
     <SideBar>
       <LayoutPage name={<TableHeader title={"Tipos de serviços"} addRouter={"/add/"}/>}>
-        <Table dataSource={dataSource} columns={columns} className='mt-4'/>
       </LayoutPage>
     </SideBar>
   )

@@ -33,72 +33,7 @@ export default function AddOrEditServiceTypes() {
 
   return (
     <SideBar>
-      <LayoutPage name={<TableHeader title={"Adicionar Tipos de servicos"} backButton={"<"} />}>
-          <Form
-            form={form}
-            initialValues={{ remember: true }}
-            className='flex flex-col'
-            validateTrigger={false}
-            size="large"
-          >
-            <div className='flex flex-row flex-wrap'>
-              <Form.Item
-                name="name"
-                label={"Nome do Serviço"}
-                className='w-1/2 p-2'
-              >
-                <Input maxLength={250}/>
-              </Form.Item>
-              <Form.Item
-                name="description"
-                label={"Descrição"}
-                className='w-1/2 p-2'
-              >
-                <Input maxLength={250}/>
-              </Form.Item>
-            </div>
-            <div className='flex flex-row flex-wrap'>
-              <Form.Item
-                name="duration"
-                label={"Duração"}
-                className='w-1/2 p-2'
-              >
-                <Input maxLength={250}/>
-              </Form.Item>
-              <Form.Item
-                name="price"
-                label={"Preço"}
-                className='w-1/2 p-2'
-              >
-                <Input maxLength={250}/>
-              </Form.Item>
-            </div>
-            <div className='flex flex-row flex-wrap'>
-            <Form.Item
-              name="user"
-              label={"Usuario"}
-              className='w-1/2 p-2'
-            >
-              <Select maxLength={250}/>
-            </Form.Item>
-            <Form.Item
-              name="employeer"
-              label={"Funcionario"}
-              className='w-1/2 p-2'
-            >
-              <Select maxLength={250}/>
-            </Form.Item>
-            </div>
-            <Form.Item>
-              <Button 
-                type="primary"
-                htmlType="submit"
-                block
-              >
-                Adicionar
-              </Button>
-            </Form.Item>
-          </Form>
+      <LayoutPage name={<TableHeader title={"Cadastras servicos"} backButton={"<"} />}>
           <form
             onSubmit={handleSubmit(onSubmit)}
           >
@@ -122,7 +57,7 @@ export default function AddOrEditServiceTypes() {
             <InputText
               label='Descrição'
               type='text'
-              placeholder={'Digite sua Telefone'}
+              placeholder={'Insira o Telefone'}
               {...register("telephone", { required: "Campo obrigatório*" })}
               variant={errors.telephone ? 'invalid' : ''} 
             />
@@ -137,45 +72,82 @@ export default function AddOrEditServiceTypes() {
               }
             </div>
             <InputText
-              label='Email'
+              label='Funcionário'
               type='text'
-              placeholder={'Digite sua Email'}
-              {...register("email", { required: "Campo obrigatório*" })}
-              variant={errors.email ? 'invalid' : ''} 
+              placeholder={'Insira o nome'}
+              {...register("employeer", { required: "Campo obrigatório*" })}
+              variant={errors.employeer ? 'invalid' : ''} 
             />
             <div>
-              {errors.email && (
+              {errors.employeer && (
                 <span
                   className="font-semibold text-red-600 text-sm"
                 >
-                  {errors.email.message}
+                  {errors.employeer.message}
                 </span>
               )
               }
             </div>
             <InputText
-              label='Senha'
-              type='password'
-              placeholder={'Digite sua senha'}
-              {...register("password", { required: "Campo obrigatório*" })}
-              variant={errors.login ? 'invalid' : ''} 
+              label='Preço'
+              type='text'
+              placeholder={'Insira o preço'}
+              {...register("price", { required: "Campo obrigatório*" })}
+              variant={errors.price ? 'invalid' : ''} 
             />
             <div>
-              {errors.password && (
+              {errors.price && (
                 <span
                   className="font-semibold text-red-600 text-sm"
                 >
-                  {errors.password.message}
+                  {errors.price.message}
                 </span>
               )
               }
             </div>
 
+            <InputText
+              label='Duração'
+              type='time'
+              placeholder={'Insira a duração'}
+              {...register("duration", { required: "Campo obrigatório*" })}
+              variant={errors.duration ? 'invalid' : ''} 
+            />
             <div>
-              <button
-                type="submit"
+              {errors.duration && (
+                <span
+                  className="font-semibold text-red-600 text-sm"
+                >
+                  {errors.duration.message}
+                </span>
+              )
+              }
+            </div>
+
+            <InputText
+              label='Dia'
+              type='Date'
+              placeholder={'Insira o dia'}
+              {...register("day", { required: "Campo obrigatório*" })}
+              variant={errors.day ? 'invalid' : ''} 
+            />
+            <div>
+              {errors.day && (
+                <span
+                  className="font-semibold text-red-600 text-sm"
+                >
+                  {errors.day.message}
+                </span>
+              )
+              }
+            </div>
+
+            <div className='flex justify-center'>
+              <button 
+                type="button" 
+                className="bg-blue-600 text-white text-sm font-medium p-2 rounded-lg "
               >
-                Entrar
+                Registrar
               </button>
             </div>
           </form>
