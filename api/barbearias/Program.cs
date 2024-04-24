@@ -14,16 +14,18 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+     // Desabilitar a verificação do certificado SSL em ambiente de desenvolvimento
+    app.UseDeveloperExceptionPage();
+    System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+
+    
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
 
-// Configuração da rota de índice
-app.MapGet("/", async context =>
-{
-    await context.Response.WriteAsync("Hello Worlddddddddddddddddddddddddddd!");
-});
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
