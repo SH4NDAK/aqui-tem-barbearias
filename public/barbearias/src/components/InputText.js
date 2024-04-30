@@ -34,6 +34,7 @@ const labelVariants = cva(
 
 // componente input de texto
 const InputText = React.forwardRef(({ errors, label, type, placeholder, className, icon, variant, onIconClick, ...props }, ref) => {
+    console.log(errors);
     return (
         <div>
             <label

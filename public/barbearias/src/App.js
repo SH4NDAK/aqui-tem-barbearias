@@ -49,17 +49,8 @@ export default function App() {
               placeholder={'E-mail ou telefone'}
               {...register("login", { required: "Campo obrigatório*" })}
               variant={errors.login ? 'invalid' : ''}
+              errors={errors.login}
             />
-            <div>
-              {errors.login && (
-                <label
-                  className="font-semibold text-red-600 text-sm"
-                >
-                  {errors.login.message}
-                </label>
-              )
-              }
-            </div>
 
             <InputText
               label={'Senha'}
@@ -69,18 +60,9 @@ export default function App() {
               variant={errors.senha ? 'invalid' : ''}
               icon={verSenha ? <EyeOff /> : <Eye />}
               onIconClick={handleIconClick}
+              errors={errors.senha}
             />
 
-            <div>
-              {errors.senha && (
-                <label
-                  className="font-semibold text-red-600 text-sm"
-                >
-                  {errors.senha.message}
-                </label>
-              )
-              }
-            </div>
             <div>
               <span
                 className="text-sm"
