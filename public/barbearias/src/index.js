@@ -5,6 +5,7 @@ import App from './App';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import RecoveryPage from './pages/RecoveryPage';
 import TipoServicoPage from './pages/TipoServicoPage';
+import TipoServicoFormPage from './pages/TipoServicoFormPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,6 +15,7 @@ root.render(
         <Route path="/" element={<App />} />
         <Route path="/recovery" element={<RecoveryPage />} />
         <Route path="/tipo-servico" element={<TipoServicoPage />} />
+        <Route path="/tipo-servico/new" element={<TipoServicoFormPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

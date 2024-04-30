@@ -3,8 +3,18 @@ import Button from "../components/Button";
 import Container from "../components/Container";
 import FormContainer from "../components/FormContainer";
 import InputText from "../components/InputText";
+import { useNavigate } from "react-router-dom";
 
 export default function TipoServicoPage() {
+    // chamando a função que navega entre as paginas do sistema
+    const navigate = useNavigate()
+
+
+    // função chamada ao clicar no botão '+' da lista de tipos de serviço, para cadastrar um
+    const handleCadastroClick = () => {
+        navigate("/tipo-servico/new")
+    }
+
     return (
         <Container
             variant={"start"}
@@ -19,7 +29,7 @@ export default function TipoServicoPage() {
                     <Button
                         type={"button"}
                         icon={<Plus />}
-                        onClick={(e) => { alert("oi") }}
+                        onClick={handleCadastroClick}
                         variant={"icon"}
                     >
                     </Button>

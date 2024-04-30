@@ -5,13 +5,13 @@ import { cn } from "../utils/cn";
 // criando variantes de estilo css pro formContainer
 const formContainerVariants = cva(
     // classe padrão
-    "flex bg-white p-12 rounded-lg gap-4 h-fit",
+    "flex bg-white p-12 rounded-lg gap-4 w-full h-fit",
     // variantes de estilo css 
     {
         variants: {
             variant: {
                 column: "flex-col",
-                row: "flex-row flex-wrap"
+                row: "lg:flex-row flex-wrap"
             }
         },
         // definindo qual vai ser a variante padrão (column)
