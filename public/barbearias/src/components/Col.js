@@ -1,7 +1,21 @@
-export default function Col({ children }) {
+import { cva } from "class-variance-authority"
+import { cn } from "../utils/cn"
+
+const colVariants = cva(
+    "w-fit",
+    {
+        variants: {
+            "half": "w-1/2",
+            "full": "w-full",
+            "auto": "w-auto"
+        }
+    }
+)
+
+export default function Col({ variant, className, children }) {
     return (
         <div
-            className="w-1/6"
+            className={cn(colVariants({ variant }), className)}
         >
             {children}
         </div>

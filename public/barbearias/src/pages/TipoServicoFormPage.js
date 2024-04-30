@@ -6,6 +6,7 @@ import InputText from "../components/InputText";
 import { useForm } from "react-hook-form";
 import Button from "../components/Button";
 import Col from "../components/Col";
+import Row from "../components/Row";
 
 export default function TipoServicoFormPage() {
     const location = useLocation();
@@ -31,10 +32,10 @@ export default function TipoServicoFormPage() {
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                 >
-                    <div
-                        className="w-full flex"
-                    >
-                        <Col>
+                    <Row>
+                        <Col
+                            variant="auto"
+                        >
                             <InputText
                                 type="text"
                                 placeholder="Digite um nome"
@@ -50,10 +51,30 @@ export default function TipoServicoFormPage() {
                                 variant={errors.nome ? 'invalid' : ''}
                             />
                         </Col>
-
-                    </div>
+                        <Col
+                            variant={"auto"}
+                        >
+                            <InputText
+                                label="Valor"
+                                pattern="[0-9*]"
+                                {...register("valor", {
+                                    required: "Campo obrigatório",
+                                    min: {
+                                        value: 0,
+                                        message: "Digite um valor válido"
+                                    }
+                                })}
+                                errors={errors.valor}
+                                variant={errors.valor ? 'invalid' : ''}
+                                onChange={(e) => {
+                                    
+                                }}
+                            />
+                        </Col>
+                    </Row>
 
                     <Button
+                        className="w-fit"
                         type="submit"
                     >
                         Cadastrar
@@ -61,7 +82,7 @@ export default function TipoServicoFormPage() {
 
                 </form>
             </FormContainer>
-        </Container>
+        </Container >
     )
 
 }
