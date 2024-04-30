@@ -33,7 +33,7 @@ const labelVariants = cva(
 
 
 // componente input de texto
-const InputText = React.forwardRef(({ label, type, placeholder, className, icon, variant, onIconClick, ...props }, ref) => {
+const InputText = React.forwardRef(({ errors, label, type, placeholder, className, icon, variant, onIconClick, ...props }, ref) => {
     return (
         <div>
             <label
@@ -59,6 +59,17 @@ const InputText = React.forwardRef(({ label, type, placeholder, className, icon,
                     >
                         {icon}
                     </button>
+                )
+                }
+            </div>
+
+            <div>
+                {errors && (
+                    <label
+                        className="font-semibold text-red-600 text-sm"
+                    >
+                        {errors.message}
+                    </label>
                 )
                 }
             </div>

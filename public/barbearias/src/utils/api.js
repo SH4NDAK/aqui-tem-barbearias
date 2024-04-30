@@ -18,10 +18,5 @@ export default class api {
             baseURL: "http://localhost:5028/",
             timeout: 5000
         });
-
-        // criando a configuração da api privada, pra ela passar o token pro backend
-        this.private.interceptors.request.use(config => {
-
-        })
     }
 }
