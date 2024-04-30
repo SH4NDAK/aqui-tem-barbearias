@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import InputText from "../components/InputText";
 import { useForm } from "react-hook-form";
 import Button from "../components/Button";
+import Col from "../components/Col";
 
 export default function TipoServicoFormPage() {
     const location = useLocation();
@@ -33,9 +34,7 @@ export default function TipoServicoFormPage() {
                     <div
                         className="w-full flex"
                     >
-                        <div
-                            className="w-1/6"
-                        >
+                        <Col>
                             <InputText
                                 type="text"
                                 placeholder="Digite um nome"
@@ -50,7 +49,8 @@ export default function TipoServicoFormPage() {
                                 errors={errors.nome}
                                 variant={errors.nome ? 'invalid' : ''}
                             />
-                        </div>
+                        </Col>
+
                     </div>
 
                     <Button
