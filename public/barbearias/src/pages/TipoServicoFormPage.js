@@ -59,6 +59,7 @@ export default function TipoServicoFormPage() {
                                 type="text"
                                 label="Valor"
                                 monetario={true}
+                                inputMode="numeric"
                                 {...register("valor", {
                                     required: "Campo obrigatório",
                                     min: {
@@ -102,17 +103,24 @@ export default function TipoServicoFormPage() {
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
+                        <Col
+                            variant={16}
+                        >
                             <InputText
+                                type="text"
+                                className="w-full"
                                 label="Duração"
-                                pattern="[0-9*]"
+                                inputMode="numeric"
                                 {...register("duracao", {
                                     required: "Campo obrigatório",
                                     min: {
                                         value: 0,
-                                        message: "Digite um valor válido"
+                                        message: "Digite uma duração válida"
                                     }
                                 })}
+                                errors={errors.duracao}
+                                variant={errors.duracao ? 'invalid' : ''}
+                                unidadeMedida="min"
                             />
                         </Col>
                     </Row>

@@ -33,12 +33,12 @@ const labelVariants = cva(
     }
 )
 
-
 // componente input de texto
-const InputText = React.forwardRef(({ monetario, errors, label, type, placeholder, className, icon, variant, onIconClick, ...props }, ref) => {
+const InputText = React.forwardRef(({ unidadeMedida, monetario, errors, label, type, placeholder, className, icon, variant, onIconClick, ...props }, ref) => {
 
     // useState pra controlar se o input esta em foco (alguem clicou pra digitar nele)
     const [isFocused, setIsFocused] = useState(false);
+
 
     return (
         <div>
@@ -48,11 +48,11 @@ const InputText = React.forwardRef(({ monetario, errors, label, type, placeholde
                 {label}
             </label>
             <div
-                className={`flex ${monetario ? 'gap-0' : 'gap-1'} `}
+                className={`flex ${monetario || !!unidadeMedida ? 'gap-0' : 'gap-1'} `}
             >
                 {monetario && (
                     <div
-                        className={`flex items-center bg-gray-200 w-1/6 justify-center font-semibold border-b border-[#242222] ${isFocused ? 'border-blue-600' : ''} ${errors ? 'border-red-600' : ''}`}
+                        className={`rounded-t-sm flex items-center bg-gray-200 w-1/6 justify-center font-semibold border-b border-[#242222] ${isFocused ? 'border-blue-600' : ''} ${errors ? 'border-red-600' : ''}`}
                     >
                         <span className={`${errors ? 'text-red-600' : ''} `}>R$</span>
                     </div>
@@ -67,6 +67,13 @@ const InputText = React.forwardRef(({ monetario, errors, label, type, placeholde
                     onFocus={() => { setIsFocused(true) }}
                     onBlur={() => { setIsFocused(false) }}
                 />
+                {!!unidadeMedida && (
+                    <div
+                        className={`rounded-t-sm flex items-center bg-gray-200 w-1/6 justify-center font-semibold border-b border-[#242222] ${isFocused ? 'border-blue-600' : ''} ${errors ? 'border-red-600' : ''}`}
+                    >
+                        <span className={`${errors ? 'text-red-600' : ''} `}>{unidadeMedida}</span>
+                    </div>
+                )}
                 {icon && (
                     <button
                         type='button'

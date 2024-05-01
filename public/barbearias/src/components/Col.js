@@ -2,14 +2,14 @@ import { cva } from "class-variance-authority"
 import { cn } from "../utils/cn"
 
 const colVariants = cva(
-    "w-fit",
+    "w-fit sm:w-full",
     {
         variants: {
             variant: {
                 half: "w-1/2",
                 full: "w-full",
-                auto: "w-auto"
-
+                auto: "w-auto",
+                16: "lg:w-2/5"
             }
         },
     },
