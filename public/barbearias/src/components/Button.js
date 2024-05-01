@@ -5,7 +5,7 @@ import { cn } from "../utils/cn";
 // criando as variações de estilo CSS para o botão
 const buttonVariants = cva(
     // css padrão para o botão
-    "sm: w-full h-fit flex justify-center items-center bg-[#242222] p-2  rounded-md text-white font-semibold text-sm hover:bg-[#272525] shadow-sm shadow-black transition-colors",
+    "sm: w-full lg: w-fit h-fit flex justify-center items-center bg-[#242222] p-2  rounded-md text-white font-semibold text-sm hover:bg-[#272525] shadow-sm shadow-black transition-colors",
     {
         // defininindo as variantes de estilo CSS para o botão
         variants: {

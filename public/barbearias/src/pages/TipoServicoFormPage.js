@@ -1,5 +1,5 @@
 import { CloudUpload } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { useLocation } from "react-router-dom";
 import Button from "../components/Button";
 import Col from "../components/Col";
@@ -15,12 +15,13 @@ export default function TipoServicoFormPage() {
     const isCadastro = !location.state?.tipoServico;
 
     // trazendo as operações de formulário da biblioteca hook form
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm();
 
     // função chamada ao submeter o formulario
     const onSubmit = (data) => {
         console.log(data);
     }
+
 
     return (
         <Container
@@ -55,8 +56,8 @@ export default function TipoServicoFormPage() {
                             variant={"auto"}
                         >
                             <InputText
+                                type="text"
                                 label="Valor"
-                                pattern="[0-9*]"
                                 monetario={true}
                                 {...register("valor", {
                                     required: "Campo obrigatório",
@@ -68,12 +69,50 @@ export default function TipoServicoFormPage() {
                                 errors={errors.valor}
                                 variant={errors.valor ? 'invalid' : ''}
                                 onChange={(e) => {
-                                    const valor = e.currentTarget.value
-                                    e.currentTarget.value = isNaN(valor) ? "" : valor
 
-                                    // formatando o valor
+                                    // formatando o valor em dinheiro
+                                    //pegando o valor atual 
+                                    let valor = e.currentTarget.value;
 
+                                    // removendo os caracteres não numéricos
+                                    valor = valor.replace(/\D/g, '');
+
+                                    // pegando o valor digitado em inteiro (dividindo por 100 pra tratar os centavos)
+                                    valor = parseInt(valor, 10) / 100;
+
+                                    // se o valor não é valido (não é um numero)
+                                    if (isNaN(valor)) {
+                                        
+                                        // seta ele como vazio e não continua o código
+                                        valor = '';
+                                        e.currentTarget.value = valor;
+                                        return;
+                                    }
+
+                                    // se ta tudo certo, formata o valor
+                                    valor = valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
+                                    // atualizando o campo do input com o valor
+                                    e.currentTarget.value = valor;
+
+                                    // definindo o valor do input como o novo valor e validando no useForm
+                                    setValue("valor", e.currentTarget.value, { shouldValidate: true });
                                 }}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <InputText
+                                label="Duração"
+                                pattern="[0-9*]"
+                                {...register("duracao", {
+                                    required: "Campo obrigatório",
+                                    min: {
+                                        value: 0,
+                                        message: "Digite um valor válido"
+                                    }
+                                })}
                             />
                         </Col>
                     </Row>
@@ -85,7 +124,7 @@ export default function TipoServicoFormPage() {
                             <Button
                                 className="float-end"
                                 type="submit"
-                                icon={<CloudUpload/>}
+                                icon={<CloudUpload />}
                             >
                                 Cadastrar
                             </Button>

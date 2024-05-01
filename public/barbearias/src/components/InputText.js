@@ -13,7 +13,7 @@ const inputVariants = cva(
         variants: {
             variant: {
                 // quando o dado do input esta invalido em um formulário
-                invalid: "border-red-600 text-red-600 border-red-600"
+                invalid: "border-red-600 text-red-600"
             }
         }
     }
@@ -52,7 +52,7 @@ const InputText = React.forwardRef(({ monetario, errors, label, type, placeholde
             >
                 {monetario && (
                     <div
-                        className={`flex items-center bg-gray-200 w-1/6 justify-center font-semibold border-b border-[#242222] ${isFocused ? 'border-blue-600' : ''}`}
+                        className={`flex items-center bg-gray-200 w-1/6 justify-center font-semibold border-b border-[#242222] ${isFocused ? 'border-blue-600' : ''} ${errors ? 'border-red-600' : ''}`}
                     >
                         <span className={`${errors ? 'text-red-600' : ''} `}>R$</span>
                     </div>
