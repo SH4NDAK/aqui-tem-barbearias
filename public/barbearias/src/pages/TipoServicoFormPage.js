@@ -104,7 +104,7 @@ export default function TipoServicoFormPage() {
                     </Row>
                     <Row>
                         <Col
-                            variant={16}
+                            variant={"auto"}
                         >
                             <InputText
                                 type="text"
@@ -122,6 +122,16 @@ export default function TipoServicoFormPage() {
                                 variant={errors.duracao ? 'invalid' : ''}
                                 unidadeMedida="min"
                             />
+                        </Col>
+                        <Col
+                            variant={"auto"}
+                        >
+                            <label>
+                                Vincular barbeiros
+                            </label>
+                            <select>
+
+                            </select>
                         </Col>
                     </Row>
 

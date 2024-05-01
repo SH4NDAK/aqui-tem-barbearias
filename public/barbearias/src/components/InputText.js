@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 // trazendo a função que mescla o css daqui do componente com css definido na aplicação
 import { cn } from '../utils/cn';
 import { cva } from "class-variance-authority"
+import Label from './Label';
 
 
 // criando variações de estilo css para o input
@@ -42,11 +43,12 @@ const InputText = React.forwardRef(({ unidadeMedida, monetario, errors, label, t
 
     return (
         <div>
-            <label
-                className={cn(labelVariants({ variant }), className)}
+            <Label 
+                variant={errors ? "invalid" : ""}
+                label={label}
             >
-                {label}
-            </label>
+            </Label>
+
             <div
                 className={`flex ${monetario || !!unidadeMedida ? 'gap-0' : 'gap-1'} `}
             >
