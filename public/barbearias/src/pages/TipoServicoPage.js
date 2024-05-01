@@ -4,6 +4,7 @@ import Container from "../components/Container";
 import FormContainer from "../components/FormContainer";
 import InputText from "../components/InputText";
 import { useNavigate } from "react-router-dom";
+import Row from "../components/Row";
 
 export default function TipoServicoPage() {
     // chamando a função que navega entre as paginas do sistema
@@ -21,33 +22,33 @@ export default function TipoServicoPage() {
         >
             <FormContainer
                 title="Tipos de serviço"
-                variant="row"
             >
-                <form
-                    className="flex w-full gap-4"
-                >
-                    <Button
-                        type={"button"}
-                        icon={<Plus />}
-                        onClick={handleCadastroClick}
-                        variant={"icon"}
-                    >
-                    </Button>
-                    <InputText
-                        label="Nome"
-                        type="text"
-                    />
-                    <Button
-                        type="submit"
-                        variant={"icon"}
-                        className="self-end"
-                        icon={<Search className="me-1" />}
-                    >
-                        Pesquisar
-                    </Button>
+                <form>
+                    <Row>
+                        <Button
+                            type={"button"}
+                            icon={<Plus />}
+                            onClick={handleCadastroClick}
+                            variant={"icon"}
+                        >
+                        </Button>
+                        <InputText
+                            label="Nome"
+                            type="text"
+                        />
+                        <Button
+                            type="submit"
+                            variant={"icon"}
+                            className="self-end"
+                            icon={<Search className="me-1" />}
+                        >
+                            Pesquisar
+                        </Button>
+
+                    </Row>
                 </form>
 
-
+                {/* 
                 <div className="w-full relative overflow-x-auto p-0.5 rounded-sm bg-[#242222]">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-200">
                         <thead className="text-xs text-white uppercase bg-[#242222]">
@@ -88,7 +89,7 @@ export default function TipoServicoPage() {
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div> */}
 
             </FormContainer>
         </Container>

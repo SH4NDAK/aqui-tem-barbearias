@@ -5,7 +5,7 @@ import { cn } from "../utils/cn";
 // criando variantes de estilo css pro formContainer
 const formContainerVariants = cva(
     // classe padrão
-    "flex bg-white p-12 rounded-lg gap-4 w-full h-fit",
+    "flex bg-white p-12 rounded-lg gap-4 w-fit h-fit sm:flex-col sm:justify-center justify-normal",
     // variantes de estilo css 
     {
         variants: {
@@ -33,7 +33,7 @@ const FormContainer = React.forwardRef(({ title, variant, className, children },
                     className="flex flex-col gap-4 text-3xl text-center font-semibold w-full h-fit"
                 >
                     {title}
-                    <hr className="" />
+                    <hr />
                 </span>
                 {children}
             </div>

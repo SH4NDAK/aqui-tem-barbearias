@@ -1,11 +1,11 @@
-import { useState } from "react";
-import Container from "../components/Container";
-import FormContainer from "../components/FormContainer";
-import { useLocation } from "react-router-dom";
-import InputText from "../components/InputText";
+import { CloudUpload } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useLocation } from "react-router-dom";
 import Button from "../components/Button";
 import Col from "../components/Col";
+import Container from "../components/Container";
+import FormContainer from "../components/FormContainer";
+import InputText from "../components/InputText";
 import Row from "../components/Row";
 
 export default function TipoServicoFormPage() {
@@ -57,6 +57,7 @@ export default function TipoServicoFormPage() {
                             <InputText
                                 label="Valor"
                                 pattern="[0-9*]"
+                                monetario={true}
                                 {...register("valor", {
                                     required: "Campo obrigatório",
                                     min: {
@@ -67,18 +68,29 @@ export default function TipoServicoFormPage() {
                                 errors={errors.valor}
                                 variant={errors.valor ? 'invalid' : ''}
                                 onChange={(e) => {
-                                    
+                                    const valor = e.currentTarget.value
+                                    e.currentTarget.value = isNaN(valor) ? "" : valor
+
+                                    // formatando o valor
+
                                 }}
                             />
                         </Col>
                     </Row>
 
-                    <Button
-                        className="w-fit"
-                        type="submit"
-                    >
-                        Cadastrar
-                    </Button>
+                    <Row>
+                        <Col
+                            variant={"full"}
+                        >
+                            <Button
+                                className="float-end"
+                                type="submit"
+                                icon={<CloudUpload/>}
+                            >
+                                Cadastrar
+                            </Button>
+                        </Col>
+                    </Row>
 
                 </form>
             </FormContainer>

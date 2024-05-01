@@ -72,7 +72,8 @@ export default function App() {
             </div>
             <div className="flex w-full mt-4 justify-center">
               <Button
-                type={'submit'}
+                type="submit"
+                className="w-full"
               >
                 Entrar
               </Button>
@@ -84,8 +85,9 @@ export default function App() {
             </div>
             <div>
               <Button
-                type={'button'}
-                variant={'gray'}
+                type="button"
+                variant="gray"
+                className="w-full"
               >
                 Criar conta
 
