@@ -1,15 +1,17 @@
-import { CloudUpload } from "lucide-react";
+import { ArrowLeftCircle, CloudUpload } from "lucide-react";
 import { set, useForm } from "react-hook-form";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import Col from "../components/Col";
 import Container from "../components/Container";
 import FormContainer from "../components/FormContainer";
 import InputText from "../components/InputText";
 import Row from "../components/Row";
+import Label from "../components/Label";
 
 export default function TipoServicoFormPage() {
     const location = useLocation();
+    const navigate = useNavigate();
 
     // verificando se o tipo de serviço foi passado para esta pagina, se sim, é uma edição
     const isCadastro = !location.state?.tipoServico;
@@ -83,7 +85,7 @@ export default function TipoServicoFormPage() {
 
                                     // se o valor não é valido (não é um numero)
                                     if (isNaN(valor)) {
-                                        
+
                                         // seta ele como vazio e não continua o código
                                         valor = '';
                                         e.currentTarget.value = valor;
@@ -126,12 +128,20 @@ export default function TipoServicoFormPage() {
                         <Col
                             variant={"auto"}
                         >
-                            <label>
-                                Vincular barbeiros
-                            </label>
-                            <select>
+                            <div class="w-full">
+                                <Label
+                                    label="Vincular barbeiros (opcional)"
+                                />
+                                <select
+                                    className="w-full rounded-sm border-b border-[#242222] p-1 text-[#242222] outline-none uppercase "
+                                >
+                                    <option value="brazil">martins</option>
 
-                            </select>
+                                    <option value="brazil">martins</option>
+                                    <option value="brazil">martins</option>
+                                    <option value="brazil">martins</option>
+                                </select>
+                            </div>
                         </Col>
                     </Row>
 
@@ -139,13 +149,25 @@ export default function TipoServicoFormPage() {
                         <Col
                             variant={"full"}
                         >
-                            <Button
-                                className="float-end"
-                                type="submit"
-                                icon={<CloudUpload />}
+                            <div
+                                className="flex gap-4 justify-end"
                             >
-                                Cadastrar
-                            </Button>
+                                <Button
+                                    type="button"
+                                    icon={<ArrowLeftCircle />}
+                                    onClick={() => { navigate("/tipo-servico") }}
+                                >
+                                    Voltar
+                                </Button>
+
+                                <Button
+                                    type="submit"
+                                    icon={<CloudUpload />}
+                                >
+                                    Cadastrar
+                                </Button>
+
+                            </div>
                         </Col>
                     </Row>
 

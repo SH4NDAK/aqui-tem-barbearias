@@ -8,27 +8,13 @@ import Label from './Label';
 // criando variações de estilo css para o input
 const inputVariants = cva(
     // classe padrão dos inputs
-    "w-full border border-[#242222] p-1 text-[#242222] outline-none border-x-0 border-t-0 border-[#242222] transition-colors focus:border-blue-600",
+    "w-full border border-[#242222] p-1 text-[#242222] outline-none border-x-0 border-t-0 transition-colors focus:border-blue-600",
     {
         // variações de estilo
         variants: {
             variant: {
                 // quando o dado do input esta invalido em um formulário
                 invalid: "border-red-600 text-red-600"
-            }
-        }
-    }
-)
-
-// criando variações de estilo CSS pra label do input
-const labelVariants = cva(
-    // padrão
-    "font-semibold text-sm tracking-tighter",
-    // variantes
-    {
-        variants: {
-            variant: {
-                invalid: "text-red-600"
             }
         }
     }
@@ -46,8 +32,7 @@ const InputText = React.forwardRef(({ unidadeMedida, monetario, errors, label, t
             <Label 
                 variant={errors ? "invalid" : ""}
                 label={label}
-            >
-            </Label>
+            />
 
             <div
                 className={`flex ${monetario || !!unidadeMedida ? 'gap-0' : 'gap-1'} `}
