@@ -1,0 +1,12 @@
+Banco de Dados
+
+dotnet tool install --global dotnet-ef Baixar pacotes    
+
+dotnet ef database update    para executar migrations e criar a tabela no banco
+
+https://localhost:7173/swagger/index.html  swagger 
+
+Autenticação do Windows -> "DefaultConnection": "Server=DESKTOP-D1IK3FL\\SQLEXPRESS; Database=AquiTemBarbearia; Trusted_Connection=True; TrustServerCertificate=true;"
+  
+Autenticação na faculdade -> "DefaultConnection": "Server=LAB02MAQ06; Database=AquiTemBarbearia; User ID=aluno; Password=dba; TrustServerCertificate=true;"
+
