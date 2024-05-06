@@ -122,6 +122,29 @@ export default function TipoServicoFormPage() {
                                 errors={errors.duracao}
                                 variant={errors.duracao ? 'invalid' : ''}
                                 unidadeMedida="min"
+                                onChange={(e) => {
+
+                                    // formatando o valor em dinheiro
+                                    //pegando o valor atual 
+                                    let duracao = e.currentTarget.value;
+
+                                    // removendo os caracteres não numéricos
+                                    duracao = duracao.replace(/\D/g, '');
+
+                                    // se o duracao não é valido (não é um numero)
+                                    if (isNaN(duracao)) {
+                                        // seta ele como vazio e não continua o código
+                                        duracao = '';
+                                        e.currentTarget.value = duracao;
+                                        return;
+                                    }
+
+                                    // atualizando o campo do input com o duracao
+                                    e.currentTarget.value = duracao;
+
+                                    // definindo o duracao do input como o novo duracao e validando no useForm
+                                    setValue("duracao", e.currentTarget.value, { shouldValidate: true });
+                                }}
                             />
                         </Col>
                         <Col
