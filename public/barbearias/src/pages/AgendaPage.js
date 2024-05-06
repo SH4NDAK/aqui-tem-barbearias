@@ -1,51 +1,42 @@
-import React, { useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Scheduler, { Resource } from 'devextreme-react/scheduler';
-import { Switch } from 'devextreme-react/switch';
-import { NumberBox } from 'devextreme-react/number-box';
+import { locale } from 'devextreme/localization'
 
 const currentDate = new Date();
-const views = ['day', 'week', 'month'];
+const views = [];
 
-const onContentReady = (e) => {
-    e.component.scrollTo(new Date());
-};
-const onAppointmentClick = (e) => {
-    e.cancel = true;
-};
-const onAppointmentDblClick = (e) => {
-    e.cancel = true;
-};
-const App = () => {
-    const [showCurrentTimeIndicator, setShowCurrentTimeIndicator] = useState(true);
-    const [shadeUntilCurrentTime, setShadeUntilCurrentTime] = useState(true);
-    const [updateInterval, setUpdateInterval] = useState(10);
-    const onShowCurrentTimeIndicatorChanged = useCallback((e) => {
-        setShowCurrentTimeIndicator(e.value);
-    }, []);
-    const onShadeUntilCurrentTimeChanged = useCallback((e) => {
-        setShadeUntilCurrentTime(e.value);
-    }, []);
-    const onUpdateIntervalChanged = useCallback((e) => {
-        setUpdateInterval(e.value);
-    }, []);
+export default function AgendaPage() {
+
+    const onAppointmentClick = () => {
+        alert("abrir o modal")
+    }
+
+    // setando o local como brasil
+    useEffect(() => {
+        locale('pt-BR')
+    }, [])
+
+    // a altura da agenda, sera o tamanho da tela do usuario -150 pixels
+    const height = window.innerHeight - 150;
+
     return (
-        <React.Fragment>
-            <Scheduler
-                locale="pt-BR"
-                views={views}
-                defaultCurrentView="week"
-                showCurrentTimeIndicator={showCurrentTimeIndicator}
-                indicatorUpdateInterval={updateInterval * 1000}
-                showAllDayPanel={false}
-                shadeUntilCurrentTime={shadeUntilCurrentTime}
-                defaultCurrentDate={currentDate}
-                editing={false}
-                height={600}
-                onContentReady={onContentReady}
-                onAppointmentClick={onAppointmentClick}
-                onAppointmentDblClick={onAppointmentDblClick}
-            >
-            </Scheduler>    </React.Fragment>
-    );
-};
-export default App;
+        <div className='flex flex-col justify-center h-dvh bg-[#242222] p-12'>
+            <div className='bg-white w-full p-1 flex justify-center text-3xl font-semibold rounded-t-md'>
+                Agenda
+            </div>
+            <div className='w-full h-full bg-white rounded-b-md'>
+                <Scheduler
+                    timeZone="America/Sao_Paulo"
+                    // dataSource={data}
+                    views={views}
+                    currentView="agenda"
+                    defaultCurrentDate={currentDate}
+                    height={height}
+                    onAppointmentClick={onAppointmentClick}
+                >
+
+                </Scheduler>
+            </div>
+        </div>
+    )
+}
