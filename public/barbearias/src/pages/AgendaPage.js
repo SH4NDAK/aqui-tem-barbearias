@@ -1,7 +1,8 @@
-export default function AgendaPage(){
+
+import Container from "../components/Container"
+
+export default function AgendaPage() {
     return (
-        <div>
-            
-        </div>
+        <></>
     )
 }

@@ -1,3 +1,4 @@
+import 'devextreme/dist/css/dx.light.css';
 
 import { useState, version } from "react";
 import InputText from './components/InputText';

@@ -26,8 +26,7 @@ export default function TipoServicoFormPage() {
 
 
     return (
-        <Container
-        >
+        <Container>
             <FormContainer
                 title={`Tipos de Serviço - ${isCadastro ? "Cadastro" : "Edição"}`}
             >
