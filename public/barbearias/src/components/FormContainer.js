@@ -12,7 +12,7 @@ const formContainerVariants = cva(
             variant: {
                 column: "flex-col",
                 row: "lg:flex-row flex-wrap",
-                modal: "p-6"
+                modal: "flex-col p-6"
             }
         },
         // definindo qual vai ser a variante padrão (column)
