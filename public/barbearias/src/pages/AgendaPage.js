@@ -8,6 +8,7 @@ import FormContainer from '../components/FormContainer';
 import InputText from '../components/InputText';
 import Row from '../components/Row';
 import Selectpicker from '../components/Selectpicker';
+import { useForm } from 'react-hook-form';
 
 const currentDate = new Date();
 const views = [];
@@ -68,6 +69,11 @@ export default function AgendaPage() {
 }
 
 const ModalAgendamento = ({ onClose }) => {
+
+    // trazendo as operações de formulário da biblioteca hook form
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+
+
     return (
         <dialog
             className='w-fit fixed top-1/2 bottom-1/2 z-10 bg-gray-50 shadow-sm shadow-[#242222] rounded-md p-2'
@@ -85,7 +91,7 @@ const ModalAgendamento = ({ onClose }) => {
                 </div>
             </div>
             <FormContainer variant="modal">
-                <form>
+                <form onSubmit={handleSubmit(onsubmit)}>
 
                     <Row>
                         <Selectpicker
@@ -104,16 +110,86 @@ const ModalAgendamento = ({ onClose }) => {
                             <InputText
                                 type="text"
                                 label="Valor"
+                                inputMode="numeric"
                                 monetario={true}
                                 placeholder="Valor do serviço"
+                                {...register("valor", {
+                                    required: "Campo obrigatório", min: {
+                                        value: 0,
+                                        message: "Digite um valor válido"
+                                    }
+                                })}
+                                errors={errors.valor}
+                                onChange={(e) => {
+
+                                    // formatando o valor em dinheiro
+                                    //pegando o valor atual 
+                                    let valor = e.currentTarget.value;
+
+                                    // removendo os caracteres não numéricos
+                                    valor = valor.replace(/\D/g, '');
+
+                                    // pegando o valor digitado em inteiro (dividindo por 100 pra tratar os centavos)
+                                    valor = parseInt(valor, 10) / 100;
+
+                                    // se o valor não é valido (não é um numero)
+                                    if (isNaN(valor)) {
+
+                                        // seta ele como vazio e não continua o código
+                                        valor = '';
+                                        e.currentTarget.value = valor;
+                                        return;
+                                    }
+
+                                    // se ta tudo certo, formata o valor
+                                    valor = valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
+                                    // atualizando o campo do input com o valor
+                                    e.currentTarget.value = valor;
+
+                                    // definindo o valor do input como o novo valor e validando no useForm
+                                    setValue("valor", e.currentTarget.value, { shouldValidate: true });
+                                }}
                             />
                         </Col>
                         <Col>
                             <InputText
                                 type="text"
+                                className="w-full"
                                 label="Duração"
+                                inputMode="numeric"
+                                {...register("duracao", {
+                                    required: "Campo obrigatório",
+                                    min: {
+                                        value: 0,
+                                        message: "Digite uma duração válida"
+                                    }
+                                })}
+                                errors={errors.duracao}
                                 unidadeMedida="min"
-                                placeholder="Duração do serviço"
+                                onChange={(e) => {
+
+                                    // formatando o valor em dinheiro
+                                    //pegando o valor atual 
+                                    let duracao = e.currentTarget.value;
+
+                                    // removendo os caracteres não numéricos
+                                    duracao = duracao.replace(/\D/g, '');
+
+                                    // se o duracao não é valido (não é um numero)
+                                    if (isNaN(duracao)) {
+                                        // seta ele como vazio e não continua o código
+                                        duracao = '';
+                                        e.currentTarget.value = duracao;
+                                        return;
+                                    }
+
+                                    // atualizando o campo do input com o duracao
+                                    e.currentTarget.value = duracao;
+
+                                    // definindo o duracao do input como o novo duracao e validando no useForm
+                                    setValue("duracao", e.currentTarget.value, { shouldValidate: true });
+                                }}
                             />
                         </Col>
                     </Row>
