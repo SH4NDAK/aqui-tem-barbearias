@@ -7,6 +7,7 @@ import FormContainer from '../components/FormContainer';
 import Row from '../components/Row';
 import Col from '../components/Col';
 import InputText from '../components/InputText';
+import Selectpicker from '../components/Selectpicker';
 
 const currentDate = new Date();
 const views = [];
@@ -69,10 +70,10 @@ export default function AgendaPage() {
 const ModalAgendamento = ({ onClose }) => {
     return (
         <dialog
-            className='absolute top-1/2 bg-gray-50 shadow-sm shadow-[#242222] rounded-sm p-2'
+            className='w-fit absolute top-1/2 bg-gray-50 shadow-sm shadow-[#242222] rounded-md p-2'
             open="true"
         >
-            <div className='w-full flex items-center gap-4 mb-2'>
+            <div className='w-full flex items-center gap-4 mb-2 justify-between'>
                 <div className='text-lg font-semibold capitalize'>
                     Novo agendamento
                 </div>
@@ -85,13 +86,35 @@ const ModalAgendamento = ({ onClose }) => {
             </div>
             <FormContainer variant="modal">
                 <Row>
+                    <Selectpicker
+                        label="Cliente"
+                    >
+                        <option>Arthur</option>
+                    </Selectpicker>
+                    <Selectpicker
+                        label="Serviços"
+                    >
+                        <option>Serviços do amigo</option>
+                    </Selectpicker>
+                </Row>
+                <Row>
                     <Col>
                         <InputText
                             type="text"
-                            label="valor"
-                            
+                            label="Valor"
+                            monetario={true}
+                            placeholder="Valor do serviço"
                         />
                     </Col>
+                    <Col>
+                        <InputText
+                            type="text"
+                            label="Duração"
+                            unidadeMedida="min"
+                            placeholder="Duração do serviço"
+                        />
+                    </Col>
+
                 </Row>
 
             </FormContainer>
