@@ -8,6 +8,7 @@ import FormContainer from "../components/FormContainer";
 import InputText from "../components/InputText";
 import Row from "../components/Row";
 import Label from "../components/Label";
+import Selectpicker from "../components/Selectpicker";
 
 export default function TipoServicoFormPage() {
     const location = useLocation();
@@ -146,24 +147,12 @@ export default function TipoServicoFormPage() {
                                 }}
                             />
                         </Col>
-                        <Col
-                            variant={"auto"}
+                        <Selectpicker
+                            label="Vincular barbeiros (opcional)"
                         >
-                            <div class="w-full">
-                                <Label
-                                    label="Vincular barbeiros (opcional)"
-                                />
-                                <select
-                                    className="w-full rounded-sm border-b border-[#242222] p-1 text-[#242222] outline-none uppercase "
-                                >
-                                    <option value="brazil">martins</option>
+                            <option>martins</option>
 
-                                    <option value="brazil">martins</option>
-                                    <option value="brazil">martins</option>
-                                    <option value="brazil">martins</option>
-                                </select>
-                            </div>
-                        </Col>
+                        </Selectpicker>
                     </Row>
 
                     <Row>
