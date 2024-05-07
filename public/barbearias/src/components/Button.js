@@ -27,7 +27,7 @@ const Button = React.forwardRef(({ icon, onClick, type, variant, className, chil
             onClick={onClick}
         >
             {icon && (
-                <div className="me-1">
+                <div>
                     {icon}
                 </div>
             )}

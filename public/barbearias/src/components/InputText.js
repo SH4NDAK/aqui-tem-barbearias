@@ -26,7 +26,6 @@ const InputText = React.forwardRef(({ unidadeMedida, monetario, errors, label, t
     // useState pra controlar se o input esta em foco (alguem clicou pra digitar nele)
     const [isFocused, setIsFocused] = useState(false);
 
-
     return (
         <div>
             <Label 
