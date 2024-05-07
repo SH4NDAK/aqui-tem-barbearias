@@ -83,7 +83,7 @@ const ModalAgendamento = ({ onClose }) => {
                     <X className='text-gray-500' />
                 </div>
             </div>
-            <FormContainer>
+            <FormContainer variant="modal">
                 <Row>
                     <Col>
                         <InputText

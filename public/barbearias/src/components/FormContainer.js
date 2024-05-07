@@ -11,7 +11,8 @@ const formContainerVariants = cva(
         variants: {
             variant: {
                 column: "flex-col",
-                row: "lg:flex-row flex-wrap"
+                row: "lg:flex-row flex-wrap",
+                modal: "p-6"
             }
         },
         // definindo qual vai ser a variante padrão (column)
@@ -29,12 +30,14 @@ const FormContainer = React.forwardRef(({ title, variant, className, children },
                 className={cn(formContainerVariants({ variant }, className))}
                 ref={ref}
             >
-                <span
-                    className="flex flex-col gap-4 text-3xl text-center font-semibold w-full h-fit"
-                >
-                    {title}
-                    <hr />
-                </span>
+                {title && (
+                    <span
+                        className="flex flex-col gap-4 text-3xl text-center font-semibold w-full h-fit"
+                    >
+                        {title}
+                        <hr />
+                    </span>
+                )}
                 {children}
             </div>
         </>
