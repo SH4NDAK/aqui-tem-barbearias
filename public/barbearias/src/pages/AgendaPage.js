@@ -96,6 +96,7 @@ const ModalAgendamento = ({ onClose }) => {
                     <Row>
                         <Selectpicker
                             label="Cliente"
+                            {...register("cliente", { required: "Campo obrigatório" })}
                         >
                             <option>Arthur</option>
                         </Selectpicker>
@@ -199,6 +200,8 @@ const ModalAgendamento = ({ onClose }) => {
                                 type="text"
                                 label="Observação (opcional)"
                                 placeholder="Alguma observação para este agendamento"
+                                {...register("obs", { required: false, minLength: { value: 3, message: "Pelo menos 3 caracteres" } })}
+                                errors={errors.obs}
                             />
                         </Col>
                     </Row>
