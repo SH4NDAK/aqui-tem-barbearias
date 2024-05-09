@@ -44,6 +44,8 @@
             }
           },
           "imports": [
+            "net461",
+            "net462",
             "net47",
             "net471",
             "net472",
@@ -51,6 +53,11 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
@@ -58,3 +65,5 @@
         }
       }
     }
+  }
+}
