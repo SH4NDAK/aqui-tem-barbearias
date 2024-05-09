@@ -1,136 +1,36 @@
-using System.ComponentModel.DataAnnotations;
-using jwtRegisterLogin.Data;
 using jwtRegisterLogin.Dtos;
-using jwtRegisterLogin.Enum;
-using jwtRegisterLogin.Models;
-using jwtRegisterLogin.Services.SenhaService;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using System;
+using jwtRegisterLogin.Services.AuthService;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
-
-namespace jwtRegisterLogin.Services.AuthService
+namespace jwtRegisterLogin.Controllers
 {
-    public class AuthService : IAuthInterface
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthContoller : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly ISenhaInterface _senhaInterface;
-        public AuthService(AppDbContext context, ISenhaInterface senhaInterface)
+        private readonly IAuthInterface _authInterface;
+        public AuthContoller(IAuthInterface authInterface)
         {
-            _context = context;
-            _senhaInterface = senhaInterface;
+                _authInterface = authInterface;
+        }
+
+        //Metodo Registrar
+        [HttpPost("login")]
+        public async Task<ActionResult> Login(UsuarioLoginDto usuarioLogin)
+        {
+
+                var resposta = await _authInterface.Login(usuarioLogin); 
+            return Ok(resposta);
         }
 
 
-        public async Task<Response<UsuarioCriacaoDto>> Registrar(UsuarioCriacaoDto usuarioRegistro)
+        [HttpPost("register")]
+        public async Task<ActionResult> Register(UsuarioCriacaoDto usuarioRegister)
         {
-            Response<UsuarioCriacaoDto> respostaServico = new Response<UsuarioCriacaoDto>();
 
-            try
-            {   
-                //Verifica se o email ou o Usario ja existem
-                if (!VerificaSeEmaileUsuarioJaExiste(usuarioRegistro))
-                {
-                    respostaServico.Dados = null;
-                    respostaServico.Status = false;
-                    respostaServico.Mensagem = "Email/Usuário já cadastrados!";
-                    return respostaServico;
-                }
-
-                //Senha criptografada
-                _senhaInterface.CriarSenhaHash(usuarioRegistro.Senha, out byte[] senhaHash, out byte[] senhaSalt);
-
-                UsuarioModel usuario = new UsuarioModel()
-                {
-                    Usuario = usuarioRegistro.Usuario,
-                    Email = usuarioRegistro.Email,
-                    Cargo = usuarioRegistro.Cargo,
-                    SenhaHash = senhaHash,
-                    SenhaSalt = senhaSalt
-                };
-
-                _context.Add(usuario);
-                await _context.SaveChangesAsync();
-                respostaServico.Dados = usuario;
-                respostaServico.Mensagem = "Usuário criado com sucesso!";
-            }
-            catch (Exception ex)
-            {
-                respostaServico.Dados = null;
-                respostaServico.Mensagem = ex.Message;
-                respostaServico.Status = false;
-
-
-            }
-
-            return respostaServico;
+            var resposta = await _authInterface.Registrar(usuarioRegister);
+            return Ok(resposta);
         }
-
-        public async Task<Response<string>> Login(UsuarioLoginDto usuarioLogin)
-        {
-            Response<string> respostaServico = new Response<string>();
-            UserDetails userDetails = new UserDetails();
-
-            try
-            {
-
-                var usuario = await _context.Usuario.FirstOrDefaultAsync(userBanco => userBanco.Email == usuarioLogin.Email);
-
-                if(usuario == null)
-                {
-                    respostaServico.Mensagem = "Credenciais inválidas!";
-                    respostaServico.Status = false;
-                    return respostaServico;
-                }
-
-                if (!_senhaInterface.VerificaSenhaHash(usuarioLogin.Senha, usuario.SenhaHash, usuario.SenhaSalt))
-                {
-                    respostaServico.Mensagem = "Credenciais inválidas!";
-                    respostaServico.Status = false;
-                    return respostaServico;
-                }
-
-                var token = _senhaInterface.CriarToken(usuario);
-
-                
-                userDetails.Token = token;
-                userDetails.Usuario = usuario.Usuario;
-                userDetails.Email = usuario.Email;
-                userDetails.Cargo = usuario.Cargo;
-                
-
-                respostaServico.Dados = userDetails;
-                respostaServico.Mensagem = "Usuário logado com sucesso!";
-                respostaServico.Status = true;
-
-
-
-
-            }catch (Exception ex)
-            {
-                respostaServico.Dados = null;
-                respostaServico.Mensagem = ex.Message;
-                respostaServico.Status = false;
-                //
-                
-            }   
-
-
-            return respostaServico;
-        }
-
-
-        public bool VerificaSeEmaileUsuarioJaExiste(UsuarioCriacaoDto usuarioRegistro)
-        {
-            var usuario = _context.Usuario.FirstOrDefault(userBanco => userBanco.Email == usuarioRegistro.Email || userBanco.Usuario == usuarioRegistro.Usuario);
-
-            if (usuario != null) return false;
-
-            return true;
-
-
-        }
-
-
     }
 }
