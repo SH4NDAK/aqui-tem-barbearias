@@ -1,9 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using jwtRegisterLogin.Data;
 using jwtRegisterLogin.Dtos;
+using jwtRegisterLogin.Enum;
 using jwtRegisterLogin.Models;
 using jwtRegisterLogin.Services.SenhaService;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System;
+
 
 namespace jwtRegisterLogin.Services.AuthService
 {
@@ -32,6 +36,7 @@ namespace jwtRegisterLogin.Services.AuthService
                     respostaServico.Mensagem = "Email/Usuário já cadastrados!";
                     return respostaServico;
                 }
+
                 //Senha criptografada
                 _senhaInterface.CriarSenhaHash(usuarioRegistro.Senha, out byte[] senhaHash, out byte[] senhaSalt);
 

@@ -14,7 +14,7 @@ namespace jwtRegisterLogin.Dtos
         public string Duracao { get; set; }
 
         [Required(ErrorMessage = "O campo Preço é obrigatório.")]
-        public decimal Preco { get; set; }
+        public string Preco { get; set; }
 
         [Required(ErrorMessage = "O campo Nome do Cliente é obrigatório.")]
         public string NomeDoCliente { get; set; }

@@ -31,6 +31,18 @@ namespace jwtRegisterLogin.Services.ServicoService
                 //    return response;
                 //}
                 // Cria o objeto ServicoModel com os dados fornecidos
+
+                //Verificar se o usuarioId fornecido existe
+                var usuarioIdExistente = await _context.Usuario.FindAsync(int.Parse(servicoDto.UsuarioId));
+                if (usuarioIdExistente == null)
+                {
+                    response.Mensagem = "Usuário com o Id fornecido não foi encontrado.";
+                    response.Status = false;
+                    return response;
+                }
+
+
+
                 if (string.IsNullOrWhiteSpace(servicoDto.Pago))
                 {
                     servicoDto.Pago = "false";
@@ -42,7 +54,7 @@ namespace jwtRegisterLogin.Services.ServicoService
                     Nome = servicoDto.Nome,
                     Descricao = servicoDto.Descricao,
                     Duracao = servicoDto.Duracao,
-                    Preco = servicoDto.Preco,
+                    Preco = decimal.Parse(servicoDto.Preco),
                     NomeDoCliente = servicoDto.NomeDoCliente,
                     TelefoneCliente = servicoDto.TelefoneCliente,
                     Ativo = bool.Parse(servicoDto.Ativo),

@@ -62,7 +62,7 @@ namespace jwtRegisterLogin.Controllers
             });
         }
 
-         [HttpGet]
+        [HttpGet("ListarServico")]
         public async Task<Response<List<ServicoCriacaoDto>>> ListarServico() {
             Response<List<ServicoCriacaoDto>> response = new Response<List<ServicoCriacaoDto>>();
             

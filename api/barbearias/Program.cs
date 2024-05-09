@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+using jwtRegisterLogin.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
+    //------------
+    options.OperationFilter<AddHeaderParameters>();
+    //------------
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
