@@ -4,7 +4,7 @@ obj**
 /.vs
 aqui-tem-barbearias.*
 
-/barbearias/obj/barbearias.csproj.nuget.dgspec.json
+# /barbearias/obj/barbearias.csproj.nuget.dgspec.json
 /barbearias/obj/barbearias.csproj.nuget.g.props
 /barbearias/obj/barbearias.csproj.nuget.g.targets
 /barbearias/obj/project.assets.json
