@@ -9,3 +9,5 @@ aqui-tem-barbearias.*
 /barbearias/obj/barbearias.csproj.nuget.g.targets
 /barbearias/obj/project.assets.json
 /barbearias/obj/project.nuget.cache
+\barbearias\obj\project.nuget.cache
+**\project.assets.json
