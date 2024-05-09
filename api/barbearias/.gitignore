@@ -1,1 +1,4 @@
-aqui-tem-barbearias.sln
+/bin
+/obj
+.vs
+.obj
