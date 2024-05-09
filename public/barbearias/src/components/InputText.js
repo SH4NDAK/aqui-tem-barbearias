@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 // trazendo a função que mescla o css daqui do componente com css definido na aplicação
 import { cn } from '../utils/cn';
 import { cva } from "class-variance-authority"
-import Label from './Label';
 
 
 // criando variações de estilo css para o input
 const inputVariants = cva(
     // classe padrão dos inputs
-    "w-full border border-[#242222] p-1 text-[#242222] outline-none border-x-0 border-t-0 transition-colors focus:border-blue-600",
+    "w-full border border-[#242222] rounded-sm p-1 text-[#242222] outline-none rounded",
     {
         // variações de estilo
         variants: {
@@ -20,46 +19,39 @@ const inputVariants = cva(
     }
 )
 
+// criando variações de estilo CSS pra label do input
+const labelVariants = cva(
+    "font-semibold text-sm",
+    {
+        variants: {
+            variant: {
+                invalid: "text-red-600"
+            }
+        }
+    }
+)
+
+
 // componente input de texto
-const InputText = React.forwardRef(({ unidadeMedida, monetario, errors, label, type, placeholder, className, icon, variant, onIconClick, ...props }, ref) => {
-
-    // useState pra controlar se o input esta em foco (alguem clicou pra digitar nele)
-    const [isFocused, setIsFocused] = useState(false);
-
+const InputText = React.forwardRef(({ label, type, placeholder, className, icon, variant, onIconClick, ...props }, ref) => {
     return (
         <div>
-            <Label 
-                variant={errors ? "invalid" : ""}
-                label={label}
-            />
-
-            <div
-                className={`flex ${monetario || !!unidadeMedida ? 'gap-0' : 'gap-1'} `}
+            <label
+                className={cn(labelVariants({ variant }), className)}
             >
-                {monetario && (
-                    <div
-                        className={`rounded-t-sm flex items-center bg-gray-200 w-1/6 justify-center font-semibold border-b border-[#242222] ${isFocused ? 'border-blue-600' : ''} ${errors ? 'border-red-600' : ''}`}
-                    >
-                        <span className={`${errors ? 'text-red-600' : ''} `}>R$</span>
-                    </div>
-                )}
+                {label}
+            </label>
+            <div
+                className='flex gap-1'
+            >
                 <input
                     // esse input aceita todas as propriedades padrão de input
                     {...props}
                     ref={ref} // Passando a ref para o input
                     type={type}
                     placeholder={placeholder}
-                    className={cn(inputVariants({ variant }), className)} // adaptar no classname
-                    onFocus={() => { setIsFocused(true) }}
-                    onBlur={() => { setIsFocused(false) }}
+                    className={cn(inputVariants({ variant }), className)}// adaptar no classname
                 />
-                {!!unidadeMedida && (
-                    <div
-                        className={`rounded-t-sm flex items-center bg-gray-200 w-1/6 justify-center font-semibold border-b border-[#242222] ${isFocused ? 'border-blue-600' : ''} ${errors ? 'border-red-600' : ''}`}
-                    >
-                        <span className={`${errors ? 'text-red-600' : ''} `}>{unidadeMedida}</span>
-                    </div>
-                )}
                 {icon && (
                     <button
                         type='button'
@@ -67,17 +59,6 @@ const InputText = React.forwardRef(({ unidadeMedida, monetario, errors, label, t
                     >
                         {icon}
                     </button>
-                )
-                }
-            </div>
-
-            <div>
-                {errors && (
-                    <label
-                        className="font-semibold text-red-600 text-sm"
-                    >
-                        {errors.message}
-                    </label>
                 )
                 }
             </div>
