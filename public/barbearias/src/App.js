@@ -31,7 +31,11 @@ export default function App() {
 
   // função chamada no envio do formulário de login
   const onSubmit = (data) => {
-    console.log(data);
+    try {
+      axios.get("http://localhost:5028/auth", { params: data })
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (
