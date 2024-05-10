@@ -44,7 +44,7 @@ export default function App() {
     <Container>
       <FormContainer>
         <div className="w-full flex justify-center font-bold text-5xl">
-          <img src={logo} width={128}/>
+          <img src={logo} width={256}/>
         </div>
         <div className="w-full flex flex-col gap-2">
           <form
