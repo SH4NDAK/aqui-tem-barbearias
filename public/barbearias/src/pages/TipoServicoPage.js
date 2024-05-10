@@ -18,11 +18,6 @@ export default function TipoServicoPage() {
 
     return (
         <>
-            <Row>
-                <div>
-                    
-                </div>
-            </Row>
             <Container
                 variant={"center"}
             >

@@ -62,7 +62,7 @@ export default function RegisterPage() {
                                     type="button"
                                     variant="gray"
                                     icon={<ArrowLeftCircle className="me-1" />}
-                                    onClick={(e) => { navigate("/") }}
+                                    onClick={(e) => { navigate("/login") }}
                                 >
                                     Voltar
                                 </Button>

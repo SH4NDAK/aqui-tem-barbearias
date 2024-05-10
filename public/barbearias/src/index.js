@@ -8,13 +8,15 @@ import TipoServicoPage from './pages/TipoServicoPage';
 import TipoServicoFormPage from './pages/TipoServicoFormPage';
 import AgendaPage from './pages/AgendaPage';
 import RegisterPage from './pages/RegisterPage';
+import MenuPage from './pages/MenuPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
+        <Route path="/" element={<MenuPage />} />
+        <Route path="/login" element={<App />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/recovery" element={<RecoveryPage />} />
         <Route path="/tipo-servico" element={<TipoServicoPage />} />
