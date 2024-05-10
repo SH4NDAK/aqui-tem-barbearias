@@ -54,7 +54,7 @@ export default function App() {   // Cria uma pagina de login
             <InputText
               label='Senha'
               type='password'
-              placeholder={'Digite sua senha'}
+            placeholder={'Digite sua senha'}
               {...register("password", { required: "Campo obrigatório*" })}
               variant={errors.password ? 'invalid' : ''} 
             />
