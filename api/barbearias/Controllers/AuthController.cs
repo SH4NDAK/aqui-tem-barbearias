@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace jwtRegisterLogin.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthContoller : ControllerBase
     {
