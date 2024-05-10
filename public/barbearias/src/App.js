@@ -9,8 +9,10 @@ import Button from "./components/Button";
 import Container from "./components/Container";
 import FormContainer from "./components/FormContainer";
 import axios from "axios";
+import logo from "./img/logo.jpg"
 
 export default function App() {
+  console.log(window.location.pathname);
 
   // trazendo a função que navega entre as rotas do sistema
   const navigate = useNavigate()
@@ -42,7 +44,7 @@ export default function App() {
     <Container>
       <FormContainer>
         <div className="w-full flex justify-center font-bold text-5xl">
-          LOGO
+          <img src={logo} width={128}/>
         </div>
         <div className="w-full flex flex-col gap-2">
           <form
@@ -93,6 +95,7 @@ export default function App() {
                 type="button"
                 variant="gray"
                 className="w-full"
+                onClick={(e) => { navigate("/register") }}
               >
                 Criar conta
 
