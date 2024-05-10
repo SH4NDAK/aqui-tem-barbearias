@@ -9,6 +9,7 @@ import Button from "./components/Button";
 import Container from "./components/Container";
 import FormContainer from "./components/FormContainer";
 import axios from "axios";
+import { signInRequest } from './services/auth';
 
 export default function App() {
 
@@ -32,7 +33,8 @@ export default function App() {
   // função chamada no envio do formulário de login
   const onSubmit = (data) => {
     try {
-      axios.get("http://localhost:5028/auth", { params: data })
+      signInRequest(data)
+      // axios.post("http://localhost:5028/api/auth/login",  data)
     } catch (e) {
       console.log(e);
     }
