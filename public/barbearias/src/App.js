@@ -12,7 +12,6 @@ import axios from "axios";
 import logo from "./img/logo.jpg"
 
 export default function App() {
-  console.log(window.location.pathname);
 
   // trazendo a função que navega entre as rotas do sistema
   const navigate = useNavigate()
@@ -33,11 +32,12 @@ export default function App() {
 
   // função chamada no envio do formulário de login
   const onSubmit = (data) => {
-    try {
-      axios.get("http://localhost:5028/auth", { params: data })
-    } catch (e) {
-      console.log(e);
-    }
+    navigate("/")
+    // try {
+    //   axios.get("http://localhost:5028/auth", { params: data })
+    // } catch (e) {
+    //   console.log(e);
+    // }
   }
 
   return (
