@@ -22,3 +22,10 @@ export function SetAuthenticationToken(token) {  // Define o token nos Cookies
     maxAge: 300
   })
 }
+export function SetAuthenticationUser(user) {  // Define o usuario na Aplicação
+  return localStorage.setItem('usuario', JSON.stringify(user));
+}
+
+export function SetLogoutUser() {
+  return localStorage.removeItem('usuairo') // remove o usuario na aplications
+}

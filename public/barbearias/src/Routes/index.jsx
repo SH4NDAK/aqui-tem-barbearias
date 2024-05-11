@@ -10,8 +10,12 @@ import App from "../App"
 
 export const router = createBrowserRouter([
   {
-    path:"/login",     // Aqui define a rota
+    path:"/",     // Aqui define a rota
     element: <App /> // Aqui define o componente
+  },
+  {
+    path:"/login",
+    element: <App />
   },
   {
     path: "/cadastro",

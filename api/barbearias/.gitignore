@@ -1,4 +1,7 @@
 /bin
+/bin/Debug
+/bin/Debug/net8.0
+/bin/Debug/net8.0/runtimes
 /obj
 .vs
 .obj

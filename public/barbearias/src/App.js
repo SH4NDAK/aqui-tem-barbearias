@@ -1,20 +1,29 @@
 import 'devextreme/dist/css/dx.light.css';
 
-import { useState, version } from "react";
+import { useEffect, useState } from "react";
 import InputText from './components/InputText';
-import { Eye, EyeOff, LogIn } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from "react-router-dom";
 import Button from "./components/Button";
 import Container from "./components/Container";
 import FormContainer from "./components/FormContainer";
-import axios from "axios";
-import { signInRequest } from './services/auth';
+import { SetAuthenticationToken, SetAuthenticationUser, signInRequest } from './services/auth';
+import { notification } from 'antd';
+
 
 export default function App() {
 
   // trazendo a função que navega entre as rotas do sistema
   const navigate = useNavigate()
+
+  // Se o usuario estiver logado direciona ele para tela de tipos-servico
+  useEffect(() => {
+    const user = localStorage.getItem('usuario');
+    if (user !== null) {
+      navigate("/tipos-servico")
+    }
+  }, [])
 
   // trazendo algumas funções úteis da biblioteca react-hook-form
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -31,12 +40,37 @@ export default function App() {
   }
 
   // função chamada no envio do formulário de login
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     try {
-      signInRequest(data)
-      // axios.post("http://localhost:5028/api/auth/login",  data)
+      // faz chamada de autenticação
+      const res = await signInRequest(data)
+      // se der erro de autenticacao volta a mensagen
+      if (res.status === false) {
+        return notification.error({
+          message: "Erro",
+          description: res.mensagem
+        })        
+      }
+      // define o token nos cookies
+      SetAuthenticationToken(res.dados.token)
+      // define usuario na aplications
+      SetAuthenticationUser(res.dados)
+      // envia mensagem de sucesso
+      notification.success({
+        message: "Sucesso",
+        description: res.mensagem
+      })
+      // direciona o usuario para tipos serviços
+      navigate('/tipos-servico')
     } catch (e) {
       console.log(e);
+      // Mostra uma notificação de erro na tela se der erro
+      if (e.response?.data?.errors?.Email[0]) {
+        notification.warning({
+          message: "Erro",
+          description: e.response.data.errors.Email[0]
+        })
+      }
     }
   }
 
@@ -54,11 +88,10 @@ export default function App() {
               label={'Login'}
               type={'text'}
               placeholder={'E-mail ou telefone'}
-              {...register("login", { required: "Campo obrigatório*" })}
-              variant={errors.login ? 'invalid' : ''}
-              errors={errors.login}
+              {...register("email", { required: "Campo obrigatório*" })}
+              variant={errors.email ? 'invalid' : ''}
+              errors={errors.email}
             />
-
             <InputText
               label={'Senha'}
               type={verSenha ? 'text' : 'password'}
@@ -95,11 +128,10 @@ export default function App() {
                 type="button"
                 variant="gray"
                 className="w-full"
+                onClick={() => navigate("cadastro")}                
               >
                 Criar conta
-
               </Button>
-
             </div>
           </form>
         </div>
