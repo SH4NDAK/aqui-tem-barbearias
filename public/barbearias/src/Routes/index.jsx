@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom"
 import Login from "../pages/login/index"
 import Register from "../pages/register"
-import ServiceTypes from "../pages/ServiceType/ServiceTypes"
-import AddOrEditServiceTypes from "../pages/ServiceType/add/[id]"
 import RecoveryPage from "../pages/RecoveryPage"
 import AgendaPage from "../pages/AgendaPage"
 import App from "../App"
+import TipoServicoPage from "../pages/TipoServicoPage"
+import TipoServicoFormPage from "../pages/TipoServicoFormPage"
 // isso é para registrar rotas do projeto, o primeiro pametro é a rota o 2 é o componente
 
 export const router = createBrowserRouter([
@@ -23,11 +23,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/tipos-servico",
-    element: <ServiceTypes />
+    element: <TipoServicoPage />
   },
   {
-    path: "/tipos-servico/add",
-    element: <AddOrEditServiceTypes />
+    path: "/tipo-servico/add",
+    element: <TipoServicoFormPage />
   },
   {
     path: "/recovery",

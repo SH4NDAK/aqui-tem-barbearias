@@ -128,7 +128,7 @@ export default function App() {
                 type="button"
                 variant="gray"
                 className="w-full"
-                onClick={() => navigate("cadastro")}                
+                onClick={() => navigate("/cadastro")}                
               >
                 Criar conta
               </Button>

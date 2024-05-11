@@ -26,6 +26,6 @@ export function SetAuthenticationUser(user) {  // Define o usuario na Aplicaçã
   return localStorage.setItem('usuario', JSON.stringify(user));
 }
 
-export function SetLogoutUser() {
-  return localStorage.removeItem('usuairo') // remove o usuario na aplications
+export function setLogoutUser() {
+  return localStorage.removeItem('usuario') // remove o usuario na aplications
 }
