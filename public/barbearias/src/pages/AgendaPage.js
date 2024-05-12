@@ -141,8 +141,12 @@ export default function AgendaPage() {
     // setando o local como brasil
     useEffect(() => {
         (async () => {
-            const data = await listAgenda()
-            setAgenda(data.dados)
+            try {
+                const data = await listAgenda()
+                setAgenda(data.dados)
+            } catch (error) {
+                console.log(error);
+            }
         })()
         locale('pt-BR')
     }, []);
