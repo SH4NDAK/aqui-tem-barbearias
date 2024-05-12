@@ -5,7 +5,7 @@ import { cn } from "../utils/cn";
 // criando variantes pro container
 const containerVariants = cva(
     // classe padrão do container
-    "flex flex-col justify-center w-screen h-dvh bg-[#242222] p-12",
+    "flex flex-col justify-center w-full h-screen bg-[#242222] p-12",
     // variantes
     {
         variants: {
