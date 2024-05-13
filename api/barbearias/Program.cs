@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using jwtRegisterLogin.Filters;
+using jwtRegisterLogin.Services.AgendaService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAuthInterface, AuthService>();
 builder.Services.AddScoped<ISenhaInterface, SenhaService>();
 builder.Services.AddScoped<IServicoService, ServicoService>(); // Adicione esta linha para registrar IServicoService
+builder.Services.AddScoped<IAgendaService, AgendaService>();
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
