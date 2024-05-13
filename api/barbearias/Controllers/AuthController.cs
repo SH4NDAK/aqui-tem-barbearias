@@ -1,11 +1,36 @@
+﻿using jwtRegisterLogin.Dtos;
+using jwtRegisterLogin.Services.AuthService;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-[ApiController]
-public class AuthController : ControllerBase
+namespace jwtRegisterLogin.Controllers
 {
-    [HttpGet("auth")]
-    public IActionResult Get()
+    [Route("api/auth")]
+    [ApiController]
+    public class AuthContoller : ControllerBase
     {
-        return Ok("Teste");
+        private readonly IAuthInterface _authInterface;
+        public AuthContoller(IAuthInterface authInterface)
+        {
+                _authInterface = authInterface;
+        }
+
+        //Metodo Registrar
+        [HttpPost("login")]
+        public async Task<ActionResult> Login(UsuarioLoginDto usuarioLogin)
+        {
+
+                var resposta = await _authInterface.Login(usuarioLogin); 
+            return Ok(resposta);
+        }
+
+
+        [HttpPost("register")]
+        public async Task<ActionResult> Register(UsuarioCriacaoDto usuarioRegister)
+        {
+
+            var resposta = await _authInterface.Registrar(usuarioRegister);
+            return Ok(resposta);
+        }
     }
 }
