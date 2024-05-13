@@ -12,3 +12,8 @@ export async function listAgenda() {   // Cria rota de listagem de agenda
   const { data } = await api.get('agenda/listar')
   return data
 }
+
+export async function editAgenda(id, payload) { // Criar rota de edição de agenda
+  const { data } = await api.put(`/agenda/editar/${id}`, payload)
+  return data
+}

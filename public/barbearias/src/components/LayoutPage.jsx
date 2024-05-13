@@ -16,7 +16,7 @@ export default function LayoutPage({name, children}) { //Cria uma pagina default
         <Header className='bg-white text-5xl flex justify-between w-full items-center h-10'>  
             <h1>{name}</h1>
             <Button
-              className="flex items-center m-2"
+              className="flex items-center m-4 p-2"
               type={"button"}
               icon={<LogOutIcon />}
               onClick={signOut}

@@ -11,33 +11,67 @@ import Selectpicker from '../components/Selectpicker';
 import { useForm } from 'react-hook-form';
 import SideBar from '../components/SideBar';
 import LayoutPage from '../components/LayoutPage';
-import { listAgenda, saveAgenda } from '../services/agenda';
+import { editAgenda, listAgenda, saveAgenda } from '../services/agenda';
 import { Switch, notification } from 'antd';
 import { data } from './data';
 
 const currentDate = new Date();
-const views = [];
+const views = ['agenda', 'day'];
 
 export default function AgendaPage() {
     const [abrirModalAgendamento, setAbrirModalAgendamento] = useState(false);
-    const [agenda, setAgenda] = useState([])
+    const [agendas, setAgendas] = useState([])
 
-
-    const Appointment = (e) => {  // arrumar depois
-        let findAgenda = agenda.find(i => i.id === e.data.targetedAppointmentData.assigneeId) || {};
+    const Appointment = (e) => {
+        let findAgenda = agendas.find(i => i.id === e.data.targetedAppointmentData.assigneeId) || {};
+        const [agenda, setAgenda] = useState(findAgenda);
+    
+        const onChangePay = async () => {
+            try {
+                // Alterar o valor de pago
+                const newAgenda = {
+                    ...agenda,
+                    pago: !agenda.pago,
+                    ativo: agenda.ativo.toString(),
+                    preco: agenda.preco.toString()
+                };
+    
+                // Atualizar o estado com o novo valor de pago
+                setAgenda(newAgenda);
+    
+                // Enviar a solicitação para editar a agenda com o novo valor de pago
+                const res = await editAgenda(findAgenda.id, {...newAgenda, pago: newAgenda.pago.toString()});
+    
+                if (newAgenda.pago) {
+                    notification.success({
+                        message: "Sucesso ao pagar",
+                        description: res.mensagem
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+    
         return (
-            <div className='flex flex-col'>
-                <h1>{findAgenda.servico}</h1>
-                <h2>{findAgenda.nomeDoCliente}</h2>
+            <div className='flex flex-row'>
+                <div>
+                    <div className="dx-scheduler-appointment-title">{findAgenda.servico}</div>
+                    <div className="dx-scheduler-appointment-content-details">
+                        <div className="dx-scheduler-appointment-content-date">Horario {findAgenda.horario}</div>
+                        <div className="dx-scheduler-appointment-content-date pl-2">Duração {findAgenda.duracao}</div>
+                    </div>
+                </div>
+                <div className="dx-scheduler-agenda-appointment-right-layout">
+                    Pago? <Switch defaultChecked={agenda.pago} onChange={onChangePay} className='h-6'/>
+                </div>
             </div>
-        )
+        );
     };
     
 
     const onAppointmentFormOpening = (e) => { // quando a edição de agenda estiver pronto retornar isso
-        let findAgenda = agenda.find(i => i.id === e.appointmentData.assigneeId) || {};
-        console.log(e);
-        console.log(findAgenda.nomeDoCliente);
+        let findAgenda = agendas.find(i => i.id === e.appointmentData.assigneeId) || {};
         e.form.option('items', [
         {
           label: {
@@ -138,16 +172,44 @@ export default function AgendaPage() {
         setAbrirModalAgendamento(true);
     }
 
+    const onAppointmentFormDelete = async (e) => {
+        console.log(e);
+        let findAgenda = agendas.find(i => i.id === e.appointmentData.assigneeId) || {};
+        try {
+            // Alterar o valor de pago
+            const newAgenda = {
+                ...findAgenda,
+                ativo: (!findAgenda.ativo).toString(),
+                pago: findAgenda.pago.toString(),
+                preco: findAgenda.preco.toString()
+            };
+
+
+            // Enviar a solicitação para editar a agenda com o novo valor de pago
+            const res = await editAgenda(findAgenda.id, newAgenda);
+
+            if (newAgenda.pago) {
+                notification.success({
+                    message: "Sucesso ao apagar",
+                    description: res.mensagem
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+//appointmentData.assigneeId
     // setando o local como brasil
     useEffect(() => {
-        (async () => {
-            try {
+        try {
+            (async () => {
                 const data = await listAgenda()
-                setAgenda(data.dados)
-            } catch (error) {
-                console.log(error);
-            }
-        })()
+                setAgendas(data.dados)
+            })()
+        } catch (error) {
+            console.log(error);
+        }
         locale('pt-BR')
     }, []);
 
@@ -191,7 +253,8 @@ export default function AgendaPage() {
                     <div className='w-full h-full bg-white rounded-b-md'>
                         <Scheduler
                             timeZone="America/Sao_Paulo"
-                            dataSource={agenda?.map(compromisso => {
+                            
+                            dataSource={agendas?.map(compromisso => {
                                 return {
                                   text: compromisso.servico,
                                   startDate: new Date(compromisso.data + 'T' + compromisso.horario),
@@ -204,7 +267,8 @@ export default function AgendaPage() {
                             currentView="agenda"
                             defaultCurrentDate={currentDate}
                             height={height}
-                            // appointmentComponent={Appointment}
+                            appointmentComponent={Appointment}
+                            onAppointmentDeleted={onAppointmentFormDelete}
                             onAppointmentFormOpening={onAppointmentFormOpening}
                         />
                     </div>

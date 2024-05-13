@@ -7,6 +7,7 @@ namespace jwtRegisterLogin.Services.AgendaService
     {
         Task<Response<AgendaCriacaoDto>> CriarAgendamento(AgendaCriacaoDto agendaDTO);
         Task<Response<List<AgendaCriacaoDto>>> ListarAgendamentos();
+        Task<Response<AgendaCriacaoDto>> EditarAgendamento(int id, AgendaCriacaoDto agendaAtualizacaoDto);
     }
 }
 

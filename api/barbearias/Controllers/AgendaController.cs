@@ -36,6 +36,20 @@ namespace jwtRegisterLogin.Controllers
         public async Task<IActionResult> ListarAgenda()
         {
             var response = await _agendaService.ListarAgendamentos();
+    
+            if (!response.Status)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPut("editar/{id}")]
+        public async Task<IActionResult> EditarAgenda(int id, AgendaCriacaoDto agendaDTO)
+        {
+
+            var response = await _agendaService.EditarAgendamento(id, agendaDTO);
 
             if (!response.Status)
             {

@@ -79,5 +79,46 @@ namespace jwtRegisterLogin.Services.AgendaService
 
             return response;
         }
+
+        public async Task<Response<AgendaCriacaoDto>> EditarAgendamento(int id, AgendaCriacaoDto agendaAtualizacaoDto)
+        {
+            Response<AgendaCriacaoDto> response = new Response<AgendaCriacaoDto>();
+
+            try
+            {
+                var agenda = await _context.Agenda.FindAsync(id);
+
+                if (agenda == null)
+                {
+                    response.Mensagem = "Agenda não encontrada.";
+                    response.Status = false;
+                    return response;
+                }
+
+                agenda.Descricao = agendaAtualizacaoDto.Descricao;
+                agenda.Duracao = agendaAtualizacaoDto.Duracao;
+                agenda.Preco = decimal.Parse(agendaAtualizacaoDto.Preco);
+                agenda.NomeDoCliente = agendaAtualizacaoDto.NomeDoCliente;
+                agenda.Data = agendaAtualizacaoDto.Data;
+                agenda.Horario = agendaAtualizacaoDto.Horario;
+                agenda.Servico = agendaAtualizacaoDto.Servico;
+                agenda.Ativo = bool.Parse(agendaAtualizacaoDto.Ativo);
+                agenda.Pago = bool.Parse(agendaAtualizacaoDto.Pago);
+
+                _context.Agenda.Update(agenda);
+                await _context.SaveChangesAsync();
+
+                response.Dados = agendaAtualizacaoDto;
+                response.Mensagem = "Agenda editada com sucesso.";
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.Mensagem = ex.Message;
+                response.Status = false;
+            }
+
+            return response;
+        }
     }
 }
