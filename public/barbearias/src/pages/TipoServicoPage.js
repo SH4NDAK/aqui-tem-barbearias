@@ -5,6 +5,7 @@ import FormContainer from "../components/FormContainer";
 import InputText from "../components/InputText";
 import { useNavigate } from "react-router-dom";
 import Row from "../components/Row";
+import LayoutPage from "../components/LayoutPage";
 
 export default function TipoServicoPage() {
     // chamando a função que navega entre as paginas do sistema
@@ -13,11 +14,11 @@ export default function TipoServicoPage() {
 
     // função chamada ao clicar no botão '+' da lista de tipos de serviço, para cadastrar um
     const handleCadastroClick = () => {
-        navigate("/tipo-servico/new")
+        navigate("/tipo-servico/add")
     }
 
     return (
-        <>
+        <LayoutPage>
             <Container
                 variant={"center"}
             >
@@ -65,7 +66,6 @@ export default function TipoServicoPage() {
                     </table>
                 </div>
             </Container>
-
-        </>
+        </LayoutPage>
     )
 }  
