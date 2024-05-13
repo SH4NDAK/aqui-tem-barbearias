@@ -8,6 +8,7 @@ import Row from "../components/Row";
 import LayoutPage from "../components/LayoutPage";
 import SideBar from "../components/SideBar";
 
+
 export default function TipoServicoPage() {
     // chamando a função que navega entre as paginas do sistema
     const navigate = useNavigate()
@@ -52,7 +53,6 @@ export default function TipoServicoPage() {
                             </Row>
                         </form>
                     </FormContainer>
-
                     <div className="container">
                         <table className="w-full flex flex-row rounded-lg overflow-hidden my-5 ">
                             <thead
