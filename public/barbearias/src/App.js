@@ -49,7 +49,7 @@ export default function App() {
         return notification.error({
           message: "Erro",
           description: res.mensagem
-        })        
+        })
       }
       // define o token nos cookies
       SetAuthenticationToken(res.dados.token)
@@ -128,7 +128,7 @@ export default function App() {
                 type="button"
                 variant="gray"
                 className="w-full"
-                onClick={() => navigate("/cadastro")}                
+                onClick={() => navigate("/cadastro")}
               >
                 Criar conta
               </Button>
