@@ -13,12 +13,6 @@ namespace jwtRegisterLogin.Dtos
         [Required(ErrorMessage = "O campo data é obrigatório.")]
         public string Data { get; set; }
 
-        [Required(ErrorMessage = "O campo Duração é obrigatório.")]
-        public string Duracao { get; set; }
-
-        [Required(ErrorMessage = "O campo Preço é obrigatório.")]
-        public string Preco { get; set; }
-
         [Required(ErrorMessage = "O campo Nome do Cliente é obrigatório.")]
         public string NomeDoCliente { get; set; }
 

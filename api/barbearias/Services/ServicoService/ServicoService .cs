@@ -42,23 +42,13 @@ namespace jwtRegisterLogin.Services.ServicoService
                 }
 
 
-
-                if (string.IsNullOrWhiteSpace(servicoDto.Pago))
-                {
-                    servicoDto.Pago = "false";
-                }
-
-
                 ServicoModel servico = new ServicoModel
                 {
                     Nome = servicoDto.Nome,
                     Descricao = servicoDto.Descricao,
                     Duracao = servicoDto.Duracao,
                     Preco = decimal.Parse(servicoDto.Preco),
-                    NomeDoCliente = servicoDto.NomeDoCliente,
-                    TelefoneCliente = servicoDto.TelefoneCliente,
                     Ativo = bool.Parse(servicoDto.Ativo),
-                    Pago = bool.Parse(servicoDto.Pago),
                     UsuarioId = int.Parse(servicoDto.UsuarioId) // Supondo que o Id do usuário seja fornecido no DTO
                 };
 

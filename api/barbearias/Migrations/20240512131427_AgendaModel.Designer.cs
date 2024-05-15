@@ -40,10 +40,6 @@ namespace jwtRegisterLogin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Duracao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -54,9 +50,6 @@ namespace jwtRegisterLogin.Migrations
 
                     b.Property<bool?>("Pago")
                         .HasColumnType("bit");
-
-                    b.Property<decimal>("Preco")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("TelefoneCliente")
                         .IsRequired()

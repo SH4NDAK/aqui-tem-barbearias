@@ -35,8 +35,6 @@ namespace jwtRegisterLogin.Services.AgendaService
                 AgendaModel agenda = new AgendaModel()
                 {
                     Descricao = agendaCriacaoDto.Descricao,
-                    Duracao = agendaCriacaoDto.Duracao,
-                    Preco = decimal.Parse(agendaCriacaoDto.Preco),
                     NomeDoCliente = agendaCriacaoDto.NomeDoCliente,
                     Data = agendaCriacaoDto.Data,
                     Horario = agendaCriacaoDto.Horario,
@@ -96,8 +94,6 @@ namespace jwtRegisterLogin.Services.AgendaService
                 }
 
                 agenda.Descricao = agendaAtualizacaoDto.Descricao;
-                agenda.Duracao = agendaAtualizacaoDto.Duracao;
-                agenda.Preco = decimal.Parse(agendaAtualizacaoDto.Preco);
                 agenda.NomeDoCliente = agendaAtualizacaoDto.NomeDoCliente;
                 agenda.Data = agendaAtualizacaoDto.Data;
                 agenda.Horario = agendaAtualizacaoDto.Horario;

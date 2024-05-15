@@ -14,6 +14,8 @@ import LayoutPage from '../components/LayoutPage';
 import { editAgenda, listAgenda, saveAgenda } from '../services/agenda';
 import { Switch, notification } from 'antd';
 import { data } from './data';
+import { useNavigate } from 'react-router-dom';
+import { listService } from '../services/service';
 
 const currentDate = new Date();
 const views = ['agenda', 'day'];
@@ -93,28 +95,6 @@ export default function AgendaPage() {
                 editorOptions: {
                     valueExpr: 'servico',
                     value: findAgenda.servico,
-                },
-            },
-            {
-                label: {
-                    text: 'Valor',
-                },
-                editorType: 'dxTextBox',
-                dataField: 'preco',
-                editorOptions: {
-                    valueExpr: 'preco',
-                    value: findAgenda.preco,
-                },
-            },
-            {
-                name: 'Duração',
-                dataField: 'duracao',
-                editorType: 'dxDateBox',
-                editorOptions: {
-                    width: '100%',
-                    type: 'time',
-                    valueExpr: 'duracao',
-                    value: findAgenda.duracao
                 },
             },
             {
@@ -220,10 +200,12 @@ export default function AgendaPage() {
     // setando o local como brasil
     useEffect(() => {
         try {
+
             (async () => {
                 const data = await listAgenda()
                 setAgendas(data.dados)
             })()
+
         } catch (error) {
             console.log(error);
         }
@@ -234,7 +216,7 @@ export default function AgendaPage() {
     const height = window.innerHeight - 150;
 
     // função para calcular a data final com base na data e hora de início e na duração
-    function calcularEndDate(data, horario, duracao) {
+    function calcularEndDate(data, horario, duracao = '1:00') {
         const [horasInicio, minutosInicio] = horario.split(':').map(Number);
         const [ano, mes, dia] = data.split('-').map(Number); // Ajustando para o formato 'AAAA-MM-DD'
 
@@ -304,7 +286,21 @@ export default function AgendaPage() {
 
 const ModalAgendamento = ({ onClose }) => {
     // trazendo as operações de formulário da biblioteca hook form
+    const navigate = useNavigate()
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+    const [servicos, setServicos] = useState([])
+
+    useEffect(() => {
+        try {
+            (async () => {
+                const { dados } = await listService()
+                setServicos(dados)
+            })()
+        } catch (error) {
+            console.log(error);
+        }
+        locale('pt-BR')
+    }, []);
 
     const onSubmit = async (data) => {
         try {
@@ -313,6 +309,9 @@ const ModalAgendamento = ({ onClose }) => {
                 message: "Sucesso",
                 description: res.mensagem
             })
+            setTimeout(() => {
+                return navigate(0)
+            }, 1000)
         } catch (error) {
             notification.warning({
                 message: "Error",
@@ -351,72 +350,10 @@ const ModalAgendamento = ({ onClose }) => {
                             label="Serviços"
                             {...register("servico", { required: "Campo obrigatório" })}
                         >
-                            <option>Serviços do amigo</option>
+                            {servicos.map(e =>
+                                <option value={e.id}>{e.nome}</option>
+                            )}
                         </Selectpicker>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <InputText
-                                type="text"
-                                label="Valor"
-                                inputMode="numeric"
-                                monetario={true}
-                                placeholder="Valor do serviço"
-                                {...register("preco", {
-                                    required: "Campo obrigatório", min: {
-                                        value: 0,
-                                        message: "Digite um valor válido"
-                                    }
-                                })}
-                                errors={errors.preco}
-                                onChange={(e) => {
-
-                                    // formatando o valor em dinheiro
-                                    //pegando o valor atual 
-                                    let valor = e.currentTarget.value;
-                                    // removendo os caracteres não numéricos
-                                    valor = valor.replace(/\D/g, '');
-
-                                    // pegando o valor digitado em inteiro (dividindo por 100 pra tratar os centavos)
-                                    valor = parseInt(valor, 10) / 100;
-
-                                    // se o valor não é valido (não é um numero)
-                                    if (isNaN(valor)) {
-
-                                        // seta ele como vazio e não continua o código
-                                        valor = '';
-                                        e.currentTarget.value = valor;
-                                        return;
-                                    }
-
-                                    // se ta tudo certo, formata o valor
-                                    valor = valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-
-                                    // atualizando o campo do input com o valor
-                                    e.currentTarget.value = valor;
-
-                                    // definindo o valor do input como o novo valor e validando no useForm
-                                    setValue("preco", e.currentTarget.value, { shouldValidate: true });
-                                }}
-                            />
-                        </Col>
-                        <Col>
-                            <InputText
-                                type="time"
-                                className="w-full"
-                                label="Duração"
-                                inputMode="numeric"
-                                {...register("duracao", {
-                                    required: "Campo obrigatório",
-                                    min: {
-                                        value: 0,
-                                        message: "Digite uma duração válida"
-                                    }
-                                })}
-                                errors={errors.duracao}
-                                unidadeMedida="min"
-                            />
-                        </Col>
                     </Row>
                     <Row>
                         <Col>

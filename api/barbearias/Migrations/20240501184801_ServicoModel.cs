@@ -19,10 +19,7 @@ namespace jwtRegisterLogin.Migrations
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Duracao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    NomeDoCliente = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TelefoneCliente = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ativo = table.Column<bool>(type: "bit", nullable: false), // Valor booleano
-                    Pago = table.Column<bool>(type: "bit", nullable: false), // Valor booleano
                     UsuarioId = table.Column<int>(type: "int", nullable: false) // Chave estrangeira da tabela User
                 },
                 constraints: table =>
