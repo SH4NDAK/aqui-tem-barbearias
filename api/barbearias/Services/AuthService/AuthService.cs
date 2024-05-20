@@ -92,7 +92,17 @@ namespace jwtRegisterLogin.Services.AuthService
 
                 var token = _senhaInterface.CriarToken(usuario);
 
-                
+                var tokenModel = new TokenModel
+                {
+                    Token = token,
+                    CriadaEm = DateTime.Now.ToString(), 
+                    ExpiraEm = DateTime.Now.AddHours(2).ToString(), 
+                    IdUsuario = usuario.Id 
+                };
+
+                _context.TokenDb.Add(tokenModel);
+                await _context.SaveChangesAsync();
+
                 userDetails.Token = token;
                 userDetails.Usuario = usuario.Usuario;
                 userDetails.Email = usuario.Email;
@@ -103,9 +113,6 @@ namespace jwtRegisterLogin.Services.AuthService
                 respostaServico.Mensagem = "Usuário logado com sucesso!";
                 respostaServico.Status = true;
 
-
-
-
             }catch (Exception ex)
             {
                 respostaServico.Dados = null;
@@ -115,10 +122,8 @@ namespace jwtRegisterLogin.Services.AuthService
                 
             }   
 
-
             return respostaServico;
         }
-
 
         public bool VerificaSeEmaileUsuarioJaExiste(UsuarioCriacaoDto usuarioRegistro)
         {
