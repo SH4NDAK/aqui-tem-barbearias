@@ -35,8 +35,6 @@ namespace jwtRegisterLogin.Services.AgendaService
                 AgendaModel agenda = new AgendaModel()
                 {
                     Descricao = agendaCriacaoDto.Descricao,
-                    Duracao = agendaCriacaoDto.Duracao,
-                    Preco = decimal.Parse(agendaCriacaoDto.Preco),
                     NomeDoCliente = agendaCriacaoDto.NomeDoCliente,
                     Data = agendaCriacaoDto.Data,
                     Horario = agendaCriacaoDto.Horario,
@@ -67,14 +65,36 @@ namespace jwtRegisterLogin.Services.AgendaService
 
             try
             {
-                var resultadoServico = await _context.Agenda.Where(a => a.Ativo == true).ToListAsync();
-                response.Dados = resultadoServico;
+                var resultadoAgendamento = await _context.Agenda.Where(a => a.Ativo == true).ToListAsync();
+                var resultadoServico = await _context.Servico.ToListAsync();
+
+                var resultado = resultadoAgendamento.Join<AgendaModel, ServicoModel, string, dynamic>(
+                    resultadoServico, 
+                    agenda => agenda.Servico.ToString(),
+                    servico => servico.Id.ToString(), 
+                    (agenda, servico) => new
+                    {
+                        Descricao = agenda.Descricao,
+                        Horario = agenda.Horario,
+                        Data = agenda.Data,
+                        NomeDoCliente = agenda.NomeDoCliente,
+                        Ativo = agenda.Ativo,
+                        Pago = agenda.Pago,
+                        Servico = servico.Id,
+                        Nome = servico.Nome,
+                        Duracao = servico.Duracao, 
+                        Preco = servico.Preco,
+                        Id = agenda.Id
+
+                    }).ToList();
+
+                response.Dados = resultado;
                 response.Status = true;
             }
             catch (Exception ex)
             {
                 response.Mensagem = ex.Message;
-                response.Status = false;
+                response.Status = false;    
             }
 
             return response;
@@ -96,8 +116,6 @@ namespace jwtRegisterLogin.Services.AgendaService
                 }
 
                 agenda.Descricao = agendaAtualizacaoDto.Descricao;
-                agenda.Duracao = agendaAtualizacaoDto.Duracao;
-                agenda.Preco = decimal.Parse(agendaAtualizacaoDto.Preco);
                 agenda.NomeDoCliente = agendaAtualizacaoDto.NomeDoCliente;
                 agenda.Data = agendaAtualizacaoDto.Data;
                 agenda.Horario = agendaAtualizacaoDto.Horario;

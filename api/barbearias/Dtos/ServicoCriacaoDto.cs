@@ -16,16 +16,8 @@ namespace jwtRegisterLogin.Dtos
         [Required(ErrorMessage = "O campo Preço é obrigatório.")]
         public string Preco { get; set; }
 
-        [Required(ErrorMessage = "O campo Nome do Cliente é obrigatório.")]
-        public string NomeDoCliente { get; set; }
-
-        [Required(ErrorMessage = "O campo Telefone do Cliente é obrigatório.")]
-        public string TelefoneCliente { get; set; }
-
         [Required(ErrorMessage = "O campo Ativo é obrigatório.")]
-        public string Ativo { get; set; }
-
-        public string? Pago { get; set; }
+        public bool Ativo { get; set; }
 
         [Required(ErrorMessage = "O campo UsuarioId é obrigatório.")]
         public string UsuarioId { get; set; } // Chave estrangeira da tabela User

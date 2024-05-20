@@ -17,10 +17,8 @@ namespace jwtRegisterLogin.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Duracao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Data = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Horario = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     NomeDoCliente = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Servico = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ativo = table.Column<bool>(type: "bit", nullable: false),

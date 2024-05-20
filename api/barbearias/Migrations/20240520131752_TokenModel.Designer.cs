@@ -12,8 +12,8 @@ using jwtRegisterLogin.Data;
 namespace jwtRegisterLogin.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240512131427_AgendaModel")]
-    partial class AgendaModel
+    [Migration("20240520131752_TokenModel")]
+    partial class TokenModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,14 +33,17 @@ namespace jwtRegisterLogin.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Ativo")
+                    b.Property<bool?>("Ativo")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Descricao")
+                    b.Property<string>("Data")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nome")
+                    b.Property<string>("Descricao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Horario")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -51,9 +54,39 @@ namespace jwtRegisterLogin.Migrations
                     b.Property<bool?>("Pago")
                         .HasColumnType("bit");
 
-                    b.Property<string>("TelefoneCliente")
+                    b.Property<string>("Servico")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Agenda");
+                });
+
+            modelBuilder.Entity("jwtRegisterLogin.Models.ServicoModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Duracao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Preco")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
@@ -61,6 +94,33 @@ namespace jwtRegisterLogin.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Servico");
+                });
+
+            modelBuilder.Entity("jwtRegisterLogin.Models.TokenModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CriadaEm")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExpiraEm")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdUsuario")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TokenDb");
                 });
 
             modelBuilder.Entity("jwtRegisterLogin.Models.UsuarioModel", b =>
