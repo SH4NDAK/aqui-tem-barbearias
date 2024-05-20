@@ -17,7 +17,7 @@ namespace jwtRegisterLogin.Dtos
         public string Preco { get; set; }
 
         [Required(ErrorMessage = "O campo Ativo é obrigatório.")]
-        public string Ativo { get; set; }
+        public bool Ativo { get; set; }
 
         [Required(ErrorMessage = "O campo UsuarioId é obrigatório.")]
         public string UsuarioId { get; set; } // Chave estrangeira da tabela User

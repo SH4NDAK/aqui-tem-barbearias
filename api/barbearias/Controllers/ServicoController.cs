@@ -1,9 +1,11 @@
-using System.Diagnostics;
+using jwtRegisterLogin.Data;
 using jwtRegisterLogin.Dtos;
 using jwtRegisterLogin.Models;
 using jwtRegisterLogin.Services.ServicoService; // Adicionado o namespace do ServicoService
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace jwtRegisterLogin.Controllers
 {
@@ -13,7 +15,7 @@ namespace jwtRegisterLogin.Controllers
     public class ServicoController : ControllerBase
     {
         private readonly IServicoService _servicoService; // Trocado para IServicoService
-        
+
         public ServicoController(IServicoService servicoService) // Modificado o parâmetro no construtor
         {
             _servicoService = servicoService;
@@ -30,8 +32,8 @@ namespace jwtRegisterLogin.Controllers
                     Mensagem = "O campo UsuarioId é obrigatório",
                     Status = false
                 });
-            } 
-            if (servicoDto.Ativo == null || servicoDto.Ativo == "")
+            }
+            if (servicoDto.Ativo.ToString() == null || servicoDto.Ativo.ToString() == "")
             {
                 return BadRequest(new Response<object>
                 {
@@ -63,27 +65,20 @@ namespace jwtRegisterLogin.Controllers
         }
 
         [HttpGet("ListarServico")]
-        public async Task<Response<List<ServicoCriacaoDto>>> ListarServico() {
-            Response<List<ServicoCriacaoDto>> response = new Response<List<ServicoCriacaoDto>>();
-            
-            try
-            {
-                // Chamar o serviço para obter os dados do usuário
-                var resultadoServico = await _servicoService.ListarServico();
-                response.Dados = resultadoServico.Dados;
-            }
-            catch (Exception ex)
-            {
-                response.Mensagem = ex.Message;
-                response.Status = false;
-            }
+        public async Task<IActionResult> ListarServico()
+        {
+            var response = await _servicoService.ListarServico();
 
-            return response;
+            if (!response.Status)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
         }
+
         private string GetDebuggerDisplay()
         {
             return ToString();
         }
-        
     }
 }

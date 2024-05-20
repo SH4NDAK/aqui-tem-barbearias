@@ -48,7 +48,7 @@ namespace jwtRegisterLogin.Services.ServicoService
                     Descricao = servicoDto.Descricao,
                     Duracao = servicoDto.Duracao,
                     Preco = decimal.Parse(servicoDto.Preco),
-                    Ativo = bool.Parse(servicoDto.Ativo),
+                    Ativo = servicoDto.Ativo,
                     UsuarioId = int.Parse(servicoDto.UsuarioId) // Supondo que o Id do usuário seja fornecido no DTO
                 };
 
