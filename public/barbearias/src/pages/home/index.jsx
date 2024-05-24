@@ -1,53 +1,41 @@
-    import { useState } from "react";
-    import { Button, Space } from 'antd';
-    import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Button, Space } from 'antd';
+import { useNavigate } from "react-router-dom";
+import { ArrowRightCircle, Calendar } from "lucide-react";
 
 
-    export default function Home() {   
-        const navigate = useNavigate();
-    
-        const handleLogin = () => {
-            navigate('/login');
-        };    
+export default function Home() {
+    const navigate = useNavigate();
 
-        const handleCadastro = () => {
-            navigate('/cadastro')
-        };
+    const handleAgendaClick = () => {
 
-        return (
-            <div>
-                <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                    
-                    <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 25px', borderBottom: '1px solid #242222' }}>
-                        
-                        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
-                            
-                            <div style={{ fontSize: '20px', color: '#242222', marginRight: '20px', fontFamily: 'monospace' }}>Sobre Nós</div>
-                            
-                            <div style={{ fontSize: '20px', color: '#242222', marginRight: '20px', fontFamily: 'monospace' }}>Contatos</div>
-                            
-                            <Button onClick={handleLogin} style={{ backgroundColor: '#242222', color: '#FFFFFF', marginRight: '10px', fontFamily: 'monospace' }}>Login</Button>
-                            
-                            <Button onClick={handleCadastro} style={{ backgroundColor: '#FFFFFF', color: '#242222', fontFamily: 'monospace' }}>Cadastro</Button>
-                        
+    }
+
+
+    return (
+        <div className="w-full h-dvh bg-[#242222]">
+            <div className="flex justify-center items-center p-1">
+                <div className="p-2 flex flex-col w-1/2 bg-white h-1/2 shadow-sm shadow-black rounded-sm">
+                    <div className="flex justify-center mb-4">
+                        <span className="text-5xl font-semibold">Menu principal</span>
+                    </div>
+                    <div className="w-full flex md:flex-row">
+                        <div className="p-2 w-48 bg-gray-200 rounded-sm shadow-sm shadow-[#242222]">
+                            <div className="flex flex-row items-center">
+                                <Calendar className="me-1" /> <span className="font-semibold">Agenda</span>
+                            </div>
+                            <div className="w-full mt-3">
+                                <button 
+                                    className="flex flex-row justify-center w-full bg-[#242222] rounded-md shadow-sm shadow-[#242222] p-1.5 text-white font-semibold text-end"
+                                    onClick={handleAgendaClick}
+                                >
+                                    Acessar <ArrowRightCircle className="ms-1" />
+                                </button>
+                            </div>
                         </div>
-                    
-                    </header>
-                </div>
-                <div style={{ fontFamily: 'monospace' , textAlign: 'Left', marginTop: '40px', marginLeft: '20px', fontSize: '80px', color: '#242222', fontWeight: 'bold' }}>
-                    Aqui Tem 
-                </div>
-
-                <div style={{ fontFamily: 'monospace' , textAlign: 'Left', marginLeft: '20px', fontSize: '80px', color: '#242222', fontWeight: 'bold' }}>
-                    BARBEARIA
-                </div>
-
-                <div style={{ fontFamily: 'monospace', textAlign: 'left', marginTop: '0px', marginLeft: '25px', fontSize: '18px', color: '#242222' }}>
-                    Conectando Barbearias e Clientes: <br/>
-                    Simplificando a Experiência de Cuidados <br/>
-                    com a Aparência
+                    </div>
                 </div>
             </div>
-
-        );
-    }
+        </div>
+    );
+}
