@@ -6,6 +6,8 @@ import { Radio, Switch } from "antd";
 import { SetAuthenticationToken, SetAuthenticationUser, signUpRequest } from "../../services/auth";
 import { notification } from 'antd';
 import { useNavigate } from "react-router-dom";
+import logo from "../../img/logo.jpg"; 
+                                    
 
 export default function Register() {
   // trazendo algumas funções úteis da biblioteca react-hook-form
@@ -73,7 +75,7 @@ export default function Register() {
     <div className="flex justify-center items-center w-screen h-dvh bg-[#242222]">
       <div className="flex flex-col bg-white p-12 rounded-lg gap-4">
         <div className="w-full flex justify-center font-bold text-5xl">
-          LOGO
+          <img src={logo} width={"50%"}/>
         </div>
         <div className="w-full flex flex-col gap-2">
           <form
@@ -152,8 +154,23 @@ export default function Register() {
                 type="submit"
                 className="flex w-full mt-4 justify-center"
               >
-              Entrar
+              CRIAR CONTA
             </Button>
+            <div
+              className="flex text-sm mt-4 mb-2 font-bold justify-left"
+            >
+              Já tem conta?
+            </div>
+            <div>
+              <Button
+                type="button"
+                variant="gray"
+                className="w-full"
+                onClick={() => navigate("/")}
+              >
+                Entrar com seu login
+              </Button>
+            </div>
           </form>
         </div>
       </div>

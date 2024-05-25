@@ -1,6 +1,7 @@
 Banco de Dados
 
 dotnet tool install --global dotnet-ef Baixar pacotes    
+ Baixar pacotes    
 
 dotnet ef database update    para executar migrations e criar a tabela no banco
 

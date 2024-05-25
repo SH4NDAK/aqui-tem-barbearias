@@ -4269,19 +4269,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\arthu\\.nuget\\packages\\": {}
+    "C:\\Users\\Bisaio\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\arthu\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
+      "projectUniqueName": "C:\\Users\\Bisaio\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
       "projectName": "jwtRegisterLogin",
-      "projectPath": "c:\\Users\\arthu\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
-      "packagesPath": "C:\\Users\\arthu\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\arthu\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\obj\\",
+      "projectPath": "C:\\Users\\Bisaio\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
+      "packagesPath": "C:\\Users\\Bisaio\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Bisaio\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\arthu\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Bisaio\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -4362,7 +4362,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
