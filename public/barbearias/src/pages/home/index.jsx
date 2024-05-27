@@ -2,14 +2,11 @@ import { useState } from "react";
 import { Button, Space } from 'antd';
 import { useNavigate } from "react-router-dom";
 import { ArrowRightCircle, Bell, BellRing, Calendar, Scissors, User } from "lucide-react";
+import Header from "../../components/Header";
 
 
 export default function Home() {
     const navigate = useNavigate();
-
-    // use state pra controlar se quem ta acessando essa tela é um barbeiro ou cliente
-    // aplicar a logica aqui
-    const [isCliente, setIsCliente] = useState(false);
 
 
     const handleAgendaClick = () => {
@@ -24,49 +21,12 @@ export default function Home() {
         navigate("/usuarios")
     }
 
-    const handlePerfilClick = () => {
-        navigate("/perfil")
-    }
-
-    const handleNotificationsClick = () => {
-        alert("em desenvolvimento")
-    }
 
     return (
         <>
 
             <div className="w-full h-dvh bg-[#242222]">
-
-                <div className="relative w-full bg-[#1c1a1a] h-16 shadow-sm shadow-[#242222] mb-4">
-                    <div className="p-2 w-full h-full flex justify-between">
-                        <div>
-                            a
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <button
-                                className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
-                                type="button"
-                                onClick={handleAgendaClick}
-                            >
-                                <Calendar />
-                            </button>
-                            <button
-                                className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
-                                type="button"
-                                onClick={handleNotificationsClick}
-                            >
-                                <Bell />
-                            </button>
-                            <button
-                                className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
-                                type="button"
-                                onClick={handlePerfilClick}
-                            >
-                                <User />
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <Header />
 
                 <div className="flex justify-center items-center p-1">
                     <div className="p-2 flex flex-col md:w-1/2 sm:w-full bg-white h-1/2 shadow-sm shadow-black rounded-md">
