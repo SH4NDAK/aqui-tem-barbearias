@@ -1,7 +1,5 @@
-import { useState } from "react";
-import { Button, Space } from 'antd';
+import { ArrowRightCircle, Calendar, Scissors, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRightCircle, Bell, BellRing, Calendar, Scissors, User } from "lucide-react";
 import Header from "../../components/Header";
 
 
