@@ -26,8 +26,9 @@
         
 
         const Appointment = (e) => {
-    
             let findAgenda = agendas.find(i => i.id === e.data.targetedAppointmentData.assigneeId) || {};
+            console.log(findAgenda)
+            
             const [agenda, setAgenda] = useState(findAgenda); 
 
             const onChangePay = async () => {
@@ -39,11 +40,12 @@
                         ativo: agenda.ativo.toString()
                     };
 
+                    console.log(newAgenda)
                     // Atualizar o estado com o novo valor de pago
-                    setAgenda(newAgenda);
-
+                    
                     // Enviar a solicitação para editar a agenda com o novo valor de pago
-                    const res = await editAgenda(findAgenda.id, { ...newAgenda, pago: newAgenda.pago.toString() });
+                    //const res = await editAgenda(findAgenda.id, { ...newAgenda, pago: newAgenda.pago.toString() });
+                    const res = await editAgenda(findAgenda.id, newAgenda);
 
                     if (newAgenda.pago) {
                         notification.success({
@@ -51,6 +53,8 @@
                             description: res.mensagem
                         });
                     }
+                    setAgenda(newAgenda);
+
                 } catch (error) {
                     console.log(error);
                 }
@@ -59,7 +63,7 @@
             return (
                 <div className='flex flex-row'>
                     <div>
-                        <div className="dx-scheduler-appointment-title">{findAgenda.nome}</div>
+                        <div className="dx-scheduler-appointment-title">{findAgenda.nomeDoCliente}</div>
                         <div className="dx-scheduler-appointment-content-details">
                             <div className="dx-scheduler-appointment-content-date">Horario {findAgenda.horario}</div>
                             <div className="dx-scheduler-appointment-content-date pl-2">Duração {findAgenda.duracao}</div>
@@ -67,7 +71,7 @@
                         </div>
                     </div>
                     <div className="dx-scheduler-agenda-appointment-right-layout">
-                        Pago? <Switch defaultChecked={agenda.pago} onChange={onChangePay} className='h-6' />
+                        Pago <Switch defaultChecked={agenda.pago} onChange={onChangePay} className='h-6' />
                     </div>
                 </div>
             );
@@ -84,7 +88,7 @@
                     editorType: 'dxTextBox',
                     dataField: 'nomeDoCliente',
                     editorOptions: {
-                        type: 'text',
+                        width: '100%',
                         valueExpr: 'nomeDoCliente',
                         value: findAgenda.nomeDoCliente,
                     },
@@ -96,6 +100,7 @@
                     editorType: 'dxTextBox',
                     dataField: 'servico',
                     editorOptions: {
+                        width: '100%',
                         valueExpr: 'servico',
                         value: findAgenda.servico,
                     },
@@ -114,12 +119,13 @@
                 {
                     name: 'Horario',
                     dataField: 'horario',
+                    className: 'w-full',
                     editorType: 'dxDateBox',
                     editorOptions: {
-                        width: '100%',
+                        // width: '100%',
                         type: 'time',
                         valueExpr: 'horario',
-                        value: findAgenda.horario
+                        value: findAgenda.horario,
                     },
                 },
                 {
@@ -194,6 +200,8 @@
                         description: res.mensagem
                     });
                 }
+            const updatedAgendas = agendas.map((item) => (item.id === newAgenda.id ? newAgenda : item));
+            setAgendas(updatedAgendas);
             } catch (error) {
                 console.log(error);
             }
@@ -201,16 +209,16 @@
         //appointmentData.assigneeId
         // setando o local como brasil
         useEffect(() => {
-            try {
-
                 (async () => {
+                    try{
                     const data = await listAgenda()
+                    console.log(data)
                     setAgendas(data.dados)
+                    } catch (err) {
+                        console.log(err)
+                    }
                 })()
 
-            } catch (error) {
-                console.log(error);
-            }
             locale('pt-BR')
         }, []);
 
@@ -261,7 +269,7 @@
                                         startDate: new Date(compromisso.data + 'T' + compromisso.horario),
                                         endDate: calcularEndDate(compromisso.data, compromisso.horario, compromisso.duracao),
                                         assigneeId: compromisso.id, // ou qualquer outra propriedade que desejar usar
-                                        priorityId: 1, // ou qualquer outra propriedade que desejar usar
+                                        priorityId: 1 // ou qualquer outra propriedade que desejar usar
                                     };
                                 })}
                                 views={views}

@@ -1,36 +1,63 @@
 import { ArrowLeftCircle, CloudUpload } from "lucide-react";
 import { set, useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
-import Button from "../components/Button";
-import Col from "../components/Col";
-import Container from "../components/Container";
-import FormContainer from "../components/FormContainer";
-import InputText from "../components/InputText";
-import Row from "../components/Row";
-import Label from "../components/Label";
-import Selectpicker from "../components/Selectpicker";
-import LayoutPage from "../components/LayoutPage";
-import { createService } from "../services/service";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Button from "../../../components/Button";
+import Col from "../../../components/Col";
+import Container from "../../../components/Container";
+import FormContainer from "../../../components/FormContainer";
+import InputText from "../../../components/InputText";
+import Row from "../../../components/Row";
+import Selectpicker from "../../../components/Selectpicker";
+import LayoutPage from "../../../components/LayoutPage";
+import { createService, editService } from "../../../services/service";
+import { useEffect } from "react";
+import { notification } from "antd";
  
-export default function TipoServicoFormPage() {
-    const location = useLocation();
+export default function EditTipoServico() {
     const navigate = useNavigate();
- 
-    // verificando se o tipo de serviço foi passado para esta pagina, se sim, é uma edição
-    const isCadastro = !location.state?.tipoServico;
+    const { id } = useParams();
+    console.log(id)
  
     // trazendo as operações de formulário da biblioteca hook form
-    const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+    const { register, handleSubmit, formState: { errors }, setValue, form } = useForm();
  
     // função chamada ao submeter o formulario
     const onSubmit = async (data) => {
         try {
-            await createService(data)
+            await deleteServiceType(data)
         } catch (error) {
             console.log(error);
         }
     }
+
+    useEffect(() => {
+        try {
+            () => {
+                
+            }
+        } catch (error) {
+            
+        }
+    }, [])
  
+    const deleteServiceType = async (record) => {
+        try {
+            await editService(record.id, {
+                ativo: "false",
+                descricao: record.descricaoServico,
+                duracao: record.duracaoServico,
+                nome: record.nomeServico,
+                preco: record.precoServico.toString(),
+                usuarioId: record.usuarioIdServico.toString()
+            })
+            notification.success({
+                message: "Sucesso",
+                description: "Item excluido com sucesso"
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    };
  
     return (
         <LayoutPage>

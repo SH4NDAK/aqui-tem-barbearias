@@ -30,7 +30,7 @@ namespace jwtRegisterLogin.Controllers
                 {
                     Dados = null,
                     Mensagem = "O campo UsuarioId é obrigatório",
-                    Status = false
+                    Status = 405
                 });
             }
             if (servicoDto.Ativo.ToString() == null || servicoDto.Ativo.ToString() == "")
@@ -39,14 +39,14 @@ namespace jwtRegisterLogin.Controllers
                 {
                     Dados = null,
                     Mensagem = "O campo Ativo é obrigatório",
-                    Status = false
+                    Status = 405
                 });
             }
             // Chama o ServicoService para criar o serviço
             var response = await _servicoService.CriarServico(servicoDto);
 
             // Verifica se houve algum erro ao criar o serviço
-            if (!response.Status)
+            if (response.Status == 405)
             {
                 return BadRequest(new Response<object>
                 {
@@ -60,7 +60,7 @@ namespace jwtRegisterLogin.Controllers
             {
                 Dados = null,
                 Mensagem = "Serviço cadastrado com sucesso.",
-                Status = true
+                Status = 200
             });
         }
 
@@ -69,7 +69,34 @@ namespace jwtRegisterLogin.Controllers
         {
             var response = await _servicoService.ListarServico();
 
-            if (!response.Status)
+            if (response.Status == 405)
+            {
+                return BadRequest(response);
+            }
+            
+            return Ok(response);
+        }
+        
+        [HttpPut("editar/{id}")]
+        public async Task<IActionResult> EditarServico(int id, ServicoCriacaoDto servicoDTO)
+        {
+
+            var response = await _servicoService.EditarServico(id, servicoDTO);
+
+            if (response.Status == 405)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPut("ListarUnicoServico/{id}")]
+        public async Task<IActionResult> ListarUnicoServico(int id)
+        {
+            var response = await _servicoService.ListarUnicoServico(id);
+
+            if (response.Status == 405)
             {
                 return BadRequest(response);
             }

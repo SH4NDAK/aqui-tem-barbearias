@@ -1,9 +1,28 @@
-''
-import { useState, version } from "react";
-import InputText from '../../components/InputText';
-import { useForm } from 'react-hook-form'
+import 'devextreme/dist/css/dx.light.css';
 
-export default function App() {   // Cria uma pagina de login
+import { useEffect, useState } from "react";
+import InputText from '../../components/InputText';
+import { Eye, EyeOff } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from "react-router-dom";
+import Button from "../../components/Button";
+import Container from "../../components/Container";
+import FormContainer from "../../components/FormContainer";
+import { SetAuthenticationToken, SetAuthenticationUser, signInRequest } from '../../services/auth';
+import { notification } from 'antd';
+
+export default function Login() {
+
+  // trazendo a função que navega entre as rotas do sistema
+  const navigate = useNavigate()
+
+  // Se o usuario estiver logado direciona ele para tela de tipos-servico
+  useEffect(() => {
+    const user = localStorage.getItem('usuario');
+    if (user !== null) {
+      navigate("/tipos-servico")
+    }
+  }, [])
 
   // trazendo algumas funções úteis da biblioteca react-hook-form
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -20,13 +39,33 @@ export default function App() {   // Cria uma pagina de login
   }
 
   // função chamada no envio do formulário de login
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      // faz chamada de autenticação
+      const res = await signInRequest(data)
+      // define o token nos cookies
+      SetAuthenticationToken(res.dados.token)
+      // define usuario na aplications
+      SetAuthenticationUser(res.dados)
+      // envia mensagem de sucesso
+      notification.success({
+        message: "Sucesso",
+        description: res.mensagem
+      })
+      // direciona o usuario para tipos serviços
+      navigate('/tipos-servico')
+    } catch (e) {
+      console.log(e)
+      notification.warning({
+        message: "Erro",
+        description: e.response.data
+      })      
+    }
   }
 
   return (
-    <div className="flex justify-center items-center w-screen h-dvh bg-[#242222]">
-      <div className="flex flex-col bg-white p-12 rounded-lg gap-4">
+    <Container>
+      <FormContainer>
         <div className="w-full flex justify-center font-bold text-5xl">
           LOGO
         </div>
@@ -38,49 +77,55 @@ export default function App() {   // Cria uma pagina de login
               label={'Login'}
               type={'text'}
               placeholder={'E-mail ou telefone'}
-              {...register("login", { required: "Campo obrigatório*" })}
-              variant={errors.login ? 'invalid' : ''} 
+              {...register("email", { required: "Campo obrigatório*" })}
+              variant={errors.email ? 'invalid' : ''}
+              errors={errors.email}
             />
-            <div>
-              {errors.login && (
-                <span
-                  className="font-semibold text-red-600 text-sm"
-                >
-                  {errors.login.message}
-                </span>
-              )
-              }
-            </div>
             <InputText
-              label='Senha'
-              type='password'
-            placeholder={'Digite sua senha'}
-              {...register("password", { required: "Campo obrigatório*" })}
-              variant={errors.password ? 'invalid' : ''} 
+              label={'Senha'}
+              type={verSenha ? 'text' : 'password'}
+              placeholder={'Digite sua senha'}
+              {...register("senha", { required: "Campo obrigatório*" })}
+              variant={errors.senha ? 'invalid' : ''}
+              icon={verSenha ? <EyeOff /> : <Eye />}
+              onIconClick={handleIconClick}
+              errors={errors.senha}
             />
-            <div>
-              {errors.password && (
-                <span
-                  className="font-semibold text-red-600 text-sm"
-                >
-                  {errors.password.message}
-                </span>
-              )
-              }
-            </div>
 
             <div>
-              <button
+              <span
+                className="text-sm"
+              >
+                Esqueceu a senha? Clique <a className="text-blue-700 font-bold" href="/recovery">aqui!</a>
+              </span>
+            </div>
+            <div className="flex w-full mt-4 justify-center">
+              <Button
                 type="submit"
+                className="w-full"
               >
                 Entrar
-              </button>
+              </Button>
+            </div>
+            <div
+              className="flex text-sm mt-4 mb-4 font-bold justify-center"
+            >
+              OU
+            </div>
+            <div>
+              <Button
+                type="button"
+                variant="gray"
+                className="w-full"
+                onClick={() => navigate("/cadastro")}
+              >
+                Criar conta
+              </Button>
             </div>
           </form>
         </div>
-      </div>
-
-    </div>
+      </FormContainer>
+    </Container>
   );
 
 }
