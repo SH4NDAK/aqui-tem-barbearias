@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
     element: <RecoveryPage />
   },
   {
-    path: "agenda",
+    path: "/agenda",
     element: <AgendaPage />
   },
   {
