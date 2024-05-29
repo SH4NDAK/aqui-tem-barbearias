@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace jwtRegisterLogin.Dtos
 {
-    // Atributo de validação para verificar se o valor é um email ou número de telefone válido
+    //atributo de validação para verificar se o valor é um email ou número de telefone válido
     public class ValidateEmailOrPhoneNumberAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             string emailOrPhoneNumber = value as string;
 
-            // Verifica se o valor é um número de telefone ou um endereço de e-mail
+            //verifica se o valor é um número de telefone ou um endereço de e-mail
             if (IsValidEmail(emailOrPhoneNumber) || IsValidPhoneNumber(emailOrPhoneNumber))
             {
                 return ValidationResult.Success;
@@ -37,7 +37,7 @@ namespace jwtRegisterLogin.Dtos
 
         private bool IsValidPhoneNumber(string phoneNumber)
         {
-            return phoneNumber.Length >= 6 && phoneNumber.Length <= 15 && phoneNumber.All(char.IsDigit);
+            return phoneNumber.Length == 11 && phoneNumber.All(char.IsDigit);
         }
     }
 
