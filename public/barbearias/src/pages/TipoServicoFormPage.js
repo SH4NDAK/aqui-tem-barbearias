@@ -10,6 +10,7 @@ import Row from "../components/Row";
 import Label from "../components/Label";
 import Selectpicker from "../components/Selectpicker";
 import LayoutPage from "../components/LayoutPage";
+import Header from "../components/Header";
 
 export default function TipoServicoFormPage() {
     const location = useLocation();
@@ -28,11 +29,14 @@ export default function TipoServicoFormPage() {
 
 
     return (
-        <LayoutPage>
-            <Container>
-                <FormContainer
-                    title={`Tipos de Serviço - ${isCadastro ? "Cadastro" : "Edição"}`}
-                >
+        <div className="w-full h-dvh bg-[#242222]">
+            <Header />
+            <div className="w-full flex justify-center p-1">
+                <div className="flex flex-col bg-white w-1/3 p-2 shadow-sm shadow-[#242222] rounded-md sm:w-full">
+                    <div className="w-fit self-center">
+                        <span className="text-3xl font-semibold">Tipos de serviço - Cadastro</span>
+                    </div>
+                    <div className="w-11/12 h-0.5 bg-black self-center mt-4 mb-4 opacity-5"></div>
                     <form
                         onSubmit={handleSubmit(onSubmit)}
                     >
@@ -132,7 +136,7 @@ export default function TipoServicoFormPage() {
 
                                         // removendo os caracteres não numéricos
                                         duracao = duracao.replace(/\D/g, '');
-                                        
+
                                         // se o duracao não é valido (não é um numero)
                                         if (isNaN(duracao)) {
                                             // seta ele como vazio e não continua o código
@@ -184,9 +188,11 @@ export default function TipoServicoFormPage() {
                         </Row>
 
                     </form>
-                </FormContainer>
-            </Container >
-        </LayoutPage>
+                </div>
+
+            </div>
+        </div >
+
     )
 
 }
