@@ -5,7 +5,7 @@ import Container from "../components/Container";
 import FormContainer from "../components/FormContainer";
 import InputText from "../components/InputText";
 import Row from "../components/Row";
-import logo from "../img/logo.jpg"
+import logo from "./img/logo.jpg";
 import { useNavigate } from "react-router-dom";
 
 
@@ -20,7 +20,7 @@ export default function RegisterPage() {
                 title="Criar conta"
             >
                 <div className="w-full flex justify-center font-bold text-5xl">
-                    <img src={logo} width={128} />
+                    <img src={logo} width={"70%"}/>
                 </div>
                 <div className="w-full flex flex-col gap-2">
                     <form>
