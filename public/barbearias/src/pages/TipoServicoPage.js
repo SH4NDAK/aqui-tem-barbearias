@@ -24,7 +24,7 @@ export default function TipoServicoPage() {
         <div className="w-full h-dvh bg-[#242222]">
             <Header />
             <div className="w-full flex justify-center p-1">
-                <div className="flex flex-col bg-white w-1/3 p-2 shadow-sm shadow-[#242222] rounded-md sm:w-full">
+                <div className="flex flex-col bg-white md:w-1/3 p-2 shadow-sm shadow-[#242222] rounded-md w-full">
                     <div className="w-fit self-center">
                         <span className="text-3xl font-semibold">Tipos de serviço</span>
                     </div>

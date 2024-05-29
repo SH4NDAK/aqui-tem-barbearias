@@ -1,11 +1,12 @@
 import { ArrowRightCircle, Calendar, Scissors, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
+import { useState } from "react";
 
 
 export default function Home() {
     const navigate = useNavigate();
-
+    const [isCliente, setisCliente] = useState(true);
 
     const handleAgendaClick = () => {
         navigate("/agenda")
@@ -35,21 +36,35 @@ export default function Home() {
                             <div className="bg-[#242222] h-0.5 w-11/12 mt-1 mb-4 opacity-5"></div>
                         </div>
                         <div className="w-full flex flex-col gap-4 md:flex-row justify-center flex-grow-0">
-                            <Card
-                                onClick={handleAgendaClick}
-                                icone={<Calendar className="me-1" />}
-                                titulo={"Agenda"}
-                            />
-                            <Card
-                                onClick={handleTipoServicoClick}
-                                icone={<Scissors className="me-1" />}
-                                titulo={"Tipos de serviço"}
-                            />
-                            <Card
-                                onClick={handleUsuariosClick}
-                                icone={<User className="me-1" />}
-                                titulo={"Barbeiros"}
-                            />
+                            {
+                                !isCliente ? (
+                                    <>
+
+                                        <Card
+                                            onClick={handleTipoServicoClick}
+                                            icone={<Scissors className="me-1" />}
+                                            titulo={"Tipos de serviço"}
+                                        />
+                                        <Card
+                                            onClick={handleUsuariosClick}
+                                            icone={<User className="me-1" />}
+                                            titulo={"Barbeiros"}
+                                        />
+                                        <Card
+                                            onClick={handleAgendaClick}
+                                            icone={<Calendar className="me-1" />}
+                                            titulo={"Agenda"}
+                                        />
+                                    </>
+                                )
+                                    : (
+                                        <>
+
+                                        </>
+                                    )
+
+                            }
+
                         </div>
                     </div>
                 </div>
