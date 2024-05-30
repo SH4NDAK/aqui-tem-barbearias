@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fXHh4rLTro0y7+qSdKL+JmSN9J/sVIi1jLyRp3fu4M7WeKqEy0PUpDLyvlTi1CoTV4NZml92Uru9P0iTWFyEyg==",
+  "dgSpecHash": "mibGmsGH9mU=",
   "success": true,
-  "projectFilePath": "c:\\Users\\arthu\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
+  "projectFilePath": "C:\\Users\\arthu\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\arthu\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\arthu\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

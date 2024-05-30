@@ -4274,11 +4274,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\arthu\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
+      "projectUniqueName": "C:\\Users\\arthu\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
       "projectName": "jwtRegisterLogin",
-      "projectPath": "c:\\Users\\arthu\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
+      "projectPath": "C:\\Users\\arthu\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
       "packagesPath": "C:\\Users\\arthu\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\arthu\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\obj\\",
+      "outputPath": "C:\\Users\\arthu\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\arthu\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -4362,7 +4362,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

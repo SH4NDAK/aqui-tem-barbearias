@@ -1,8 +1,8 @@
 {
   "Version": 1,
-  "Hash": "+efY9ezSoXzFDDNYNpqueX2vc03Jnq4gdmeAvKv+Rw4=",
-  "Source": "barbearias",
-  "BasePath": "_content/barbearias",
+  "Hash": "wfrAhNXj5NUUG9sTyc10ELoAljZ4ihzd4gfYKlAdcU4=",
+  "Source": "jwtRegisterLogin",
+  "BasePath": "_content/jwtRegisterLogin",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
