@@ -7,7 +7,7 @@ import { cva } from "class-variance-authority"
 // criando variações de estilo css para o input
 const inputVariants = cva(
     // classe padrão dos inputs
-    "w-full border border-[#242222] rounded-sm p-1 text-[#242222] outline-none rounded",
+    "w-full border border-[#242222] rounded-sm p-2 text-[#242222] outline-none rounded",
     {
         // variações de estilo
         variants: {

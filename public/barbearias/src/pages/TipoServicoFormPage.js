@@ -11,7 +11,8 @@ import Label from "../components/Label";
 import Selectpicker from "../components/Selectpicker";
 import LayoutPage from "../components/LayoutPage";
 import { createService } from "../services/service";
- 
+import Header from "../components/Header";
+
 export default function TipoServicoFormPage() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -33,11 +34,14 @@ export default function TipoServicoFormPage() {
  
  
     return (
-        <LayoutPage>
-            <Container>
-                <FormContainer
-                    title={`Tipos de Serviço - ${isCadastro ? "Cadastro" : "Edição"}`}
-                >
+        <div className="w-full h-dvh bg-[#242222]">
+            <Header />
+            <div className="w-full flex justify-center p-1">
+                <div className="flex flex-col bg-white w-1/3 p-2 shadow-sm shadow-[#242222] rounded-md sm:w-full">
+                    <div className="w-fit self-center">
+                        <span className="text-3xl font-semibold">Tipos de serviço - Cadastro</span>
+                    </div>
+                    <div className="w-11/12 h-0.5 bg-black self-center mt-4 mb-4 opacity-5"></div>
                     <form
                         onSubmit={handleSubmit(onSubmit)}
                     >
@@ -145,6 +149,31 @@ export default function TipoServicoFormPage() {
                                         }
                                     })}
                                     errors={errors.duracao}
+                                    variant={errors.duracao ? 'invalid' : ''}
+                                    unidadeMedida="min"
+                                    onChange={(e) => {
+
+                                        // formatando o valor em dinheiro
+                                        //pegando o valor atual 
+                                        let duracao = e.currentTarget.value;
+
+                                        // removendo os caracteres não numéricos
+                                        duracao = duracao.replace(/\D/g, '');
+
+                                        // se o duracao não é valido (não é um numero)
+                                        if (isNaN(duracao)) {
+                                            // seta ele como vazio e não continua o código
+                                            duracao = '';
+                                            e.currentTarget.value = duracao;
+                                            return;
+                                        }
+
+                                        // atualizando o campo do input com o duracao
+                                        e.currentTarget.value = duracao;
+
+                                        // definindo o duracao do input como o novo duracao e validando no useForm
+                                        setValue("duracao", e.currentTarget.value, { shouldValidate: true });
+                                    }}
                                 />
                             </Col>
                             <Selectpicker
@@ -181,9 +210,11 @@ export default function TipoServicoFormPage() {
                         </Row>
  
                     </form>
-                </FormContainer>
-            </Container >
-        </LayoutPage>
+                </div>
+
+            </div>
+        </div >
+
     )
  
 }

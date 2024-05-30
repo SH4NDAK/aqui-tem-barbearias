@@ -11,7 +11,7 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 gray: "bg-[#444444] hover:bg-[#494949] shadow-[#494949]",
-                icon: "w-full lg:w-fit mt-5"
+                icon: "w-full lg:w-fit mt-1"
             }
         }
     }

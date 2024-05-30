@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import { editService, listService } from "../services/service";
 import { Col, Dropdown, Menu, Table, notification } from "antd";
 import { PlusSquareOutlined } from "antd";
+import Header from "../components/Header";
+
 
 export default function TipoServicoPage() {
     // chamando a função que navega entre as páginas do sistema
@@ -100,11 +102,18 @@ export default function TipoServicoPage() {
     ];
 
     return (
-        <LayoutPage>
-            <SideBar>
-                <Container variant={"center"}>
-                    <FormContainer title="Tipos de serviço">
-                        <Row className="flex items-center justify-center">
+
+        <div className="w-full h-dvh bg-[#242222]">
+            <Header />
+            <div className="w-full flex justify-center p-1">
+                <div className="flex flex-col bg-white w-1/3 p-2 shadow-sm shadow-[#242222] rounded-md sm:w-full">
+                    <div className="w-fit self-center">
+                        <span className="text-3xl font-semibold">Tipos de serviço</span>
+                    </div>
+                    <div className="w-11/12 h-0.5 bg-black self-center mt-4 mb-4 opacity-5"></div>
+                    <form>
+                        <Row>
+
                             <Button
                                 type={"button"}
                                 icon={<Plus />}
@@ -123,11 +132,11 @@ export default function TipoServicoPage() {
                                     )
                                 }
                             />
-                        </Row>
                         <Table columns={columns} dataSource={serviceTypeFilter} pagination={{ pageSize: 10 }} scroll={{ y: 240 }} />
-                    </FormContainer>
-                </Container>
-            </SideBar>
-        </LayoutPage>
-    );
-}
+                        </Row>
+                    </form>
+                </div>
+            </div>
+        </div>
+    )
+}  

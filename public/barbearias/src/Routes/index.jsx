@@ -8,6 +8,7 @@ import Home from "../pages/home"
 import TipoServicoPage from "../pages/TipoServicoPage"
 import TipoServicoFormPage from "../pages/TipoServicoFormPage"
 import EditTipoServico from "../pages/ServiceType/edit/[id]"
+
 // isso é para registrar rotas do projeto, o primeiro pametro é a rota o 2 é o componente
 
 export const router = createBrowserRouter([
@@ -40,7 +41,7 @@ export const router = createBrowserRouter([
     element: <RecoveryPage />
   },
   {
-    path: "agenda",
+    path: "/agenda",
     element: <AgendaPage />
   },
   {

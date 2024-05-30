@@ -10,6 +10,7 @@ import Container from "./components/Container";
 import FormContainer from "./components/FormContainer";
 import { SetAuthenticationToken, SetAuthenticationUser, signInRequest } from './services/auth';
 import { notification } from 'antd';
+import logo from "./img/logo.jpg";
 
 
 export default function App() {
@@ -71,7 +72,7 @@ export default function App() {
     <Container>
       <FormContainer>
         <div className="w-full flex justify-center font-bold text-5xl">
-          LOGO
+          <img src={logo} width={"60%"}/>
         </div>
         <div className="w-full flex flex-col gap-2">
           <form
@@ -108,11 +109,11 @@ export default function App() {
                 type="submit"
                 className="w-full"
               >
-                Entrar
+                ENTRAR
               </Button>
             </div>
             <div
-              className="flex text-sm mt-4 mb-4 font-bold justify-center"
+              className="flex text-sm mt-2 mb-2 font-bold justify-center"
             >
               OU
             </div>

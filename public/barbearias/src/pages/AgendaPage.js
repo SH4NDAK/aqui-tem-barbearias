@@ -16,6 +16,7 @@ import { Switch, notification } from 'antd';
 import { data } from './data';
 import { useNavigate } from 'react-router-dom';
 import { listService } from '../services/service';
+import Header from '../components/Header';
 
 const currentDate = new Date();
 const views = ['agenda', 'day'];
@@ -23,12 +24,9 @@ const views = ['agenda', 'day'];
 export default function AgendaPage() {
     const [abrirModalAgendamento, setAbrirModalAgendamento] = useState(false);
     const [agendas, setAgendas] = useState([])
-    
 
     const Appointment = (e) => {
-        let findAgenda = agendas.find(i => i.id === e.data.targetedAppointmentData.assigneeId) || {};
-        console.log(findAgenda)
-        
+        let findAgenda = agendas.find(i => i.id === e.data.targetedAppointmentData.assigneeId) || {};        
         const [agenda, setAgenda] = useState(findAgenda); 
 
         const onChangePay = async () => {
@@ -40,12 +38,12 @@ export default function AgendaPage() {
                     ativo: agenda.ativo.toString()
                 };
 
-                console.log(newAgenda)
                 // Atualizar o estado com o novo valor de pago
-                
+                setAgenda(newAgenda);
+
                 // Enviar a solicitação para editar a agenda com o novo valor de pago
-                //const res = await editAgenda(findAgenda.id, { ...newAgenda, pago: newAgenda.pago.toString() });
-                const res = await editAgenda(findAgenda.id, newAgenda);
+                const res = await editAgenda(findAgenda.id, { ...newAgenda, pago: newAgenda.pago.toString() });
+
 
                 if (newAgenda.pago) {
                     notification.success({
@@ -71,7 +69,7 @@ export default function AgendaPage() {
                     </div>
                 </div>
                 <div className="dx-scheduler-agenda-appointment-right-layout">
-                    Pago <Switch defaultChecked={agenda.pago} onChange={onChangePay} className='h-6' />
+                    Pago? <Switch defaultChecked={agenda.pago} onChange={onChangePay} className='h-6' />
                 </div>
             </div>
         );
@@ -89,6 +87,7 @@ export default function AgendaPage() {
                 dataField: 'nomeDoCliente',
                 editorOptions: {
                     width: '100%',
+                    type: 'text',
                     valueExpr: 'nomeDoCliente',
                     value: findAgenda.nomeDoCliente,
                 },
@@ -126,6 +125,7 @@ export default function AgendaPage() {
                     type: 'time',
                     valueExpr: 'horario',
                     value: findAgenda.horario,
+
                 },
             },
             {
@@ -202,6 +202,7 @@ export default function AgendaPage() {
             }
         const updatedAgendas = agendas.map((item) => (item.id === newAgenda.id ? newAgenda : item));
         setAgendas(updatedAgendas);
+
         } catch (error) {
             console.log(error);
         }
@@ -211,9 +212,8 @@ export default function AgendaPage() {
     useEffect(() => {
             (async () => {
                 try{
-                const data = await listAgenda()
-                console.log(data)
-                setAgendas(data.dados)
+                  const data = await listAgenda()
+                  setAgendas(data.dados)
                 } catch (err) {
                     console.log(err)
                 }
@@ -247,9 +247,10 @@ export default function AgendaPage() {
 
 
     return (
-        <LayoutPage>
-            <SideBar>
-                <div className='flex flex-col justify-center h-dvh bg-[#242222] p-12'>
+        <>
+            <div className='w-full flex flex-col justify-center h-dvh bg-[#242222]'>
+                <Header />
+                <div className='flex flex-col justify-center'>
                     <div className='bg-white w-full p-1 flex flex-col justify-center items-center text-3xl font-semibold rounded-t-md'>
                         <div>Agenda</div>
                         <Button
@@ -269,6 +270,7 @@ export default function AgendaPage() {
                                     startDate: new Date(compromisso.data + 'T' + compromisso.horario),
                                     endDate: calcularEndDate(compromisso.data, compromisso.horario, compromisso.duracao),
                                     assigneeId: compromisso.id, // ou qualquer outra propriedade que desejar usar
+
                                     priorityId: 1 // ou qualquer outra propriedade que desejar usar
                                 };
                             })}
@@ -283,14 +285,14 @@ export default function AgendaPage() {
                         />
                     </div>
                 </div>
+            </div>
+            {abrirModalAgendamento && (
+                <ModalAgendamento
+                    onClose={() => { setAbrirModalAgendamento(false) }}
+                />
+            )}
+        </>
 
-                {abrirModalAgendamento && (
-                    <ModalAgendamento
-                        onClose={() => { setAbrirModalAgendamento(false) }}
-                    />
-                )}
-            </SideBar>
-        </LayoutPage>
     )
 }
 
@@ -359,7 +361,6 @@ const ModalAgendamento = ({ onClose }) => {
                                 errors={errors.nomeDoCliente}
                             />
                         </Col>
-        
                         <Selectpicker
                             label="Serviços"
                             {...register("servico", { required: "Campo obrigatório" })}
