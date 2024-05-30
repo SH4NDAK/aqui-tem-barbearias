@@ -19,9 +19,15 @@ namespace jwtRegisterLogin.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login(UsuarioLoginDto usuarioLogin)
         {
-
-                var resposta = await _authInterface.Login(usuarioLogin); 
-            return Ok(resposta);
+            try
+            {
+                var response = await _authInterface.Login(usuarioLogin);
+                return StatusCode(response.Status, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
 

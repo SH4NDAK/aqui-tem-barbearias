@@ -25,11 +25,9 @@ export default function AgendaPage() {
     const [abrirModalAgendamento, setAbrirModalAgendamento] = useState(false);
     const [agendas, setAgendas] = useState([])
 
-
     const Appointment = (e) => {
-
-        let findAgenda = agendas.find(i => i.id === e.data.targetedAppointmentData.assigneeId) || {};
-        const [agenda, setAgenda] = useState(findAgenda);
+        let findAgenda = agendas.find(i => i.id === e.data.targetedAppointmentData.assigneeId) || {};        
+        const [agenda, setAgenda] = useState(findAgenda); 
 
         const onChangePay = async () => {
             try {
@@ -46,12 +44,15 @@ export default function AgendaPage() {
                 // Enviar a solicitação para editar a agenda com o novo valor de pago
                 const res = await editAgenda(findAgenda.id, { ...newAgenda, pago: newAgenda.pago.toString() });
 
+
                 if (newAgenda.pago) {
                     notification.success({
                         message: "Sucesso ao pagar",
                         description: res.mensagem
                     });
                 }
+                setAgenda(newAgenda);
+
             } catch (error) {
                 console.log(error);
             }
@@ -60,7 +61,7 @@ export default function AgendaPage() {
         return (
             <div className='flex flex-row'>
                 <div>
-                    <div className="dx-scheduler-appointment-title">{findAgenda.nome}</div>
+                    <div className="dx-scheduler-appointment-title">{findAgenda.nomeDoCliente}</div>
                     <div className="dx-scheduler-appointment-content-details">
                         <div className="dx-scheduler-appointment-content-date">Horario {findAgenda.horario}</div>
                         <div className="dx-scheduler-appointment-content-date pl-2">Duração {findAgenda.duracao}</div>
@@ -85,6 +86,7 @@ export default function AgendaPage() {
                 editorType: 'dxTextBox',
                 dataField: 'nomeDoCliente',
                 editorOptions: {
+                    width: '100%',
                     type: 'text',
                     valueExpr: 'nomeDoCliente',
                     value: findAgenda.nomeDoCliente,
@@ -97,6 +99,7 @@ export default function AgendaPage() {
                 editorType: 'dxTextBox',
                 dataField: 'servico',
                 editorOptions: {
+                    width: '100%',
                     valueExpr: 'servico',
                     value: findAgenda.servico,
                 },
@@ -115,12 +118,14 @@ export default function AgendaPage() {
             {
                 name: 'Horario',
                 dataField: 'horario',
+                className: 'w-full',
                 editorType: 'dxDateBox',
                 editorOptions: {
-                    width: '100%',
+                    // width: '100%',
                     type: 'time',
                     valueExpr: 'horario',
-                    value: findAgenda.horario
+                    value: findAgenda.horario,
+
                 },
             },
             {
@@ -195,6 +200,9 @@ export default function AgendaPage() {
                     description: res.mensagem
                 });
             }
+        const updatedAgendas = agendas.map((item) => (item.id === newAgenda.id ? newAgenda : item));
+        setAgendas(updatedAgendas);
+
         } catch (error) {
             console.log(error);
         }
@@ -202,16 +210,15 @@ export default function AgendaPage() {
     //appointmentData.assigneeId
     // setando o local como brasil
     useEffect(() => {
-        try {
-
             (async () => {
-                const data = await listAgenda()
-                setAgendas(data.dados)
+                try{
+                  const data = await listAgenda()
+                  setAgendas(data.dados)
+                } catch (err) {
+                    console.log(err)
+                }
             })()
 
-        } catch (error) {
-            console.log(error);
-        }
         locale('pt-BR')
     }, []);
 
@@ -241,10 +248,8 @@ export default function AgendaPage() {
 
     return (
         <>
-
             <div className='w-full flex flex-col justify-center h-dvh bg-[#242222]'>
                 <Header />
-                
                 <div className='flex flex-col justify-center'>
                     <div className='bg-white w-full p-1 flex flex-col justify-center items-center text-3xl font-semibold rounded-t-md'>
                         <div>Agenda</div>
@@ -265,7 +270,8 @@ export default function AgendaPage() {
                                     startDate: new Date(compromisso.data + 'T' + compromisso.horario),
                                     endDate: calcularEndDate(compromisso.data, compromisso.horario, compromisso.duracao),
                                     assigneeId: compromisso.id, // ou qualquer outra propriedade que desejar usar
-                                    priorityId: 1, // ou qualquer outra propriedade que desejar usar
+
+                                    priorityId: 1 // ou qualquer outra propriedade que desejar usar
                                 };
                             })}
                             views={views}
@@ -286,7 +292,6 @@ export default function AgendaPage() {
                 />
             )}
         </>
-
 
     )
 }
@@ -356,7 +361,6 @@ const ModalAgendamento = ({ onClose }) => {
                                 errors={errors.nomeDoCliente}
                             />
                         </Col>
-
                         <Selectpicker
                             label="Serviços"
                             {...register("servico", { required: "Campo obrigatório" })}

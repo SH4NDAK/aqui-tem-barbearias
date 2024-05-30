@@ -45,13 +45,6 @@ export default function App() {
     try {
       // faz chamada de autenticação
       const res = await signInRequest(data)
-      // se der erro de autenticacao volta a mensagen
-      if (res.status === false) {
-        return notification.error({
-          message: "Erro",
-          description: res.mensagem
-        })
-      }
       // define o token nos cookies
       SetAuthenticationToken(res.dados.token)
       // define usuario na aplications

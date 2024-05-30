@@ -24,7 +24,7 @@ namespace jwtRegisterLogin.Controllers
         {
             var response = await _agendaService.CriarAgendamento(agendaDTO);
 
-            if (!response.Status)
+            if (response.Status == 405 )
             {
                 return BadRequest(response);
             }
@@ -37,7 +37,7 @@ namespace jwtRegisterLogin.Controllers
         {
             var response = await _agendaService.ListarAgendamentos();
     
-            if (!response.Status)
+            if (response.Status == 405)
             {
                 return BadRequest(response);
             }
@@ -51,7 +51,7 @@ namespace jwtRegisterLogin.Controllers
 
             var response = await _agendaService.EditarAgendamento(id, agendaDTO);
 
-            if (!response.Status)
+            if (response.Status == 405)
             {
                 return BadRequest(response);
             }

@@ -7,7 +7,9 @@ using jwtRegisterLogin.Services.SenhaService;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System;
-
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using jwtRegisterLogin.Services.CookieService;
 
 namespace jwtRegisterLogin.Services.AuthService
 {
@@ -15,29 +17,29 @@ namespace jwtRegisterLogin.Services.AuthService
     {
         private readonly AppDbContext _context;
         private readonly ISenhaInterface _senhaInterface;
-        public AuthService(AppDbContext context, ISenhaInterface senhaInterface)
+
+        private readonly ICookieService _cookieService;
+
+        public AuthService(AppDbContext context, ISenhaInterface senhaInterface, ICookieService cookieService)
         {
             _context = context;
             _senhaInterface = senhaInterface;
+            _cookieService = cookieService;
         }
-
 
         public async Task<Response<UsuarioCriacaoDto>> Registrar(UsuarioCriacaoDto usuarioRegistro)
         {
             Response<UsuarioCriacaoDto> respostaServico = new Response<UsuarioCriacaoDto>();
 
             try
-            {   
-                //Verifica se o email ou o Usario ja existem
+            {
                 if (!VerificaSeEmaileUsuarioJaExiste(usuarioRegistro))
                 {
-                    respostaServico.Dados = null;
-                    respostaServico.Status = false;
+                    respostaServico.Status = 405;
                     respostaServico.Mensagem = "Email/Usuário já cadastrados!";
                     return respostaServico;
                 }
 
-                //Senha criptografada
                 _senhaInterface.CriarSenhaHash(usuarioRegistro.Senha, out byte[] senhaHash, out byte[] senhaSalt);
 
                 UsuarioModel usuario = new UsuarioModel()
@@ -56,11 +58,8 @@ namespace jwtRegisterLogin.Services.AuthService
             }
             catch (Exception ex)
             {
-                respostaServico.Dados = null;
                 respostaServico.Mensagem = ex.Message;
-                respostaServico.Status = false;
-
-
+                respostaServico.Status = 405;
             }
 
             return respostaServico;
@@ -73,20 +72,19 @@ namespace jwtRegisterLogin.Services.AuthService
 
             try
             {
-
                 var usuario = await _context.Usuario.FirstOrDefaultAsync(userBanco => userBanco.Email == usuarioLogin.Email);
 
-                if(usuario == null)
+                if (usuario == null)
                 {
-                    respostaServico.Mensagem = "Credenciais inválidas!";
-                    respostaServico.Status = false;
+                    respostaServico.Status = 400;
+                    respostaServico.Mensagem = "Usuário não existe.";
                     return respostaServico;
                 }
 
                 if (!_senhaInterface.VerificaSenhaHash(usuarioLogin.Senha, usuario.SenhaHash, usuario.SenhaSalt))
                 {
-                    respostaServico.Mensagem = "Credenciais inválidas!";
-                    respostaServico.Status = false;
+                    respostaServico.Status = 400;
+                    respostaServico.Mensagem = "Senha errada.";
                     return respostaServico;
                 }
 
@@ -95,9 +93,9 @@ namespace jwtRegisterLogin.Services.AuthService
                 var tokenModel = new TokenModel
                 {
                     Token = token,
-                    CriadaEm = DateTime.Now.ToString(), 
-                    ExpiraEm = DateTime.Now.AddHours(2).ToString(), 
-                    IdUsuario = usuario.Id 
+                    CriadaEm = DateTime.Now.ToString(),
+                    ExpiraEm = DateTime.Now.AddHours(2).ToString(),
+                    IdUsuario = usuario.Id
                 };
 
                 _context.TokenDb.Add(tokenModel);
@@ -107,35 +105,29 @@ namespace jwtRegisterLogin.Services.AuthService
                 userDetails.Usuario = usuario.Usuario;
                 userDetails.Email = usuario.Email;
                 userDetails.Cargo = usuario.Cargo;
-                
 
                 respostaServico.Dados = userDetails;
                 respostaServico.Mensagem = "Usuário logado com sucesso!";
-                respostaServico.Status = true;
+                respostaServico.Status = 200;
 
-            }catch (Exception ex)
+                Console.Write($" Token: {token}");
+                 _cookieService.SalvarCookie(token);
+
+                return respostaServico;
+            }
+            catch (Exception exception)
             {
-                respostaServico.Dados = null;
-                respostaServico.Mensagem = ex.Message;
-                respostaServico.Status = false;
-                //
-                
-            }   
-
-            return respostaServico;
+                respostaServico.Status = 500;
+                respostaServico.Mensagem = "Erro ao realizar o login.";
+                return respostaServico;
+            }
         }
 
         public bool VerificaSeEmaileUsuarioJaExiste(UsuarioCriacaoDto usuarioRegistro)
         {
             var usuario = _context.Usuario.FirstOrDefault(userBanco => userBanco.Email == usuarioRegistro.Email || userBanco.Usuario == usuarioRegistro.Usuario);
 
-            if (usuario != null) return false;
-
-            return true;
-
-
+            return usuario == null;
         }
-
-
     }
 }
