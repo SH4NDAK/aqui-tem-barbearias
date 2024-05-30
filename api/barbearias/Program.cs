@@ -39,9 +39,12 @@ builder.Services.AddScoped<IAgendaService, AgendaService>();
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+    {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), options =>
+        {
+            options.EnableRetryOnFailure();
+        });
+    });
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -74,22 +77,17 @@ var app = builder.Build();
 app.UseCors("MyAllowSpecificOrigins");
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 
-    // Desabilitar a verificação do certificado SSL em ambiente de desenvolvimento
-    app.UseDeveloperExceptionPage();
-    System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-
-
-}
+// Desabilitar a verificação do certificado SSL em ambiente de desenvolvimento
+app.UseDeveloperExceptionPage();
+System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
