@@ -91,7 +91,7 @@ namespace jwtRegisterLogin.Controllers
             return Ok(response);
         }
 
-        [HttpPut("ListarUnicoServico/{id}")]
+        [HttpGet("ListarUnicoServico/{id}")]
         public async Task<IActionResult> ListarUnicoServico(int id)
         {
             var response = await _servicoService.ListarUnicoServico(id);

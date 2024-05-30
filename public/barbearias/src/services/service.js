@@ -16,6 +16,6 @@ export async function editService(id, payload) {
 }
 
 export async function takeUniqueService(id) {
-    const { data } = await api.get(`Service/get/${id}`)
+    const { data } = await api.get(`Servico/ListarUnicoServico/${id}`)
     return data
 }

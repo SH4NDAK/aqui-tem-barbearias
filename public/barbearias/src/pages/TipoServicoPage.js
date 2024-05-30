@@ -124,7 +124,7 @@ export default function TipoServicoPage() {
                                 }
                             />
                         </Row>
-                        <Table columns={columns} dataSource={serviceTypeFilter} />
+                        <Table columns={columns} dataSource={serviceTypeFilter} pagination={{ pageSize: 10 }} scroll={{ y: 240 }} />
                     </FormContainer>
                 </Container>
             </SideBar>

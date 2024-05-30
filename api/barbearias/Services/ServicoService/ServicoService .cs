@@ -196,7 +196,7 @@ namespace jwtRegisterLogin.Services.ServicoService
                 //var resultadoServico = await _context.Servico.ToListAsync();
 
                 var resultadoServico = await _context.Servico
-                .Where(servico => servico.UsuarioId == id)
+                .Where(servico => servico.Id == id)
                 .ToListAsync(); 
                 var resultadoUsuario = await _context.Usuario.ToListAsync();
 
@@ -214,7 +214,7 @@ namespace jwtRegisterLogin.Services.ServicoService
                         AtivoServico = servico.Ativo,
                         UsuarioIdServico = servico.UsuarioId,
                         NomeUsuario = usuario.Usuario
-                    }).Where(joinResult => joinResult.UsuarioIdServico == id).ToList();
+                    }).ToList();
 
                 response.Dados = resultado;
                 response.Mensagem = "Serviço e usuário exibidos com sucesso.";

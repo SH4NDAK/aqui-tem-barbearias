@@ -33,7 +33,7 @@ const labelVariants = cva(
 
 
 // componente input de texto
-const InputText = React.forwardRef(({ label, type, placeholder, className, icon, variant, onIconClick, ...props }, ref) => {
+const InputText = React.forwardRef(({ label, type, placeholder, className, icon, variant, onIconClick, value, ...props }, ref) => {
     return (
         <div>
             <label
@@ -50,6 +50,7 @@ const InputText = React.forwardRef(({ label, type, placeholder, className, icon,
                     ref={ref} // Passando a ref para o input
                     type={type}
                     placeholder={placeholder}
+                    value={value}
                     className={cn(inputVariants({ variant }), className)}// adaptar no classname
                 />
                 {icon && (
