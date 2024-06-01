@@ -17,7 +17,6 @@ namespace jwtRegisterLogin.Services.AuthService
     {
         private readonly AppDbContext _context;
         private readonly ISenhaInterface _senhaInterface;
-
         private readonly ICookieService _cookieService;
 
         public AuthService(AppDbContext context, ISenhaInterface senhaInterface, ICookieService cookieService)
@@ -128,6 +127,84 @@ namespace jwtRegisterLogin.Services.AuthService
             var usuario = _context.Usuario.FirstOrDefault(userBanco => userBanco.Email == usuarioRegistro.Email || userBanco.Usuario == usuarioRegistro.Usuario);
 
             return usuario == null;
+        }
+
+
+        public bool VerificaSeEmaileUsuarioJaExiste2(int id, UsuarioEdicaoDto usuarioRegistro)
+        {
+            // Obtém todos os usuários, exceto o usuário com o ID fornecido
+            var usuariosExistentes = _context.Usuario.Where(userBanco => userBanco.Id != id);
+
+            // Verifica se há algum usuário com o mesmo email ou nome de usuário do usuarioRegistro
+            var usuarioExistente = usuariosExistentes.FirstOrDefault(userBanco =>
+                userBanco.Email == usuarioRegistro.Email || userBanco.Usuario == usuarioRegistro.Usuario);
+
+            // Retorna true se um usuário com o mesmo email ou nome de usuário for encontrado, caso contrário, retorna false
+            return usuarioExistente != null;
+        }
+
+        async public Task<Response<UsuarioEdicaoDto>> EditarUsuario(int id, UsuarioEdicaoDto usuarioRegistro)
+        {
+            Response<UsuarioEdicaoDto> respostaServico = new Response<UsuarioEdicaoDto>();
+                    
+            try
+            {
+                var usuario = await _context.Usuario.FindAsync(id);
+
+                if (usuario == null)
+                {
+                    respostaServico.Mensagem = "Usuário não encontrado.";
+                    respostaServico.Status = 405;
+                    return respostaServico;
+                }
+
+                if (VerificaSeEmaileUsuarioJaExiste2(id, usuarioRegistro))
+                {
+                    respostaServico.Status = 405;
+                    respostaServico.Mensagem = "Email/Usuário já cadastrados!";
+                    return respostaServico;
+                }
+
+                if (!string.IsNullOrEmpty(usuarioRegistro.Email))
+                {
+                    // Utilize a classe EmailAddressAttribute para verificar se o email é válido
+                    var emailAttribute = new EmailAddressAttribute();
+
+                    // Verifica se o email fornecido é válido
+                    if (!emailAttribute.IsValid(usuarioRegistro.Email))
+                    {
+                        respostaServico.Status = 405;
+                        respostaServico.Mensagem = "Email inválido!";
+                        return respostaServico;
+                    }
+                    usuario.Email = usuarioRegistro.Email;
+                }
+
+                // Atualiza os campos do usuário com os valores do usuarioRegistro
+                usuario.Usuario = usuarioRegistro.Usuario ?? usuario.Usuario;
+                usuario.Email = !string.IsNullOrEmpty(usuarioRegistro.Email) ? usuarioRegistro.Email : usuario.Email;
+
+                // Se a senha estiver sendo atualizada e não estiver vazia, cria um novo hash de senha
+                if (!string.IsNullOrEmpty(usuarioRegistro.Senha))
+                {
+                    _senhaInterface.CriarSenhaHash(usuarioRegistro.Senha, out byte[] senhaHash, out byte[] senhaSalt);
+                    usuario.SenhaHash = senhaHash;
+                    usuario.SenhaSalt = senhaSalt;
+                }
+
+                // Salva as alterações no banco de dados
+                await _context.SaveChangesAsync();
+
+                respostaServico.Mensagem = "Usuário editado com sucesso";
+                respostaServico.Status = 200;
+            }
+            catch (Exception ex)
+            {
+                respostaServico.Mensagem = ex.Message;
+                respostaServico.Status = 405;
+            }
+
+            return respostaServico;
         }
     }
 }
