@@ -1,70 +1,62 @@
-import React from 'react';
-// trazendo a função que mescla o css daqui do componente com css definido na aplicação
-import { cn } from '../utils/cn';
-import { cva } from "class-variance-authority"
+import { ArrowLeft, ArrowLeftCircle, Plus } from "lucide-react";
+import Button from "../components/Button";
+import Col from "../components/Col";
+import Container from "../components/Container";
+import FormContainer from "../components/FormContainer";
+import InputText from "../components/InputText";
+import Row from "../components/Row";
+import logo from "../img/logo.jpg"
+import { useNavigate } from "react-router-dom";
 
 
-// criando variações de estilo css para o input
-const inputVariants = cva(
-    // classe padrão dos inputs
-    "w-full border border-[#242222] rounded-sm p-3 mt-1 text-[#242222] outline-none rounded",
-    {
-        // variações de estilo
-        variants: {
-            variant: {
-                // quando o dado do input esta invalido em um formulário
-                invalid: "border-red-600 text-red-600"
-            }
-        }
-    }
-)
+export default function RegisterPage() {
 
-// criando variações de estilo CSS pra label do input
-const labelVariants = cva(
-    "font-semibold text-sm",
-    {
-        variants: {
-            variant: {
-                invalid: "text-red-600"
-            }
-        }
-    }
-)
+    const navigate = useNavigate(false);
 
 
-// componente input de texto
-const InputText = React.forwardRef(({ label, type, placeholder, className, icon, variant, onIconClick, ...props }, ref) => {
     return (
-        <div>
-            <label
-                className={cn(labelVariants({ variant }), className)}
+        <Container>
+            <FormContainer
+                title="Recuperar Senha"
             >
-                {label}
-            </label>
-            <div
-                className='flex gap-1'
-            >
-                <input
-                    // esse input aceita todas as propriedades padrão de input
-                    {...props}
-                    ref={ref} // Passando a ref para o input
-                    type={type}
-                    placeholder={placeholder}
-                    className={cn(inputVariants({ variant }), className)}// adaptar no classname
-                />
-                {icon && (
-                    <button
-                        type='button'
-                        onClick={onIconClick}
-                    >
-                        {icon}
-                    </button>
-                )
-                }
-            </div>
-        </div>
-    )
-});
+                <div className="w-full flex flex-col gap-2">
+                    <form>
+                        <Row>
+                            <Col>
+                                <InputText
+                                    label="E-mail"
+                                    type="email"
+                                    placeholder="Digite seu e-mail"
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <div className="flex w-full  justify-center">
+                                <Button
+                                    type="submit"
+                                    className="w-full"
+                                >
+                                    Enviar e-mail de redefinição de senha
+                                </Button>
+                            </div>
+                        </Row>
 
-// exporta o componente pra todos os arquivos do sistema ver
-export default InputText;
+                        <div
+                            className="flex text-sm mt-2 mb-4 font-bold justify-center"
+                        >
+                            OU
+                        </div>
+                        <div>
+                            <span
+                                className="text-sm"
+                            >
+                                Quer voltar para o login? Clique <a className="text-blue-700 font-bold" href="/">aqui!</a>
+                            </span>
+                        </div>
+
+                    </form>
+                </div>
+            </FormContainer>
+        </Container>
+    )
+}
