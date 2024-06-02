@@ -29,3 +29,8 @@ export function SetAuthenticationUser(user) {  // Define o usuario na Aplicaçã
 export function setLogoutUser() {
   return localStorage.removeItem('usuario') // remove o usuario na aplications
 }
+
+export async function editUser(id, payload) {
+  const { data } = await api.put(`auth/editarUsuario/${id}`, payload)
+  return data
+}

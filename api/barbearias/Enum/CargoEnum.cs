@@ -3,6 +3,7 @@ namespace jwtRegisterLogin.Enum
 {
     public enum CargoEnum
     {
+        Cliente = 0,
         Operacional = 1,
         Administrador = 2,
         SuperAdministrador = 3,

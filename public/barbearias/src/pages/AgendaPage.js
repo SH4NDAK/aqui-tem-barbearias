@@ -250,41 +250,41 @@ export default function AgendaPage() {
         <>
             <div className='w-full flex flex-col justify-center h-dvh bg-[#242222]'>
                 <Header />
-                <div className='flex flex-col justify-center'>
-                    <div className='bg-white w-full p-1 flex flex-col justify-center items-center text-3xl font-semibold rounded-t-md'>
-                        <div>Agenda</div>
-                        <Button
-                            variant="icon"
-                            icon={<Plus />}
-                            onClick={handleNovoAgendamento}
-                        />
+                    <div className='flex flex-col justify-center'>
+                        <div className='bg-white w-full p-1 flex flex-col justify-center items-center text-3xl font-semibold rounded-t-md'>
+                            <div>Agenda</div>
+                            <Button
+                                variant="icon"
+                                icon={<Plus />}
+                                onClick={handleNovoAgendamento}
+                            />
 
+                        </div>
+                        <div className='w-full h-full bg-white rounded-b-md'>
+                            <Scheduler
+                                timeZone="America/Sao_Paulo"
+
+                                dataSource={agendas?.map(compromisso => {
+                                    return {
+                                        text: compromisso.servico,
+                                        startDate: new Date(compromisso.data + 'T' + compromisso.horario),
+                                        endDate: calcularEndDate(compromisso.data, compromisso.horario, compromisso.duracao),
+                                        assigneeId: compromisso.id, // ou qualquer outra propriedade que desejar usar
+
+                                        priorityId: 1 // ou qualquer outra propriedade que desejar usar
+                                    };
+                                })}
+                                views={views}
+                                currentView="agenda"
+                                defaultCurrentDate={currentDate}
+                                height={height}
+                                appointmentComponent={Appointment}
+                                onAppointmentDeleted={onAppointmentFormDelete}
+                                onAppointmentFormOpening={onAppointmentFormOpening}
+                                onAppointmentUpdated={onAppointmentUpdated}
+                            />
+                        </div>
                     </div>
-                    <div className='w-full h-full bg-white rounded-b-md'>
-                        <Scheduler
-                            timeZone="America/Sao_Paulo"
-
-                            dataSource={agendas?.map(compromisso => {
-                                return {
-                                    text: compromisso.servico,
-                                    startDate: new Date(compromisso.data + 'T' + compromisso.horario),
-                                    endDate: calcularEndDate(compromisso.data, compromisso.horario, compromisso.duracao),
-                                    assigneeId: compromisso.id, // ou qualquer outra propriedade que desejar usar
-
-                                    priorityId: 1 // ou qualquer outra propriedade que desejar usar
-                                };
-                            })}
-                            views={views}
-                            currentView="agenda"
-                            defaultCurrentDate={currentDate}
-                            height={height}
-                            appointmentComponent={Appointment}
-                            onAppointmentDeleted={onAppointmentFormDelete}
-                            onAppointmentFormOpening={onAppointmentFormOpening}
-                            onAppointmentUpdated={onAppointmentUpdated}
-                        />
-                    </div>
-                </div>
             </div>
             {abrirModalAgendamento && (
                 <ModalAgendamento
@@ -303,14 +303,14 @@ const ModalAgendamento = ({ onClose }) => {
     const [servicos, setServicos] = useState([])
 
     useEffect(() => {
-        try {
-            (async () => {
+        (async () => {
+                try {
                 const { dados } = await listService()
                 setServicos(dados)
-            })()
-        } catch (error) {
-            console.log(error);
-        }
+            } catch (error) {
+                console.log(error);
+            }
+        })()
         locale('pt-BR')
     }, []);
 

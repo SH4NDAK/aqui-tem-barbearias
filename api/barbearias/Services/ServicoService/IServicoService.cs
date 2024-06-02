@@ -12,7 +12,7 @@ namespace jwtRegisterLogin.Services.ServicoService
         Task<Response<ServicoCriacaoDto>> EditarServico(int id, ServicoCriacaoDto servicoDto);
 
         Task<Response<List<ServicoCriacaoDto>>> ListarUnicoServico(int Id);
-
+    
     }
 }
 

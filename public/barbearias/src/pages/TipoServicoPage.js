@@ -26,15 +26,15 @@ export default function TipoServicoPage() {
     };
 
     useEffect(() => {
-        try {
-            (async () => {
+        (async () => {
+            try {
                 const { dados } = await listService();
                 setServiceType(dados);
                 setServiceTypeFilter(dados);
-            })();
-        } catch (error) {
-            console.log(error);
-        }
+            } catch (error) {
+                console.log(error);
+            }
+        })();
     }, []);
 
     const deleteServiceType = async (record) => {
@@ -105,34 +105,35 @@ export default function TipoServicoPage() {
 
         <div className="w-full h-dvh bg-[#242222]">
             <Header />
-            <div className="w-full flex justify-center p-1">
-                <div className="flex flex-col bg-white w-1/3 p-2 shadow-sm shadow-[#242222] rounded-md sm:w-full">
+            <div className="w-full flex justify-center">
+                <div className="flex flex-col bg-white w-1/3 shadow-sm shadow-[#242222] rounded-md sm:w-full">
                     <div className="w-fit self-center">
                         <span className="text-3xl font-semibold">Tipos de serviço</span>
                     </div>
-                    <div className="w-11/12 h-0.5 bg-black self-center mt-4 mb-4 opacity-5"></div>
+                    <div className="w-11/12 h-0.5 bg-black self-center pt-4 mb-4 opacity-5"></div>
                     <form>
                         <Row>
-
-                            <Button
-                                type={"button"}
-                                icon={<Plus />}
-                                onClick={handleCadastroClick}
-                                variant={"icon"}
-                            />
-                            <InputText
-                                label="Nome"
-                                type="text"
-                                className="w-64"
-                                onChange={(e) =>
-                                    setServiceTypeFilter(
-                                        serviceType.filter((y) =>
-                                            y.nome.toLowerCase().includes(e.target.value.toLowerCase())
+                            <Row className="flex justify-center items-center">
+                                <Button
+                                    type={"button"}
+                                    icon={<Plus />}
+                                    onClick={handleCadastroClick}
+                                    variant={"icon"}
+                                    />
+                                <InputText
+                                    label="Nome"
+                                    type="text"
+                                    className="w-64"
+                                    onChange={(e) =>
+                                        setServiceTypeFilter(
+                                            serviceType.filter((y) =>
+                                                y.nomeServico.toLowerCase().includes(e.target.value.toLowerCase())
                                         )
                                     )
                                 }
-                            />
-                        <Table columns={columns} dataSource={serviceTypeFilter} pagination={{ pageSize: 10 }} scroll={{ y: 240 }} />
+                                />
+                            </Row>
+                            <Table columns={columns} dataSource={serviceTypeFilter} pagination={{ pageSize: 10 }} scroll={{ y: 240 }}/>
                         </Row>
                     </form>
                 </div>

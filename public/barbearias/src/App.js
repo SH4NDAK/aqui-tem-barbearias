@@ -57,12 +57,11 @@ export default function App() {
       // direciona o usuario para tipos serviços
       navigate('/tipos-servico')
     } catch (e) {
-      console.log(e);
       // Mostra uma notificação de erro na tela se der erro
-      if (e.response?.data?.errors?.Email[0]) {
+      if (e.response.data.mensagem) {
         notification.warning({
           message: "Erro",
-          description: e.response.data.errors.Email[0]
+          description: e.response.data.mensagem
         })
       }
     }
@@ -132,5 +131,4 @@ export default function App() {
       </FormContainer>
     </Container>
   );
-
 }
