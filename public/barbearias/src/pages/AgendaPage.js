@@ -250,7 +250,6 @@ export default function AgendaPage() {
         <>
             <div className='w-full flex flex-col justify-center h-dvh bg-[#242222]'>
                 <Header />
-                <SideBar>
                     <div className='flex flex-col justify-center'>
                         <div className='bg-white w-full p-1 flex flex-col justify-center items-center text-3xl font-semibold rounded-t-md'>
                             <div>Agenda</div>
@@ -286,7 +285,6 @@ export default function AgendaPage() {
                             />
                         </div>
                     </div>
-                </SideBar>
             </div>
             {abrirModalAgendamento && (
                 <ModalAgendamento

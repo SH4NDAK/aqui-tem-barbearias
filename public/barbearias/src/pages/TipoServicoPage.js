@@ -105,41 +105,39 @@ export default function TipoServicoPage() {
 
         <div className="w-full h-dvh bg-[#242222]">
             <Header />
-            <SideBar>
-                <div className="w-full flex justify-center">
-                    <div className="flex flex-col bg-white w-1/3 shadow-sm shadow-[#242222] rounded-md sm:w-full">
-                        <div className="w-fit self-center">
-                            <span className="text-3xl font-semibold">Tipos de serviço</span>
-                        </div>
-                        <div className="w-11/12 h-0.5 bg-black self-center pt-4 mb-4 opacity-5"></div>
-                        <form>
-                            <Row>
-                                <Row className="flex justify-center items-center">
-                                    <Button
-                                        type={"button"}
-                                        icon={<Plus />}
-                                        onClick={handleCadastroClick}
-                                        variant={"icon"}
-                                        />
-                                    <InputText
-                                        label="Nome"
-                                        type="text"
-                                        className="w-64"
-                                        onChange={(e) =>
-                                            setServiceTypeFilter(
-                                                serviceType.filter((y) =>
-                                                    y.nomeServico.toLowerCase().includes(e.target.value.toLowerCase())
-                                            )
-                                        )
-                                    }
-                                    />
-                                </Row>
-                                <Table columns={columns} dataSource={serviceTypeFilter} pagination={{ pageSize: 10 }} scroll={{ y: 240 }}/>
-                            </Row>
-                        </form>
+            <div className="w-full flex justify-center">
+                <div className="flex flex-col bg-white w-1/3 shadow-sm shadow-[#242222] rounded-md sm:w-full">
+                    <div className="w-fit self-center">
+                        <span className="text-3xl font-semibold">Tipos de serviço</span>
                     </div>
+                    <div className="w-11/12 h-0.5 bg-black self-center pt-4 mb-4 opacity-5"></div>
+                    <form>
+                        <Row>
+                            <Row className="flex justify-center items-center">
+                                <Button
+                                    type={"button"}
+                                    icon={<Plus />}
+                                    onClick={handleCadastroClick}
+                                    variant={"icon"}
+                                    />
+                                <InputText
+                                    label="Nome"
+                                    type="text"
+                                    className="w-64"
+                                    onChange={(e) =>
+                                        setServiceTypeFilter(
+                                            serviceType.filter((y) =>
+                                                y.nomeServico.toLowerCase().includes(e.target.value.toLowerCase())
+                                        )
+                                    )
+                                }
+                                />
+                            </Row>
+                            <Table columns={columns} dataSource={serviceTypeFilter} pagination={{ pageSize: 10 }} scroll={{ y: 240 }}/>
+                        </Row>
+                    </form>
                 </div>
-            </SideBar>
+            </div>
         </div>
     )
 }  

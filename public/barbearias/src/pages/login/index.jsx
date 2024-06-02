@@ -1,17 +1,20 @@
 import 'devextreme/dist/css/dx.light.css';
-
 import { useEffect, useState } from "react";
-import InputText from '../../components/InputText';
-import { Eye, EyeOff } from 'lucide-react'
-import { useForm } from 'react-hook-form'
 import { useNavigate } from "react-router-dom";
-import Button from "../../components/Button";
-import Container from "../../components/Container";
-import FormContainer from "../../components/FormContainer";
-import { SetAuthenticationToken, SetAuthenticationUser, signInRequest } from '../../services/auth';
-import { notification } from 'antd';
+import { useForm } from 'react-hook-form'
 
-export default function Login() {
+import { notification } from 'antd';
+import { Eye, EyeOff } from 'lucide-react'
+
+import Button from '../../components/Button';
+import Container from '../../components/Container';
+import FormContainer from '../../components/FormContainer';
+import InputText from '../../components/InputText';
+import { SetAuthenticationToken, SetAuthenticationUser, signInRequest } from './../../services/auth';
+import logo from "./../../img/logo.jpg";
+
+
+export default function App() {
 
   // trazendo a função que navega entre as rotas do sistema
   const navigate = useNavigate()
@@ -55,11 +58,13 @@ export default function Login() {
       // direciona o usuario para tipos serviços
       navigate('/tipos-servico')
     } catch (e) {
-      console.log(e)
-      notification.warning({
-        message: "Erro",
-        description: e.response.data
-      })      
+      // Mostra uma notificação de erro na tela se der erro
+      if (e.response.data.mensagem) {
+        notification.warning({
+          message: "Erro",
+          description: e.response.data.mensagem
+        })
+      }
     }
   }
 
@@ -67,7 +72,7 @@ export default function Login() {
     <Container>
       <FormContainer>
         <div className="w-full flex justify-center font-bold text-5xl">
-          LOGO
+          <img src={logo} width={"60%"}/>
         </div>
         <div className="w-full flex flex-col gap-2">
           <form
@@ -104,11 +109,11 @@ export default function Login() {
                 type="submit"
                 className="w-full"
               >
-                Entrar
+                ENTRAR
               </Button>
             </div>
             <div
-              className="flex text-sm mt-4 mb-4 font-bold justify-center"
+              className="flex text-sm mt-2 mb-2 font-bold justify-center"
             >
               OU
             </div>

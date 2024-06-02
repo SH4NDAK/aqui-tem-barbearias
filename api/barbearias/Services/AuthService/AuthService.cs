@@ -110,7 +110,7 @@ namespace jwtRegisterLogin.Services.AuthService
                 respostaServico.Status = 200;
 
                 Console.Write($" Token: {token}");
-                 _cookieService.SalvarCookie(token);
+                _cookieService.SalvarCookie(token);
 
                 return respostaServico;
             }

@@ -48,7 +48,6 @@ export default function Perfil() {
   return (
     <>
       <Header />
-      <SideBar>
         <div className="flex justify-center items-center w-full h-dvh bg-[#242222]">
         <div className="flex flex-col bg-white p-12 rounded-lg gap-4">
             <div className="w-full flex justify-center font-bold text-5xl">
@@ -136,7 +135,6 @@ export default function Perfil() {
             </div>
         </div>
         </div>
-        </SideBar>
     </>
   );
 

@@ -32,6 +32,5 @@ export function setLogoutUser() {
 
 export async function editUser(id, payload) {
   const { data } = await api.put(`auth/editarUsuario/${id}`, payload)
-  console.log(data);
   return data
 }
