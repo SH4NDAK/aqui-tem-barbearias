@@ -24,7 +24,7 @@ export default function Home() {
     }
 
     const handleUsuariosClick = () => {
-        navigate("/usuarios")
+        navigate("/barbeiros")
     }
 
     const handleMinhasBarbearias = () => {
