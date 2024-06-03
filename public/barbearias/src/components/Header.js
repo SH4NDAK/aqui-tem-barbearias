@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { setLogoutUser } from "../services/auth";
 import { ROLES } from "../utils/role";
+import logo from "../img/logo_header.jpg"
 
 export default function Header() {
     const navigate = useNavigate();
@@ -31,14 +32,14 @@ export default function Header() {
     const signOut = () => {
         setLogoutUser()
         return navigate("/")
-      }
+    }
 
     return (
 
         <div className="relative w-full bg-[#1c1a1a] h-16 shadow-sm shadow-[#242222] mb-4">
             <div className="p-2 w-full h-full flex justify-between">
                 <div>
-                    a
+                    <img src={logo} width={128}/>
                 </div>
                 <div className="flex items-center gap-4">
                     <Button
@@ -47,7 +48,7 @@ export default function Header() {
                         icon={<LogOutIcon />}
                         onClick={signOut}
                         variant={"icon"}
-                    /> 
+                    />
                     <button
                         className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
                         type="button"
@@ -62,9 +63,9 @@ export default function Header() {
                             onClick={() => navigate("/tipos-servico")}
                         >
                             <Briefcase />
-                        </button>                                         
-                        )
-                    }                                
+                        </button>
+                    )
+                    }
                     <button
                         className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
                         type="button"

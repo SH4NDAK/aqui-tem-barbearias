@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("jwtRegisterLogin")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+97361619151af9c826169d7de6bce82cbd4a5186")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7eb643244ae4bd35f2350ad30718c4dd2bb2221e")]
 [assembly: System.Reflection.AssemblyProductAttribute("jwtRegisterLogin")]
 [assembly: System.Reflection.AssemblyTitleAttribute("jwtRegisterLogin")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
