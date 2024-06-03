@@ -1,12 +1,19 @@
 import { ArrowRightCircle, Building, Calendar, PlusCircle, Scissors, Search, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ROLES } from "../../utils/role";
 
 
 export default function Home() {
     const navigate = useNavigate();
-    const [isCliente, setisCliente] = useState(true);
+
+    const [user, setUser] = useState();
+
+    useEffect(() => {
+        const user = localStorage.getItem('usuario');
+        setUser(JSON.parse(user))
+    }, [])
 
     const handleAgendaClick = () => {
         navigate("/agenda")
@@ -45,7 +52,7 @@ export default function Home() {
                         </div>
                         <div className="w-full flex flex-col gap-4 md:flex-row justify-center flex-grow-0">
                             {
-                                !isCliente ? (
+                                !user?.cargo && !ROLES.Cliente ? (
                                     <>
 
                                         <Card
