@@ -52,7 +52,7 @@ export default function Home() {
                         </div>
                         <div className="w-full flex flex-col gap-4 md:flex-row justify-center flex-grow-0">
                             {
-                                !user?.cargo && !ROLES.Cliente ? (
+                                user?.cargo != ROLES.Cliente ? (
                                     <>
 
                                         <Card
@@ -138,9 +138,7 @@ export default function Home() {
                                             </div>
                                         </div>
                                     )
-
                             }
-
                         </div>
                     </div>
                 </div>
