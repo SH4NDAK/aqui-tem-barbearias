@@ -87,8 +87,8 @@ export default function Home() {
                                                 <span className="text-4xl md:text-5xl font-semibold">Minhas barbearias</span>
                                             </div>
                                             <div className="w-full self-center h-0.5 bg-[#242222] opacity-5"></div>
-                                            <div className="w-full flex flex-row flex-wrap">
-                                                <div className="w-3/12">
+                                            <div className="w-full flex flex-row flex-wrap gap-4">
+                                                <div className="md:w-3/12 w-full">
                                                     <div className="p-1 w-full flex flex-col bg-gray-200 rounded-md shadow-sm shadow-[#242222] gap-2">
                                                         <div className="w-full flex gap-2 flex-row items-center">
                                                             <div className="text-white w-16 bg-[#242222] h-16 rounded-full">
@@ -108,9 +108,26 @@ export default function Home() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="w-3/12"></div>
-                                                <div className="w-3/12"></div>
-                                                <div className="w-3/12"></div>
+                                                <div className="md:w-3/12 w-full">
+                                                    <div className="p-1 w-full flex flex-col bg-gray-200 rounded-md shadow-sm shadow-[#242222] gap-2">
+                                                        <div className="w-full flex gap-2 flex-row items-center">
+                                                            <div className="text-white w-16 bg-[#242222] h-16 rounded-full">
+                                                                logo da barbearia se tiver
+                                                            </div>
+                                                            <div className="font-semibold text-lg">
+                                                                Martins
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <button
+                                                                className="flex flex-row justify-center w-full bg-[#242222] rounded-md shadow-sm shadow-[#242222] p-1.5 text-white font-semibold text-end hover:bg-[#1b1919] transition-colors"
+                                                                onClick={handleAcessarBarbearia}
+                                                            >
+                                                                Acessar <ArrowRightCircle className="ms-1" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     )
