@@ -15,7 +15,7 @@ import Perfil from "../pages/perfil/index"
 export const router = createBrowserRouter([
   {
     path:"/",     // Aqui define a rota
-    element: <App /> // Aqui define o componente
+    element: <Home /> // Aqui define o componente
   },
   {
     path:"/login",
