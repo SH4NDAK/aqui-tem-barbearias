@@ -1,8 +1,15 @@
 import { Plus, Search } from "lucide-react";
 import Header from "../../components/Header";
 import InputText from "../../components/InputText";
+import { useNavigate } from "react-router-dom";
 
 export default function Barbeiros() {
+    const navigate = useNavigate()
+
+    const handleCadastroClick = () => {
+        navigate("/barbeiros/add")        
+    }
+
     return (
         <div className="w-full h-dvh bg-[#242222]">
             <Header />
@@ -15,7 +22,11 @@ export default function Barbeiros() {
 
                     <form className="flex flex-col md:flex-row gap-4 p-2 md:w-11/12 w-full">
                         <div>
-                            <button className="md:mt-4 flex justify-center text-white bg-[#242222] p-2 rounded-md md:w-fit w-full">
+                            <button
+                                type="button"
+                                className="md:mt-4 flex justify-center text-white bg-[#242222] p-2 rounded-md md:w-fit w-full"
+                                onClick={handleCadastroClick}
+                            >
                                 <Plus />
                             </button>
                         </div>
@@ -25,7 +36,10 @@ export default function Barbeiros() {
                             className="md:w-64"
                         />
                         <div className="md:w-full flex justify-end">
-                            <button className=" font-semibold md:mt-4 flex justify-center text-white bg-[#242222] p-2 rounded-md md:w-fit w-full">
+                            <button
+                                type="submit"
+                                className=" font-semibold md:mt-4 flex justify-center text-white bg-[#242222] p-2 rounded-md md:w-fit w-full"
+                            >
                                 <Search className="me-1" />Pesquisar
                             </button>
                         </div>

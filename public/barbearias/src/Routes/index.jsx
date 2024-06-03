@@ -10,6 +10,7 @@ import TipoServicoFormPage from "../pages/TipoServicoFormPage"
 import EditTipoServico from "../pages/ServiceType/edit/[id]"
 import Perfil from "../pages/perfil/index"
 import Barbeiros from "../pages/barbeiros"
+import BarbeirosForm from "../pages/barbeiros-add"
 
 
 // isso é para registrar rotas do projeto, o primeiro pametro é a rota o 2 é o componente
@@ -57,6 +58,10 @@ export const router = createBrowserRouter([
   {
     path: "/barbeiros",
     element: <Barbeiros />
+  },
+  {
+    path: "/barbeiros/add",
+    element: <BarbeirosForm />
   },
 
 ])
