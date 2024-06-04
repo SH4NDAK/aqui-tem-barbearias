@@ -99,9 +99,9 @@ export default function Register() {
               }
             </div>
             <InputText
-              label='Email ou Telefone'
+              label='Email'
               type='text'
-              placeholder={'Digite seu Email ou Telefone'}
+              placeholder={'Digite seu Email'}
               {...register("email", { required: "Campo obrigatório*" })}
               variant={errors.email ? 'invalid' : ''} 
             />
@@ -111,6 +111,23 @@ export default function Register() {
                   className="font-semibold text-red-600 text-sm"
                 >
                   {errors.email.message}
+                </span>
+              )
+              }
+            </div>
+            <InputText
+              label='Telefone'
+              type='tel'
+              placeholder={'Digite seu Telefone'}
+              {...register("telefone", { required: "Campo obrigatório*" })}
+              variant={errors.telefone ? 'invalid' : ''} 
+            />
+            <div>
+              {errors.telefone && (
+                <span
+                  className="font-semibold text-red-600 text-sm"
+                >
+                  {errors.telefone.message}
                 </span>
               )
               }

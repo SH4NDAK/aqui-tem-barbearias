@@ -45,6 +45,7 @@ namespace jwtRegisterLogin.Services.AuthService
                 {
                     Usuario = usuarioRegistro.Usuario,
                     Email = usuarioRegistro.Email,
+                    Telefone = usuarioRegistro.Telefone,
                     Cargo = usuarioRegistro.Cargo,
                     SenhaHash = senhaHash,
                     SenhaSalt = senhaSalt
@@ -103,6 +104,7 @@ namespace jwtRegisterLogin.Services.AuthService
                 userDetails.Token = token;
                 userDetails.Usuario = usuario.Usuario;
                 userDetails.Email = usuario.Email;
+                userDetails.Telefone = usuario.Telefone;
                 userDetails.Cargo = usuario.Cargo;
 
                 respostaServico.Dados = userDetails;
@@ -124,7 +126,7 @@ namespace jwtRegisterLogin.Services.AuthService
 
         public bool VerificaSeEmaileUsuarioJaExiste(UsuarioCriacaoDto usuarioRegistro)
         {
-            var usuario = _context.Usuario.FirstOrDefault(userBanco => userBanco.Email == usuarioRegistro.Email || userBanco.Usuario == usuarioRegistro.Usuario);
+            var usuario = _context.Usuario.FirstOrDefault(userBanco => userBanco.Email == usuarioRegistro.Email || userBanco.Telefone == usuarioRegistro.Telefone || userBanco.Usuario == usuarioRegistro.Usuario);
 
             return usuario == null;
         }
@@ -137,7 +139,7 @@ namespace jwtRegisterLogin.Services.AuthService
 
             // Verifica se há algum usuário com o mesmo email ou nome de usuário do usuarioRegistro
             var usuarioExistente = usuariosExistentes.FirstOrDefault(userBanco =>
-                userBanco.Email == usuarioRegistro.Email || userBanco.Usuario == usuarioRegistro.Usuario);
+                userBanco.Email == usuarioRegistro.Email || userBanco.Telefone == usuarioRegistro.Telefone || userBanco.Usuario == usuarioRegistro.Usuario);
 
             // Retorna true se um usuário com o mesmo email ou nome de usuário for encontrado, caso contrário, retorna false
             return usuarioExistente != null;

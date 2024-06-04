@@ -7,6 +7,7 @@ namespace jwtRegisterLogin.Models
         public string? Token { get; set; }
         public string Usuario { get; set; }
         public string Email { get; set; }
+        public string Telefone { get; set; }
         public CargoEnum Cargo { get; set; }
 
     }

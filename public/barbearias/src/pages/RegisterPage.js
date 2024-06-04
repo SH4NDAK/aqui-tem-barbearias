@@ -34,9 +34,16 @@ export default function RegisterPage() {
                             </Col>
                             <Col>
                                 <InputText
-                                    label="Login"
+                                    label="Email"
                                     type="text"
-                                    placeholder="Digite seu e-mail ou telefone"
+                                    placeholder="Digite seu e-mail"
+                                />
+                            </Col>
+                            <Col>
+                                <InputText
+                                    label="Telefone"
+                                    type="text"
+                                    placeholder="Digite seu telefone"
                                 />
                             </Col>
                         </Row>
