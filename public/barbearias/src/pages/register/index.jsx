@@ -11,7 +11,7 @@ import logo from "../../img/logo.jpg";
 
 export default function Register() {
   // trazendo algumas funções úteis da biblioteca react-hook-form
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
   const navigate = useNavigate()
   // usestate é usado para setar o estado (valor) de um elemento 
   // estado para definir se o input de senha vai ser password, ou text (nao ver senha ou ver senha)
@@ -120,7 +120,19 @@ export default function Register() {
               type='tel'
               placeholder={'Digite seu Telefone'}
               {...register("telefone", { required: "Campo obrigatório*" })}
-              variant={errors.telefone ? 'invalid' : ''} 
+              variant={errors.telefone ? 'invalid' : ''}
+              onChange={(e)=>{
+                let valor = e.currentTarget.value
+                valor.replace(/\D/g, '');
+
+                const match = valor.match(/^(\d{2})(\d{5})(\d{4})$/);
+
+                if (match) {
+                  valor = `(${match[1]}) ${match[2]}-${match[3]}`;
+                }
+
+                setValue("telefone", valor, { shouldValidate: true })
+              }} 
             />
             <div>
               {errors.telefone && (
@@ -183,7 +195,7 @@ export default function Register() {
                 type="button"
                 variant="gray"
                 className="w-full"
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/login")}
               >
                 Entrar com seu login
               </Button>

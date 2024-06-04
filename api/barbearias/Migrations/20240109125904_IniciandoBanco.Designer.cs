@@ -39,6 +39,10 @@ namespace jwtRegisterLogin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<byte[]>("SenhaHash")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");

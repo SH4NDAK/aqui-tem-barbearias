@@ -16,6 +16,7 @@ namespace jwtRegisterLogin.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Usuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cargo = table.Column<int>(type: "int", nullable: false),
                     SenhaHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),

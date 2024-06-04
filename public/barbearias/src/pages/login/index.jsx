@@ -28,7 +28,7 @@ export default function App() {
   }, [])
 
   // trazendo algumas funções úteis da biblioteca react-hook-form
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
 
   // usestate é usado para setar o estado (valor) de um elemento 
   // estado para definir se o input de senha vai ser password, ou text (nao ver senha ou ver senha)
@@ -82,9 +82,24 @@ export default function App() {
               label={'Login'}
               type={'text'}
               placeholder={'E-mail ou telefone'}
-              {...register("email", { required: "Campo obrigatório*" })}
-              variant={errors.email ? 'invalid' : ''}
-              errors={errors.email}
+              {...register("login", { required: "Campo obrigatório*" })}
+              variant={errors.login ? 'invalid' : ''}
+              errors={errors.login}
+              onChange={(e) => {
+                if(!isNaN(e.currentTarget.value)){
+
+                  let valor = e.currentTarget.value
+                  valor.replace(/\D/g, '');
+
+                  const match = valor.match(/^(\d{2})(\d{5})(\d{4})$/);
+
+                  if (match) {
+                    valor = `(${match[1]}) ${match[2]}-${match[3]}`;
+                  }
+
+                  setValue("login", valor, { shouldValidate: true })
+                }
+              }}
             />
             <InputText
               label={'Senha'}
