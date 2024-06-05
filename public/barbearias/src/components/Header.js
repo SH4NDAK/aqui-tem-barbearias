@@ -47,11 +47,6 @@ export default function Header() {
                 <a href="/">
                     <img src={logo} width={128} />
                 </a>
-                <div>
-                    <a href="/home">
-                        <img src={logo} width={128} />
-                    </a>
-                </div>
                 <div className="flex items-center gap-4">
                     {user &&
                         <Button
