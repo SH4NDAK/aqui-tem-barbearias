@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using System.Linq;
 using jwtRegisterLogin.Services.CookieService;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.VisualBasic;
 
 namespace jwtRegisterLogin.Services.AgendaService 
 {
@@ -40,7 +41,16 @@ namespace jwtRegisterLogin.Services.AgendaService
             // }
 
             try
-            {
+            {       
+                var usuarioExistente = await _context.Usuario.FindAsync(agendaCriacaoDto.UsuarioId);
+
+                if (usuarioExistente == null)
+                {
+                    response.Mensagem = "Usuário não encontrado.";
+                    response.Status = 405;
+                    return response;
+                }
+
                 if (string.IsNullOrWhiteSpace(agendaCriacaoDto.Pago))
                 {
                     agendaCriacaoDto.Pago = "false";
@@ -53,7 +63,6 @@ namespace jwtRegisterLogin.Services.AgendaService
                 AgendaModel agenda = new AgendaModel()
                 {
                     Descricao = agendaCriacaoDto.Descricao,
-                    NomeDoCliente = agendaCriacaoDto.NomeDoCliente,
                     Data = agendaCriacaoDto.Data,
                     Horario = agendaCriacaoDto.Horario,
                     Servico = agendaCriacaoDto.Servico,
@@ -77,9 +86,9 @@ namespace jwtRegisterLogin.Services.AgendaService
             return response;
         }
 
-        public async Task<Response<List<AgendaCriacaoDto>>> ListarAgendamentos()
+        public async Task<Response<List<AgendaCriacaoDto>>> ListarAgendamentos(int cargo, int id)
         {
-             bool cookieValido = await _cookieService.VerificarCookie();
+            bool cookieValido = await _cookieService.VerificarCookie();
 
             Response<List<AgendaCriacaoDto>> response = new Response<List<AgendaCriacaoDto>>();
 
@@ -92,8 +101,18 @@ namespace jwtRegisterLogin.Services.AgendaService
             // }
 
             try
-            {
-                var resultadoAgendamento = await _context.Agenda.Where(a => a.Ativo == true).ToListAsync();
+            {   
+                IQueryable<AgendaModel> resultadoAgendamentoQuery;
+                if (cargo != 0)
+                {
+                    resultadoAgendamentoQuery = _context.Agenda;
+                }
+                else
+                {
+                    resultadoAgendamentoQuery = _context.Agenda.Where(a => a.Id == id);
+                }
+
+                var resultadoAgendamento = await resultadoAgendamentoQuery.ToListAsync();
                 var resultadoServico = await _context.Servico.ToListAsync();
 
                 var resultado = resultadoAgendamento.Join<AgendaModel, ServicoModel, string, dynamic>(
@@ -105,7 +124,6 @@ namespace jwtRegisterLogin.Services.AgendaService
                         Descricao = agenda.Descricao,
                         Horario = agenda.Horario,
                         Data = agenda.Data,
-                        NomeDoCliente = agenda.NomeDoCliente,
                         Ativo = agenda.Ativo,
                         Pago = agenda.Pago,
                         Servico = servico.Id,
@@ -157,7 +175,6 @@ namespace jwtRegisterLogin.Services.AgendaService
                 }
 
                 agenda.Descricao = agendaAtualizacaoDto.Descricao;
-                agenda.NomeDoCliente = agendaAtualizacaoDto.NomeDoCliente;
                 agenda.Data = agendaAtualizacaoDto.Data;
                 agenda.Horario = agendaAtualizacaoDto.Horario;
                 agenda.Servico = agendaAtualizacaoDto.Servico;

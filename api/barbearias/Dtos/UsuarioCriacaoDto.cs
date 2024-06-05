@@ -34,9 +34,12 @@ namespace jwtRegisterLogin.Dtos
                 return false;
             }
         }
-
         private bool IsValidPhoneNumber(string phoneNumber)
         {
+            if (phoneNumber == null)
+            {
+                return false;
+            }
             return phoneNumber.Length == 11 && phoneNumber.All(char.IsDigit);
         }
     }
@@ -46,14 +49,20 @@ namespace jwtRegisterLogin.Dtos
         [Required(ErrorMessage = "O campo usuário é obrigatório")]
         public string Usuario { get; set; }
 
-        [Required(ErrorMessage = "O campo email ou número de telefone é obrigatório")]
-        [ValidateEmailOrPhoneNumber(ErrorMessage = "Email ou número de telefone inválido!")]
+        [Required(ErrorMessage = "O campo email é obrigatório")]
+        [ValidateEmailOrPhoneNumber(ErrorMessage = "Email inválido!")]
         public string Email { get; set; }
+
+        [Required(ErrorMessage = "O campo telefone é obrigatório")]
+        [ValidateEmailOrPhoneNumber(ErrorMessage = "Telefone inválido!")]
+        public string Telefone { get; set; }
 
         [Required(ErrorMessage = "O campo senha é obrigatório")]
         public string Senha { get; set; }
 
         [Required(ErrorMessage = "O campo cargo é obrigatório")]
         public CargoEnum Cargo { get; set; }
+
+        public string BarbeariaId { get; set; }
     }
 }

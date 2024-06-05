@@ -5,6 +5,7 @@ using jwtRegisterLogin.Dtos;
 using jwtRegisterLogin.Models;
 using jwtRegisterLogin.Services.AgendaService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace jwtRegisterLogin.Controllers
 {
@@ -33,15 +34,15 @@ namespace jwtRegisterLogin.Controllers
         }
 
         [HttpGet("listar")]
-        public async Task<IActionResult> ListarAgenda()
-        {
-            var response = await _agendaService.ListarAgendamentos();
+        public async Task<IActionResult> ListarAgenda([FromHeader]int cargo, [FromHeader]int id)
+        {   
+            var response = await _agendaService.ListarAgendamentos(cargo, id);
     
             if (response.Status == 405)
             {
                 return BadRequest(response);
             }
-
+            
             return Ok(response);
         }
 

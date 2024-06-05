@@ -10,6 +10,7 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using jwtRegisterLogin.Services.CookieService;
+using Microsoft.Identity.Client;
 
 namespace jwtRegisterLogin.Services.AuthService
 {
@@ -29,26 +30,45 @@ namespace jwtRegisterLogin.Services.AuthService
         public async Task<Response<UsuarioCriacaoDto>> Registrar(UsuarioCriacaoDto usuarioRegistro)
         {
             Response<UsuarioCriacaoDto> respostaServico = new Response<UsuarioCriacaoDto>();
-
+            
             try
             {
-                if (!VerificaSeEmaileUsuarioJaExiste(usuarioRegistro))
+
+                if (!VerificaSeEmaileUsuarioTelefoneJaExiste(usuarioRegistro))
                 {
                     respostaServico.Status = 405;
-                    respostaServico.Mensagem = "Email/Usuário já cadastrados!";
+                    respostaServico.Mensagem = "Email/Usuário/Telefone já cadastrados!";
                     return respostaServico;
                 }
+                
 
+                if (!string.IsNullOrEmpty(usuarioRegistro.BarbeariaId))
+                {
+                    var barbeariaIdExistente = await _context.Barbershop.FindAsync(int.Parse(usuarioRegistro.BarbeariaId));
+                    
+                    if (barbeariaIdExistente == null)
+                    {
+                        respostaServico.Mensagem = "Barbearia com o Id fornecido não foi encontrado.";
+                        respostaServico.Status = 405;
+                        return respostaServico;
+                    }
+                }
                 _senhaInterface.CriarSenhaHash(usuarioRegistro.Senha, out byte[] senhaHash, out byte[] senhaSalt);
 
                 UsuarioModel usuario = new UsuarioModel()
                 {
                     Usuario = usuarioRegistro.Usuario,
                     Email = usuarioRegistro.Email,
+                    Telefone = usuarioRegistro.Telefone,
                     Cargo = usuarioRegistro.Cargo,
                     SenhaHash = senhaHash,
                     SenhaSalt = senhaSalt
                 };
+
+                if (!string.IsNullOrEmpty(usuarioRegistro.BarbeariaId))
+                {
+                    usuario.BarbeariaId = int.Parse(usuarioRegistro.BarbeariaId);
+                }
 
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
@@ -58,7 +78,7 @@ namespace jwtRegisterLogin.Services.AuthService
             catch (Exception ex)
             {
                 respostaServico.Mensagem = ex.Message;
-                respostaServico.Status = 405;
+                respostaServico.Status = 40043242; //405;
             }
 
             return respostaServico;
@@ -71,23 +91,23 @@ namespace jwtRegisterLogin.Services.AuthService
 
             try
             {
-                var usuario = await _context.Usuario.FirstOrDefaultAsync(userBanco => userBanco.Email == usuarioLogin.Email);
+                var usuario = await _context.Usuario.FirstOrDefaultAsync(userBanco => userBanco.Email == usuarioLogin.Login || userBanco.Telefone == usuarioLogin.Login);
 
                 if (usuario == null)
                 {
                     respostaServico.Status = 400;
-                    respostaServico.Mensagem = "Usuário não existe.";
+                    respostaServico.Mensagem = "Credenciais inválidas.";
                     return respostaServico;
                 }
 
                 if (!_senhaInterface.VerificaSenhaHash(usuarioLogin.Senha, usuario.SenhaHash, usuario.SenhaSalt))
                 {
                     respostaServico.Status = 400;
-                    respostaServico.Mensagem = "Senha errada.";
+                    respostaServico.Mensagem = "Credenciais inválidas.";
                     return respostaServico;
                 }
 
-                var token = _senhaInterface.CriarToken(usuario);
+                var token = _senhaInterface.CriarTokenUsuario(usuario);
 
                 var tokenModel = new TokenModel
                 {
@@ -103,28 +123,32 @@ namespace jwtRegisterLogin.Services.AuthService
                 userDetails.Token = token;
                 userDetails.Usuario = usuario.Usuario;
                 userDetails.Email = usuario.Email;
+                userDetails.Telefone = usuario.Telefone;
                 userDetails.Cargo = usuario.Cargo;
+                userDetails.BarbeariaId = usuario.BarbeariaId;
 
                 respostaServico.Dados = userDetails;
                 respostaServico.Mensagem = "Usuário logado com sucesso!";
                 respostaServico.Status = 200;
 
                 Console.Write($" Token: {token}");
-                _cookieService.SalvarCookie(token);
+                 _cookieService.SalvarCookie(token);
 
                 return respostaServico;
             }
             catch (Exception exception)
             {
+                Console.Write(exception);
+
                 respostaServico.Status = 500;
                 respostaServico.Mensagem = "Erro ao realizar o login.";
                 return respostaServico;
             }
         }
 
-        public bool VerificaSeEmaileUsuarioJaExiste(UsuarioCriacaoDto usuarioRegistro)
+        public bool VerificaSeEmaileUsuarioTelefoneJaExiste(UsuarioCriacaoDto usuarioRegistro)
         {
-            var usuario = _context.Usuario.FirstOrDefault(userBanco => userBanco.Email == usuarioRegistro.Email || userBanco.Usuario == usuarioRegistro.Usuario);
+            var usuario = _context.Usuario.FirstOrDefault(userBanco => userBanco.Email == usuarioRegistro.Email || userBanco.Usuario == usuarioRegistro.Usuario || userBanco.Telefone == usuarioRegistro.Telefone);
 
             return usuario == null;
         }

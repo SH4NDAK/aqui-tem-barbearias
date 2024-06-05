@@ -38,14 +38,41 @@ namespace jwtRegisterLogin.Services.SenhaService
         
         }
 
-        public string CriarToken(UsuarioModel usuario)
+        public string CriarTokenUsuario(UsuarioModel usuario)
         {
 
             List<Claim> claims = new List<Claim>()
             {
                 new Claim("Cargo", usuario.Cargo.ToString()),
                 new Claim("Email", usuario.Email),
-                new Claim("Username", usuario.Usuario)
+                new Claim("Username", usuario.Usuario),
+                new Claim("Telefone", usuario.Telefone)
+            };
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(1),
+                    signingCredentials: cred
+                );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+        }
+
+        public string CriarTokenBarberia(BarbershopModel barbearia)
+        {
+
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim("Nome", barbearia.Nome),
+                new Claim("Email", barbearia.Email),
+                new Claim("Telefone", barbearia.Telefone),
+                new Claim("CNPJ", barbearia.CNPJ)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));

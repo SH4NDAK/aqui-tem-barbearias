@@ -38,19 +38,5 @@ namespace jwtRegisterLogin.Controllers
             var resposta = await _authInterface.Registrar(usuarioRegister);
             return Ok(resposta);
         }
-
-        [HttpPut("editarUsuario/{id}")]
-        public async Task<IActionResult> EditarUsuario(int id, UsuarioEdicaoDto usuarioRegistro)
-        {
-
-            var response = await _authInterface.EditarUsuario(id, usuarioRegistro);
-
-            if (response.Status == 405)
-            {
-                return BadRequest(response);
-            }
-
-            return Ok(response);
-        }
     }
 }

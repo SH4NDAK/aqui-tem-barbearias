@@ -44,19 +44,59 @@ namespace jwtRegisterLogin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NomeDoCliente")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool?>("Pago")
                         .HasColumnType("bit");
 
                     b.Property<string>("Servico")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UsuarioId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Agenda");
+                });
+
+            modelBuilder.Entity("jwtRegisterLogin.Models.BarbershopModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CNPJ")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("SenhaHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("SenhaSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TokenDataCriacao")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Barbershop");
                 });
 
             modelBuilder.Entity("jwtRegisterLogin.Models.ServicoModel", b =>
@@ -128,6 +168,9 @@ namespace jwtRegisterLogin.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("BarbeariaId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Cargo")
                         .HasColumnType("int");
 
@@ -142,6 +185,10 @@ namespace jwtRegisterLogin.Migrations
                     b.Property<byte[]>("SenhaSalt")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TokenDataCriacao")
                         .HasColumnType("datetime2");
