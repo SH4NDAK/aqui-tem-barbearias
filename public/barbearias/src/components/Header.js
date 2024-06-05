@@ -44,9 +44,17 @@ export default function Header() {
 
         <div className="relative w-full bg-[#1c1a1a] h-16 shadow-sm shadow-[#242222] mb-4">
             <div className="p-2 w-full h-full flex justify-between">
+<<<<<<< Updated upstream
                 <a href="/">
                     <img src={logo} width={128} />
                 </a>
+=======
+                <div>
+                    <a href="/home">
+                        <img src={logo} width={128} />
+                    </a>
+                </div>
+>>>>>>> Stashed changes
                 <div className="flex items-center gap-4">
                     {user &&
                         <Button

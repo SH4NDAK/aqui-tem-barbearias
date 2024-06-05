@@ -17,12 +17,12 @@ import BarbeirosForm from "../pages/barbeiros-add"
 export const router = createBrowserRouter([
   {
     path: "/",     // Aqui define a rota
-    element: <Home /> // Aqui define o componente
+    element: <Login /> // Aqui define o componente
   },
-  {
-    path: "/login",
-    element: <Login />
-  },
+  // {
+  //   path: "/login",
+  //   element: <Login />
+  // },
   {
     path: "/cadastro",
     element: <Register />
