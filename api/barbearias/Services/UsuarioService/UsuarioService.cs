@@ -20,7 +20,7 @@ namespace jwtRegisterLogin.Services.UsuarioService
             _context = context;
             _cookieService = cookieService;
         }
-        public async Task<List<UsuarioModel>> GetByCargo(CargoEnum cargo)
+        public async Task<List<UsuarioModel>> GetByCargo(CargoEnum cargo, string? nome)
         {
             // Traz os usuários cadastrados
             return await _context.Usuario

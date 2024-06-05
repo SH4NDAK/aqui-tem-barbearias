@@ -6,6 +6,6 @@ namespace jwtRegisterLogin.Services.UsuarioService
 {
     public interface IUsuarioService
     {
-        Task<List<UsuarioModel>> GetByCargo(CargoEnum cargo);
+        Task<List<UsuarioModel>> GetByCargo(CargoEnum cargo, string? nome);
     }
 }
