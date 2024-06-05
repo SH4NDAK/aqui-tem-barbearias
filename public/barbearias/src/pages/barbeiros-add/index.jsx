@@ -4,8 +4,22 @@ import InputText from "../../components/InputText";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { signUpRequest } from "../../services/auth";
+import { notification } from 'antd';
+
 
 export default function BarbeirosForm() {
+
+    const cargos = [
+        {
+            value: 4,
+            name: "BARBEIRO"
+        },
+        {
+            value: 2,
+            name: "ADMINISTRADOR"
+        },
+    ];
 
     const navigate = useNavigate();
     const [verSenha, setVerSenha] = useState(false);
@@ -19,8 +33,39 @@ export default function BarbeirosForm() {
         navigate("/barbeiros");
     }
 
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async (data) => {
+        try {
+            data.cargo = Number(data.cargo);
+
+            // Chamada de cadastro de usuário
+            const res = await signUpRequest(data)
+
+            // se der erro de autenticacao volta a mensagen
+            if (res.status === false) {
+                return notification.error({
+                    message: "Erro",
+                    description: res.mensagem
+                })
+            }
+
+            // Limpa os campos do formulário
+            setValue("usuario", "", { shouldValidate: false });
+            setValue("cargo", 4, { shouldValidate: false });
+            setValue("email", "", { shouldValidate: false });
+            setValue("telefone", "", { shouldValidate: false });
+            setValue("senha", "", { shouldValidate: false });
+            setValue("conf_senha", "", { shouldValidate: false });
+
+
+            // envia mensagem de sucesso
+            notification.success({
+                message: "Sucesso",
+                description: res.mensagem
+            });
+
+        } catch (e) {
+            console.log(e);
+        }
     }
 
 
@@ -47,19 +92,41 @@ export default function BarbeirosForm() {
                                 type="text"
                                 placeholder="Informe um nome"
                                 label="Nome"
-                                {...register("nome", {
+                                {...register("usuario", {
                                     required: "Campo obrigatório",
                                     minLength: {
                                         value: 3,
                                         message: "Informe pelo menos 3 caracteres"
                                     }
                                 })}
-                                errors={formState.errors.nome}
-                                variant={formState.errors.nome ? 'invalid' : ''}
+                                errors={formState.errors.usuario}
+                                variant={formState.errors.usuario ? 'invalid' : ''}
                             />
                             {
-                                formState.errors.nome && (
-                                    <span className="text-red-600">{formState.errors.nome.message}</span>
+                                formState.errors.usuario && (
+                                    <span className="text-red-600">{formState.errors.usuario.message}</span>
+                                )
+                            }
+                        </div>
+                        <div className="w-full">
+                            <label className="block text-sm font-semibold">Cargo</label>
+                            <select
+                                className="w-full border border-[#242222] p-2 text-[#242222] outline-none rounded-md"
+                                {...register("cargo", {
+                                    required: "Campo obrigatório"
+                                })}
+                            >
+                                {
+                                    cargos.map(cargo => {
+                                        return (
+                                            <option value={cargo.value}>{cargo.name}</option>
+                                        )
+                                    })
+                                }
+                            </select>
+                            {
+                                formState.errors.cargo && (
+                                    <span>{formState.errors.cargo.message}</span>
                                 )
                             }
                         </div>
@@ -89,7 +156,7 @@ export default function BarbeirosForm() {
                                     label="Telefone"
                                     placeholder="Informe um telefone"
                                     type="text"
-                                    maxlength={15}
+                                    maxLength={15}
                                     variant={formState.errors.telefone ? 'invalid' : ''}
                                     {...register("telefone", {
                                         required: "Campo obrigatório",
@@ -141,13 +208,6 @@ export default function BarbeirosForm() {
                                             )
                                         }
                                     </div>
-                                    <button
-                                        type="button"
-                                        className="w-fit p-1 mt-4"
-                                        onClick={() => setVerSenha(!verSenha)}
-                                    >
-                                        {verSenha ? <Eye /> : <EyeOff />}
-                                    </button>
                                 </div>
                             </div>
                             <div className="w-1/2">

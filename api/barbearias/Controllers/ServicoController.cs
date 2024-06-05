@@ -24,24 +24,7 @@ namespace jwtRegisterLogin.Controllers
         [HttpPost("cadastrar")] // Renomeei o endpoint para "cadastrar"
         public async Task<IActionResult> CadastrarServico(ServicoCriacaoDto servicoDto)
         {
-            if (servicoDto.UsuarioId == null || servicoDto.UsuarioId == "")
-            {
-                return BadRequest(new Response<object>
-                {
-                    Dados = null,
-                    Mensagem = "O campo UsuarioId é obrigatório",
-                    Status = 405
-                });
-            }
-            if (servicoDto.Ativo.ToString() == null || servicoDto.Ativo.ToString() == "")
-            {
-                return BadRequest(new Response<object>
-                {
-                    Dados = null,
-                    Mensagem = "O campo Ativo é obrigatório",
-                    Status = 405
-                });
-            }
+            
             // Chama o ServicoService para criar o serviço
             var response = await _servicoService.CriarServico(servicoDto);
 

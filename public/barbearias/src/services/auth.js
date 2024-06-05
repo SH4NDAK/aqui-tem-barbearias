@@ -11,6 +11,7 @@ export async function signInRequest(  // Cria rota de login com retorno de data
 }
 
 export async function signUpRequest(signUpData) {   // Cria rota de registro com retorno de data
+  
   const { data } = await api.post('auth/register', signUpData)
   return data
 }

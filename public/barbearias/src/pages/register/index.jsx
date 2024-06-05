@@ -20,7 +20,7 @@ export default function Register() {
   useEffect(() => {
     const user = localStorage.getItem('usuario');
     if (user !== null) {
-      navigate("/home")
+      navigate("/tipos-servico")
     }
   }, [])
 
