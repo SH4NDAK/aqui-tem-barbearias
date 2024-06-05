@@ -19,7 +19,7 @@ export default function Header() {
     }, [])
     const handlePerfilClick = () => {
         if (!user) {
-            return navigate("/login?perfil=1")
+            return navigate("/login")
         }
         navigate("/perfil")
     }
@@ -30,7 +30,7 @@ export default function Header() {
 
     const handleAgendaClick = () => {
         if (!user) {
-            return navigate("/login?agenda=1")
+            return navigate("/login")
         }
         navigate("/agenda")
     }
