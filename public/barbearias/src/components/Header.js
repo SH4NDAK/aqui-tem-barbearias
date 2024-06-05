@@ -18,6 +18,9 @@ export default function Header() {
         setUser(JSON.parse(user))
     }, [])
     const handlePerfilClick = () => {
+        if (!user) {
+            return navigate("/login")
+        }
         navigate("/perfil")
     }
 
@@ -26,6 +29,9 @@ export default function Header() {
     }
 
     const handleAgendaClick = () => {
+        if (!user) {
+            return navigate("/login")
+        }
         navigate("/agenda")
     }
 
@@ -38,19 +44,19 @@ export default function Header() {
 
         <div className="relative w-full bg-[#1c1a1a] h-16 shadow-sm shadow-[#242222] mb-4">
             <div className="p-2 w-full h-full flex justify-between">
-                <div>
-                    <a href="/">
-                        <img src={logo} width={128} />
-                    </a>
-                </div>
+                <a href="/">
+                    <img src={logo} width={128} />
+                </a>
                 <div className="flex items-center gap-4">
-                    <Button
-                        className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
-                        type={"button"}
-                        icon={<LogOutIcon />}
-                        onClick={signOut}
-                        variant={"icon"}
-                    />
+                    {user &&
+                        <Button
+                            className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
+                            type={"button"}
+                            icon={<LogOutIcon />}
+                            onClick={signOut}
+                            variant={"icon"}
+                        />
+                    }
                     <button
                         className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
                         type="button"
@@ -58,7 +64,7 @@ export default function Header() {
                     >
                         <Calendar />
                     </button>
-                    {user?.cargo !== ROLES.Cliente && (
+                    {user && user?.cargo != ROLES.Cliente && (
                         <button
                             className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
                             type="button"
@@ -68,13 +74,15 @@ export default function Header() {
                         </button>
                     )
                     }
-                    <button
-                        className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
-                        type="button"
-                        onClick={handleNotificationsClick}
-                    >
-                        <Bell />
-                    </button>
+                    {user &&
+                        <button
+                            className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
+                            type="button"
+                            onClick={handleNotificationsClick}
+                        >
+                            <Bell />
+                        </button>
+                    }
                     <button
                         className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
                         type="button"

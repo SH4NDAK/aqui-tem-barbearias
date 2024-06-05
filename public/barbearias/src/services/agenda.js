@@ -13,7 +13,6 @@ export async function saveAgenda(payload) {
 export async function listAgenda() {
     try {
         const { data } = await api.get('agenda/listar');
-        console.log('Resposta da listagem de agenda:', data);
         return data;
     } catch (error) {
         console.error('Erro ao listar agenda:', error.response ? error.response.data : error.message);

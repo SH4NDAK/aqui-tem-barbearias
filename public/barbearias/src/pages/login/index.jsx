@@ -34,13 +34,11 @@ export default function App() {
   // estado para definir se o input de senha vai ser password, ou text (nao ver senha ou ver senha)
   const [verSenha, setVerSenha] = useState(false);
 
-
   // função chamada ao clicar no botão de 'ver senha'
   const handleIconClick = () => {
     // 'ver senha' será o contrario do estado anterior de 'ver senha'
     setVerSenha(!verSenha)
   }
-
   // função chamada no envio do formulário de login
   const onSubmit = async (data) => {
     try {
@@ -72,7 +70,7 @@ export default function App() {
     <Container>
       <FormContainer>
         <div className="w-full flex justify-center font-bold text-5xl">
-          <img src={logo} width={"60%"}/>
+          <img src={logo} width={"60%"} />
         </div>
         <div className="w-full flex flex-col gap-2">
           <form
