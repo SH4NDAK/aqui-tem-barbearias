@@ -23,7 +23,7 @@ export default function App() {
   useEffect(() => {
     const user = localStorage.getItem('usuario');
     if (user !== null) {
-      navigate("/tipos-servico")
+      navigate("/home")
     }
   }, [])
 
