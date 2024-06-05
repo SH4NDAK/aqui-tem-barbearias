@@ -2,12 +2,19 @@ import { Plus, Search } from "lucide-react";
 import Header from "../../components/Header";
 import InputText from "../../components/InputText";
 import { useNavigate } from "react-router-dom";
+import { listByCargo } from "../../services/barbeiro";
 
 export default function Barbeiros() {
     const navigate = useNavigate()
 
     const handleCadastroClick = () => {
         navigate("/barbeiros/add")        
+    }
+
+    const handlePesquisarClick = async () => {
+        const response = await listByCargo(4);
+
+        console.log(response);
     }
 
     return (
@@ -37,8 +44,9 @@ export default function Barbeiros() {
                         />
                         <div className="md:w-full flex justify-end">
                             <button
-                                type="submit"
+                                type="button"
                                 className=" font-semibold md:mt-4 flex justify-center text-white bg-[#242222] p-2 rounded-md md:w-fit w-full"
+                                onClick={handlePesquisarClick}
                             >
                                 <Search className="me-1" />Pesquisar
                             </button>
