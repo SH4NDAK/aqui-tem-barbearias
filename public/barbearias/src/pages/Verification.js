@@ -17,16 +17,16 @@ export default function RegisterPage() {
     return (
         <Container>
             <FormContainer
-                title="Recuperar Senha"
+                title="Verificar E-mail"
             >
                 <div className="w-full flex flex-col gap-2">
                     <form>
                         <Row>
                             <Col>
                                 <InputText
-                                    label="E-mail"
-                                    type="email"
-                                    placeholder="Digite seu e-mail"
+                                    label="Código"
+                                    type="text"
+                                    placeholder="Digite código"
                                 />
                             </Col>
                         </Row>
@@ -35,26 +35,12 @@ export default function RegisterPage() {
                                 <Button
                                     type="submit"
                                     className="w-full"
-                                    onClick={() => navigate("/verification")}
+                                    onClick={() => navigate("/reset")}
                                 >
-                                    Enviar e-mail de redefinição de senha
+                                    Validar código
                                 </Button>
                             </div>
                         </Row>
-
-                        <div
-                            className="flex text-sm mt-2 mb-4 font-bold justify-center"
-                        >
-                            OU
-                        </div>
-                        <div>
-                            <span
-                                className="text-sm"
-                            >
-                                Quer voltar para o login? Clique <a className="text-blue-700 font-bold" href="/">aqui!</a>
-                            </span>
-                        </div>
-
                     </form>
                 </div>
             </FormContainer>

@@ -7,6 +7,9 @@ import App from "../App"
 import Home from "../pages/home"
 import TipoServicoPage from "../pages/TipoServicoPage"
 import TipoServicoFormPage from "../pages/TipoServicoFormPage"
+import ResetPassword from "../pages/ResetPassword"
+import Verification from "../pages/Verification"
+
 
 // isso é para registrar rotas do projeto, o primeiro pametro é a rota o 2 é o componente
 
@@ -42,6 +45,14 @@ export const router = createBrowserRouter([
   {
     path: "/home", 
     element: <Home />
+  },
+  {
+    path: "/verification", 
+    element: <Verification />
+  },
+  {
+    path: "/reset", 
+    element: <ResetPassword />
   }
 
 ])

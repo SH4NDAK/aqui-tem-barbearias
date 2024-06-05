@@ -7,26 +7,48 @@ import InputText from "../components/InputText";
 import Row from "../components/Row";
 import logo from "../img/logo.jpg"
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from "react";
 
 
 export default function RegisterPage() {
 
     const navigate = useNavigate(false);
 
+    const [verSenha, setVerSenha] = useState(false);
+
+    const handleIconClick = () => {
+        // 'ver senha' será o contrario do estado anterior de 'ver senha'
+        setVerSenha(!verSenha)
+    }
+
 
     return (
         <Container>
             <FormContainer
-                title="Recuperar Senha"
+                title="Redefinir senha"
             >
                 <div className="w-full flex flex-col gap-2">
                     <form>
                         <Row>
                             <Col>
                                 <InputText
-                                    label="E-mail"
-                                    type="email"
-                                    placeholder="Digite seu e-mail"
+                                    label="Senha"
+                                    type={verSenha ? 'text' : 'password'}
+                                    placeholder="Digite sua senha"
+                                    icon={verSenha ? <EyeOff /> : <Eye />}
+                                    onIconClick={handleIconClick}
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <InputText
+                                    label="Senha"
+                                    type={verSenha ? 'text' : 'password'}
+                                    placeholder="Digite sua senha"
+                                    icon={verSenha ? <EyeOff /> : <Eye />}
+                                    onIconClick={handleIconClick}
                                 />
                             </Col>
                         </Row>
@@ -35,26 +57,12 @@ export default function RegisterPage() {
                                 <Button
                                     type="submit"
                                     className="w-full"
-                                    onClick={() => navigate("/verification")}
+                                    onClick={() => navigate("/reset")}
                                 >
-                                    Enviar e-mail de redefinição de senha
+                                    Alterar Senha
                                 </Button>
                             </div>
                         </Row>
-
-                        <div
-                            className="flex text-sm mt-2 mb-4 font-bold justify-center"
-                        >
-                            OU
-                        </div>
-                        <div>
-                            <span
-                                className="text-sm"
-                            >
-                                Quer voltar para o login? Clique <a className="text-blue-700 font-bold" href="/">aqui!</a>
-                            </span>
-                        </div>
-
                     </form>
                 </div>
             </FormContainer>
