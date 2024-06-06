@@ -22,11 +22,20 @@ namespace jwtRegisterLogin.Services.UsuarioService
         }
         public async Task<List<UsuarioModel>> GetByCargo(CargoEnum cargo, string? nome)
         {
+            // Monta a "query" de pesquisa
+            var query = _context.Usuario.AsQueryable();
+
+            // Filtro de cargo (obrigatorio)
+            query = query.Where(filtro => filtro.Cargo == cargo);
+
+            // Filtro de nome do usuário
+            if (!string.IsNullOrEmpty(nome))
+            {
+                query = query.Where(filtro => filtro.Usuario.Contains(nome));
+            }
+
             // Traz os usuários cadastrados
-            return await _context.Usuario
-                // Filtrando por cargo
-                .Where(filtro => filtro.Cargo == cargo)
-                .ToListAsync();
+            return await query.ToListAsync();
         }
     }
 }

@@ -1,14 +1,32 @@
 import { ArrowLeft, ArrowLeftCircle, Cloud, CloudUpload, Eye, EyeOff } from "lucide-react";
 import Header from "../../components/Header";
 import InputText from "../../components/InputText";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { signUpRequest } from "../../services/auth";
+import { useEffect, useState } from "react";
+import { editUser, signUpRequest } from "../../services/auth";
 import { notification } from 'antd';
+import { ROLES } from "../../utils/role";
 
 
 export default function BarbeirosForm() {
+    const location = useLocation();
+    const [user, setUser] = useState(null);
+    const barbeiro = location.state || {};
+    const isEdicao = Object.entries(barbeiro).length > 0;
+
+    useEffect(() => {
+        console.log(barbeiro);
+        if (isEdicao) {
+            setValue("usuario", barbeiro.usuario)
+            setValue("email", barbeiro.email)
+            setValue("telefone", barbeiro.telefone)
+        }
+
+        const user = localStorage.getItem('usuario');
+        setUser(JSON.parse(user))
+
+    }, []);
 
     const cargos = [
         {
@@ -25,20 +43,17 @@ export default function BarbeirosForm() {
     const [verSenha, setVerSenha] = useState(false);
     const [verConfSenha, setVerConfSenha] = useState(false);
 
-    const handleCadastrar = () => {
-
-    }
-
     const handleVoltar = () => {
         navigate("/barbeiros");
     }
 
     const onSubmit = async (data) => {
         try {
-            data.cargo = Number(data.cargo);
+
+            data.cargo = 'cargo' in data ? Number(data.cargo) : ROLES.Barbeiro
 
             // Chamada de cadastro de usuário
-            const res = await signUpRequest(data)
+            const res = 'senha' in data ? await signUpRequest(data) : await editUser(barbeiro.id, data)
 
             // se der erro de autenticacao volta a mensagen
             if (res.status === false) {
@@ -63,6 +78,10 @@ export default function BarbeirosForm() {
                 description: res.mensagem
             });
 
+            if (isEdicao) {
+                navigate("/barbeiros")
+            }
+
         } catch (e) {
             console.log(e);
         }
@@ -77,9 +96,10 @@ export default function BarbeirosForm() {
         <div className="w-full h-dvh bg-[#242222]">
             <Header />
             <div className="w-full flex justify-center">
+
                 <div className="flex flex-col bg-white md:w-6/12 shadow-sm shadow-[#242222] rounded-md w-full">
                     <div className="w-fit self-center">
-                        <span className="text-3xl font-semibold">Barbeiros - Cadastro</span>
+                        <span className="text-3xl font-semibold">Barbeiros - {isEdicao ? 'Edição' : 'Cadastro'}</span>
                     </div>
                     <div className="w-11/12 h-0.5 bg-black self-center mt-4 mb-4 opacity-5"></div>
 
@@ -108,28 +128,32 @@ export default function BarbeirosForm() {
                                 )
                             }
                         </div>
-                        <div className="w-full">
-                            <label className="block text-sm font-semibold">Cargo</label>
-                            <select
-                                className="w-full border border-[#242222] p-2 text-[#242222] outline-none rounded-md"
-                                {...register("cargo", {
-                                    required: "Campo obrigatório"
-                                })}
-                            >
-                                {
-                                    cargos.map(cargo => {
-                                        return (
-                                            <option value={cargo.value}>{cargo.name}</option>
+                        {
+                            !isEdicao && user?.cargo == ROLES.Administrador && (
+                                <div className="w-full">
+                                    <label className="block text-sm font-semibold">Cargo</label>
+                                    <select
+                                        className="w-full border border-[#242222] p-2 text-[#242222] outline-none rounded-md"
+                                        {...register("cargo", {
+                                            required: "Campo obrigatório"
+                                        })}
+                                    >
+                                        {
+                                            cargos.map(cargo => {
+                                                return (
+                                                    <option value={cargo.value}>{cargo.name}</option>
+                                                )
+                                            })
+                                        }
+                                    </select>
+                                    {
+                                        formState.errors.cargo && (
+                                            <span>{formState.errors.cargo.message}</span>
                                         )
-                                    })
-                                }
-                            </select>
-                            {
-                                formState.errors.cargo && (
-                                    <span>{formState.errors.cargo.message}</span>
-                                )
-                            }
-                        </div>
+                                    }
+                                </div>
+                            )
+                        }
                         <div className="flex gap-4 w-full">
                             <div className="w-1/2">
                                 <InputText
@@ -185,73 +209,77 @@ export default function BarbeirosForm() {
                                 }
                             </div>
                         </div>
-                        <div className="flex gap-4 w-full">
-                            <div className="w-1/2">
-                                <div className="flex gap-2 items-center">
-                                    <div className="w-full">
-                                        <InputText
-                                            label="Senha"
-                                            type={verSenha ? "text" : "password"}
-                                            placeholder="Informe uma senha"
-                                            variant={formState.errors.senha ? 'invalid' : ''}
-                                            {...register("senha", {
-                                                required: "Campo obrigatório",
-                                                minLength: {
-                                                    value: 4,
-                                                    message: "Informe pelo menos 4 caracteres"
+                        {
+                            !isEdicao && (
+                                <div className="flex gap-4 w-full">
+                                    <div className="w-1/2">
+                                        <div className="flex gap-2 items-center">
+                                            <div className="w-full">
+                                                <InputText
+                                                    label="Senha"
+                                                    type={verSenha ? "text" : "password"}
+                                                    placeholder="Informe uma senha"
+                                                    variant={formState.errors.senha ? 'invalid' : ''}
+                                                    {...register("senha", {
+                                                        required: "Campo obrigatório",
+                                                        minLength: {
+                                                            value: 4,
+                                                            message: "Informe pelo menos 4 caracteres"
+                                                        }
+                                                    })}
+                                                />
+                                                {
+                                                    formState.errors.senha && (
+                                                        <span className="text-red-600">{formState.errors.senha.message}</span>
+                                                    )
                                                 }
-                                            })}
-                                        />
-                                        {
-                                            formState.errors.senha && (
-                                                <span className="text-red-600">{formState.errors.senha.message}</span>
-                                            )
-                                        }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="w-1/2">
+
+                                        <div className="flex gap-2 items-center">
+                                            <div className="w-full">
+                                                <InputText
+                                                    label="Confirmar senha"
+                                                    placeholder="Confirme a senha"
+                                                    variant={formState.errors.conf_senha ? 'invalid' : ''}
+                                                    type={verConfSenha ? "text" : "password"}
+                                                    {...register("conf_senha", {
+                                                        required: "Campo obrigatório",
+                                                        validate: (conf_senha) => conf_senha === senha || "As senhas não coincidem"
+
+                                                    })}
+                                                />
+                                                {
+                                                    formState.errors.conf_senha && (
+                                                        <span className="text-red-600">{formState.errors.conf_senha.message}</span>
+                                                    )
+                                                }
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="w-1/2">
-
-                                <div className="flex gap-2 items-center">
-                                    <div className="w-full">
-                                        <InputText
-                                            label="Confirmar senha"
-                                            placeholder="Confirme a senha"
-                                            variant={formState.errors.conf_senha ? 'invalid' : ''}
-                                            type={verConfSenha ? "text" : "password"}
-                                            {...register("conf_senha", {
-                                                required: "Campo obrigatório",
-                                                validate: (conf_senha) => conf_senha === senha || "As senhas não coincidem"
-
-                                            })}
-                                        />
-                                        {
-                                            formState.errors.conf_senha && (
-                                                <span className="text-red-600">{formState.errors.conf_senha.message}</span>
-                                            )
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            )
+                        }
                         <div className="w-full md:w-fit">
                             <button
                                 type="button"
                                 onClick={handleVoltar}
                                 className="w-full flex items-center justify-center gap-1 p-2 bg-[#444444] text-white font-semibold rounded-md shadow-sm shadow-[#242222]"
                             >
-                                <ArrowLeftCircle /> Voltar
+                                <ArrowLeftCircle /> {isEdicao ? 'Cancelar edição' : 'Voltar'}
                             </button>
                         </div>
                         <div className="w-full md:w-fit">
                             <button
                                 type="submit"
-                                onClick={handleCadastrar}
                                 className="w-full flex items-center justify-center gap-1 p-2 bg-[#242222] text-white font-semibold rounded-md shadow-sm shadow-[#242222]"
                             >
-                                <CloudUpload /> Cadastrar
+                                <CloudUpload /> {isEdicao ? 'Salvar edição' : 'Cadastrar'}
                             </button>
                         </div>
+
                     </form>
                 </div>
             </div >
