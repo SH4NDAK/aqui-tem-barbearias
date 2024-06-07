@@ -16,9 +16,6 @@ namespace jwtRegisterLogin.Data
         public DbSet<AgendaModel> Agenda { get; set; }
 
         public DbSet<TokenModel> TokenDb { get; set; }
-        
-        public DbSet<BarbershopModel> Barbershop { get; set; }
-
-        public DbSet<HorariosModel> Horarios { get; set; }
+        public DbSet<BarbeariaModel> BarbeariaModels  { get; set; }
     }
 }
