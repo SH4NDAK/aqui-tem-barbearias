@@ -9,6 +9,7 @@ export default function Home() {
     const navigate = useNavigate();
 
     const [user, setUser] = useState();
+    const [codigo, setCodigo] = useState();
 
     useEffect(() => {
         const user = localStorage.getItem('usuario');
@@ -33,6 +34,10 @@ export default function Home() {
 
     const handleAcessarBarbearia = () => {
         alert("Em desenvolvimento")
+    }
+
+    const handlePesquisarBarbearia = () => {
+        
     }
 
 
@@ -87,10 +92,13 @@ export default function Home() {
                                                     <input
                                                         type="text"
                                                         className="w-full p-2 rounded-sm bg-gray-50 outline outline-2 outline-[#242222]"
-                                                        placeholder="Informe o código da barbearia "
+                                                        placeholder="Informe o código da barbearia"
+                                                        onChange={(e) => setCodigo(e.currentTarget.value)}
                                                     />
                                                     <div className="p-1 rounded-md">
-                                                        <Search />
+                                                        <Search
+                                                            onClick={handlePesquisarBarbearia} 
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>
