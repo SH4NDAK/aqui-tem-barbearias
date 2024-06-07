@@ -1,16 +1,11 @@
-import { Lightbulb, Link, Pencil, Plus, Search, Trash, ListPlus } from "lucide-react";
+import { Plus, Trash, } from "lucide-react";
 import Button from "../components/Button";
-import Container from "../components/Container";
-import FormContainer from "../components/FormContainer";
 import InputText from "../components/InputText";
 import { useNavigate } from "react-router-dom";
 import Row from "../components/Row";
-import LayoutPage from "../components/LayoutPage";
-import SideBar from "../components/SideBar";
 import { useEffect, useState } from "react";
 import { editService, listService } from "../services/service";
-import { Col, Dropdown, Menu, Table, notification } from "antd";
-import { PlusSquareOutlined } from "antd";
+import { Dropdown, Menu, Table, notification } from "antd";
 import Header from "../components/Header";
 import CardServiceType from "../components/CardServiceType";
 import useIsTouchDevice from "../utils/isTouchMobile";
@@ -28,6 +23,13 @@ export default function TipoServicoPage() {
     };
 
     useEffect(() => {
+        const user = localStorage.getItem('usuario');
+        if (user !== null || user !== undefined) {
+          navigate("/login")
+        }
+    }, [])
+
+    useEffect(() => {
         (async () => {
             try {
                 const { dados } = await listService();
@@ -38,7 +40,7 @@ export default function TipoServicoPage() {
             }
         })();
     }, []);
-
+    
     const deleteServiceType = async (record) => {
         try {
             await editService(record.id, {
