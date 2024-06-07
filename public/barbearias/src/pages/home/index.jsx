@@ -60,11 +60,15 @@ export default function Home() {
                                             icone={<Scissors className="me-1" />}
                                             titulo={"Tipos de serviço"}
                                         />
-                                        <Card
-                                            onClick={handleUsuariosClick}
-                                            icone={<User className="me-1" />}
-                                            titulo={"Barbeiros"}
-                                        />
+                                        {
+                                            user?.cargo == ROLES.Administrador && (
+                                                <Card
+                                                    onClick={handleUsuariosClick}
+                                                    icone={<User className="me-1" />}
+                                                    titulo={"Barbeiros"}
+                                                />
+                                            )
+                                        }
                                         <Card
                                             onClick={handleAgendaClick}
                                             icone={<Calendar className="me-1" />}

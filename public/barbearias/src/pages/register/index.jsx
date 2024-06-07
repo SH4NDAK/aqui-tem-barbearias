@@ -20,7 +20,7 @@ export default function Register() {
   useEffect(() => {
     const user = localStorage.getItem('usuario');
     if (user !== null) {
-      navigate("/tipos-servico")
+      navigate("/home")
     }
   }, [])
 
@@ -58,7 +58,7 @@ export default function Register() {
         description: res.mensagem
       })
       // direciona o usuario para tipos serviços
-      navigate('/tipos-servico')
+      navigate('/home')
     } catch (e) {
       // Mostra uma notificação de erro na tela se der erro
       if (e.response?.data?.errors?.Email[0]) {
