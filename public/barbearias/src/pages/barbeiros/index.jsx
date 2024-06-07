@@ -14,6 +14,7 @@ export default function Barbeiros() {
     const [barbeiros, setBarbeiros] = useState([]);
     const [abrirModalExclusao, setAbrirModalExclusao] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
+    const [nome, setNome] = useState();
 
     useEffect(() => {
         (async () => {
@@ -26,7 +27,7 @@ export default function Barbeiros() {
     }
 
     const handlePesquisarClick = async () => {
-        const response = await listByCargo(4, 'art');
+        const response = await listByCargo(4, nome);
         setBarbeiros(response);
     }
 
@@ -65,6 +66,7 @@ export default function Barbeiros() {
                             label="Nome"
                             type="text"
                             className="md:w-64"
+                            onChange={(e) => setNome(e.currentTarget.value)}
                         />
                         <div className="md:w-full flex justify-end">
                             <button
