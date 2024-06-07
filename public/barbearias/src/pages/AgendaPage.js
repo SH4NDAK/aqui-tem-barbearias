@@ -24,6 +24,14 @@ const views = ['agenda', 'day'];
 export default function AgendaPage() {
     const [abrirModalAgendamento, setAbrirModalAgendamento] = useState(false);
     const [agendas, setAgendas] = useState([])
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const user = localStorage.getItem('usuario');
+        if (user !== null || user !== undefined) {
+          navigate("/login")
+        }
+    }, [])
 
     const Appointment = (e) => {
         let findAgenda = agendas.find(i => i.id === e.data.targetedAppointmentData.assigneeId) || {};        

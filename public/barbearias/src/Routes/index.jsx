@@ -19,10 +19,10 @@ export const router = createBrowserRouter([
     path: "/",     // Aqui define a rota
     element: <Login /> // Aqui define o componente
   },
-  // {
-  //   path: "/login",
-  //   element: <Login />
-  // },
+  {
+    path: "/login",
+    element: <Login />
+  },
   {
     path: "/cadastro",
     element: <Register />
