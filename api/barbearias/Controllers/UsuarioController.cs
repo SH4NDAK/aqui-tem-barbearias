@@ -1,4 +1,6 @@
-﻿using jwtRegisterLogin.Models;
+﻿using jwtRegisterLogin.Enum;
+using jwtRegisterLogin.Models;
+using jwtRegisterLogin.Services.UsuarioService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,21 +13,28 @@ namespace jwtRegisterLogin.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        private readonly IAuthInterface _authInterface;
+        private readonly IUsuarioService _usuarioService;
 
-        public UsuarioController(IAuthInterface authInterface)
+        public UsuarioController(IUsuarioService usuarioService)
         {
-            _authInterface = authInterface;
+            _usuarioService = usuarioService;
         }
 
-        [Authorize]
-        [HttpGet]
-        public ActionResult<Response<string>> GetUsuario()
-        {
-            Response<string> response = new Response<string>();
-            response.Mensagem = "Acessei";
+        [HttpGet("listar/{cargo}")]
+        public async Task<ActionResult<List<UsuarioModel>>> GetByCargo(CargoEnum cargo, [FromQuery] string nome = null)
 
-            return Ok(response);
+        {
+            // Traz os usuários pelo cargo informado
+            var usuarios = await _usuarioService.GetByCargo(cargo, nome);
+
+            // Se não encontrou, retorna um array vazio
+            if (usuarios == null)
+            {
+                return new List<UsuarioModel>();
+            }
+
+            // Retorna os usuários encontrados
+            return Ok(usuarios);
         }
 
         [HttpPut("editarUsuario/{id}")]

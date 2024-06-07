@@ -137,7 +137,7 @@ export default function TipoServicoFormPage() {
                                 variant={"auto"}
                             >
                                 <InputText
-                                    type="time"
+                                    type="text"
                                     className="w-full"
                                     label="Duração"
                                     inputMode="numeric"

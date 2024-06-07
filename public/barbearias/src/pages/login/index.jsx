@@ -19,11 +19,11 @@ export default function App() {
   // trazendo a função que navega entre as rotas do sistema
   const navigate = useNavigate()
 
-  // Se o usuario estiver logado direciona ele para tela de tipos-servico
+  // Se o usuario estiver logado direciona ele para tela de home
   useEffect(() => {
     const user = localStorage.getItem('usuario');
     if (user !== null) {
-      navigate("/tipos-servico")
+      navigate("/home")
     }
   }, [])
 
@@ -34,13 +34,11 @@ export default function App() {
   // estado para definir se o input de senha vai ser password, ou text (nao ver senha ou ver senha)
   const [verSenha, setVerSenha] = useState(false);
 
-
   // função chamada ao clicar no botão de 'ver senha'
   const handleIconClick = () => {
     // 'ver senha' será o contrario do estado anterior de 'ver senha'
     setVerSenha(!verSenha)
   }
-
   // função chamada no envio do formulário de login
   const onSubmit = async (data) => {
     try {
@@ -56,7 +54,7 @@ export default function App() {
         description: res.mensagem
       })
       // direciona o usuario para tipos serviços
-      navigate('/tipos-servico')
+      navigate('/home')
     } catch (e) {
       // Mostra uma notificação de erro na tela se der erro
       if (e.response.data.mensagem) {
@@ -72,7 +70,7 @@ export default function App() {
     <Container>
       <FormContainer>
         <div className="w-full flex justify-center font-bold text-5xl">
-          <img src={logo} width={"60%"}/>
+          <img src={logo} width={"60%"} />
         </div>
         <div className="w-full flex flex-col gap-2">
           <form

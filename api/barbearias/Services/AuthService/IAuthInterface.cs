@@ -8,6 +8,8 @@ namespace jwtRegisterLogin.Services.AuthService
         Task<Response<UsuarioCriacaoDto>> Registrar(UsuarioCriacaoDto usuarioRegistro);
         Task<Response<string>> Login(UsuarioLoginDto usuarioLogin);
         Task<Response<UsuarioEdicaoDto>> EditarUsuario(int id, UsuarioEdicaoDto usuarioRegistro);
+
+        Task<Response<string>> ExcluirUsuario(int id);
     }
 }
 

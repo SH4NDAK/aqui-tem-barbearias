@@ -18,11 +18,11 @@ export default function App() {
   // trazendo a função que navega entre as rotas do sistema
   const navigate = useNavigate()
 
-  // Se o usuario estiver logado direciona ele para tela de tipos-servico
+  // Se o usuario estiver logado direciona ele para tela de home
   useEffect(() => {
     const user = localStorage.getItem('usuario');
     if (user !== null) {
-      navigate("/tipos-servico")
+      navigate("/home")
     }
   }, [])
 
@@ -55,7 +55,7 @@ export default function App() {
         description: res.mensagem
       })
       // direciona o usuario para tipos serviços
-      navigate('/tipos-servico')
+      navigate('/home')
     } catch (e) {
       // Mostra uma notificação de erro na tela se der erro
       if (e.response.data.mensagem) {

@@ -52,7 +52,7 @@ export default function Home() {
                         </div>
                         <div className="w-full flex flex-col gap-4 md:flex-row justify-center flex-grow-0">
                             {
-                                !user?.cargo && !ROLES.Cliente ? (
+                                user?.cargo != ROLES.Cliente ? (
                                     <>
 
                                         <Card
@@ -60,11 +60,15 @@ export default function Home() {
                                             icone={<Scissors className="me-1" />}
                                             titulo={"Tipos de serviço"}
                                         />
-                                        <Card
-                                            onClick={handleUsuariosClick}
-                                            icone={<User className="me-1" />}
-                                            titulo={"Barbeiros"}
-                                        />
+                                        {
+                                            user?.cargo == ROLES.Administrador && (
+                                                <Card
+                                                    onClick={handleUsuariosClick}
+                                                    icone={<User className="me-1" />}
+                                                    titulo={"Barbeiros"}
+                                                />
+                                            )
+                                        }
                                         <Card
                                             onClick={handleAgendaClick}
                                             icone={<Calendar className="me-1" />}
@@ -138,9 +142,7 @@ export default function Home() {
                                             </div>
                                         </div>
                                     )
-
                             }
-
                         </div>
                     </div>
                 </div>

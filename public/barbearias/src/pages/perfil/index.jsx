@@ -50,10 +50,9 @@ export default function Perfil() {
       <Header />
         <div className="flex justify-center items-center w-full h-dvh bg-[#242222]">
         <div className="flex flex-col bg-white p-12 rounded-lg gap-4">
-            <div className="w-full flex justify-center font-bold text-5xl">
-            <img src={logo} width={"50%"}/>
+            <div className="flex justify-center w-full">
+                <span className="text-3xl font-semibold">Editar dados</span>
             </div>
-            Editar
             <div className="w-full flex flex-col gap-2">
             <form
                 onSubmit={handleSubmit(onSubmit)}
