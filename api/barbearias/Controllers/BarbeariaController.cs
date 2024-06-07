@@ -1,35 +1,33 @@
-using jwtRegisterLogin.Dtos;
-using jwtRegisterLogin.Services.AuthBarbeariaService;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+// using jwtRegisterLogin.Dtos;
+// using jwtRegisterLogin.Services.AuthBarbeariaService;
+// using Microsoft.AspNetCore.Http;
+// using Microsoft.AspNetCore.Mvc;
 
-namespace jwtRegisterLogin.Controllers
-{
-    [Route("api/auth")]
-    [ApiController]
-    public class BarbeariaAuthContoller : ControllerBase
-    {
-        private readonly IAuthBarbeariaInterface _authInterface;
-        public BarbeariaAuthContoller(IAuthBarbeariaInterface authInterface)
-        {
-                _authInterface = authInterface;
-        }
+// namespace jwtRegisterLogin.Controllers
+// {
+//     [Route("api/")]
+//     [ApiController]
+//     public class BarbeariaContoller : ControllerBase
+//     {
+//         private readonly IAuthBarbeariaInterface _authInterface;
+//         public BarbeariaContoller(IAuthBarbeariaInterface authInterface)
+//         {
+//                 _authInterface = authInterface;
+//         }
 
+//         [HttpPut("editarBarbearia/{id}")]
+        
+//         public async Task<IActionResult> EditarBarbeiro(int id, BarbeariaEdicaoDto barbeariaRegistro)
+//         {
+//             var response = await _authInterface.EditarBarbearia(id, barbeariaRegistro);
 
-        [HttpPost("registerBarbearia")]
-        public async Task<ActionResult> Register(BarbeariaCriacaoDto barbeariaRegistro)
-        {
+//             if (response.Status == 405)
+//             {
+//                 return BadRequest(response);
+//             }
 
-            var resposta = await _authInterface.RegistrarBarbearia(barbeariaRegistro);
-            return Ok(resposta);
-        }
+//             return Ok(response);
+//         }
 
-        [HttpPost("loginBarbearia")]
-        public async Task<ActionResult> LoginBarbearia(UsuarioLoginDto barbeariaLogin)
-        {
-
-            var resposta = await _authInterface.LoginBarbearia(barbeariaLogin);
-            return Ok(resposta);
-        }
-    }
-}
+//     }
+// }

@@ -7,6 +7,7 @@ namespace jwtRegisterLogin.Services.AuthBarbeariaService
     {
         Task<Response<BarbeariaCriacaoDto>> RegistrarBarbearia(BarbeariaCriacaoDto barbeariaRegistro);
         Task<Response<string>> LoginBarbearia(UsuarioLoginDto barbeariaLogin);
+        Task<Response<BarbeariaEdicaoDto>> EditarBarbearia(int id, BarbeariaEdicaoDto barbeariaRegistro);
     }
 }
 

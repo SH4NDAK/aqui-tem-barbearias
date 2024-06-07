@@ -1,14 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using jwtRegisterLogin.Data;
 using jwtRegisterLogin.Dtos;
-using jwtRegisterLogin.Enum;
 using jwtRegisterLogin.Models;
 using jwtRegisterLogin.Services.SenhaService;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using jwtRegisterLogin.Services.CookieService;
 
 namespace jwtRegisterLogin.Services.AuthBarbeariaService
@@ -26,41 +23,46 @@ namespace jwtRegisterLogin.Services.AuthBarbeariaService
 
         public bool VerificarSeEmailJaExiste(BarbeariaCriacaoDto barbeariaRegistro)
         {
-            var usuario = _context.Barbershop.FirstOrDefault(userBanco => userBanco.Email == barbeariaRegistro.Email);
-
-            return usuario == null;
+            return !_context.Barbershop.Any(userBanco => userBanco.Email == barbeariaRegistro.Email);
         }
+
+        public bool VerificarSeEmailJaExiste2(int id, BarbeariaEdicaoDto barbeariaRegistro)
+        {
+            return _context.Barbershop.Any(userBanco => userBanco.Id != id && userBanco.Email == barbeariaRegistro.Email);
+        }
+
         public bool VerificarSeTelefoneJaExiste(BarbeariaCriacaoDto barbeariaRegistro)
         {
-            var usuario = _context.Barbershop.FirstOrDefault(userBanco => userBanco.Telefone == barbeariaRegistro.Telefone);
-
-            return usuario == null;
+            return !_context.Barbershop.Any(userBanco => userBanco.Telefone == barbeariaRegistro.Telefone);
         }
+
         public bool VerificarCNPJJaExisteOuValido(BarbeariaCriacaoDto barbeariaRegistro)
         {
-            var usuario = _context.Barbershop.FirstOrDefault(userBanco => userBanco.CNPJ == barbeariaRegistro.CNPJ);
-
-            return usuario == null;
+            return !_context.Barbershop.Any(userBanco => userBanco.CNPJ == barbeariaRegistro.CNPJ);
         }
-        
+
+        public bool VerificarCNPJJaExisteOuValido2(int id, BarbeariaEdicaoDto barbeariaRegistro)
+        {
+            return _context.Barbershop.Any(userBanco => userBanco.Id != id && userBanco.CNPJ == barbeariaRegistro.CNPJ);
+        }
 
         public async Task<Response<BarbeariaCriacaoDto>> RegistrarBarbearia(BarbeariaCriacaoDto barbeariaRegistro)
         {
-            Response<BarbeariaCriacaoDto> respostaServico = new Response<BarbeariaCriacaoDto>();
+            var respostaServico = new Response<BarbeariaCriacaoDto>();
 
-            try 
+            try
             {
                 if (!VerificarSeEmailJaExiste(barbeariaRegistro))
                 {
                     respostaServico.Status = 405;
-                    respostaServico.Mensagem = "Email já cadastrados!";
+                    respostaServico.Mensagem = "Email já cadastrado!";
                     return respostaServico;
                 }
 
                 if (!VerificarSeTelefoneJaExiste(barbeariaRegistro))
                 {
                     respostaServico.Status = 405;
-                    respostaServico.Mensagem = "Telefone já cadastrados!";
+                    respostaServico.Mensagem = "Telefone já cadastrado!";
                     return respostaServico;
                 }
 
@@ -69,13 +71,13 @@ namespace jwtRegisterLogin.Services.AuthBarbeariaService
                 if (!VerificarCNPJJaExisteOuValido(barbeariaRegistro))
                 {
                     respostaServico.Status = 405;
-                    respostaServico.Mensagem = "CNPJ já cadastrados!";
+                    respostaServico.Mensagem = "CNPJ já cadastrado!";
                     return respostaServico;
                 }
 
                 _senhaInterface.CriarSenhaHash(barbeariaRegistro.Senha, out byte[] senhaHash, out byte[] senhaSalt);
 
-                BarbershopModel barbearia = new BarbershopModel()
+                var barbearia = new BarbershopModel
                 {
                     Nome = barbeariaRegistro.Nome,
                     Email = barbeariaRegistro.Email,
@@ -87,9 +89,9 @@ namespace jwtRegisterLogin.Services.AuthBarbeariaService
 
                 _context.Add(barbearia);
                 await _context.SaveChangesAsync();
-                respostaServico.Dados = barbearia;
+                respostaServico.Dados = barbeariaRegistro;
                 respostaServico.Mensagem = "Barbearia criada com sucesso!";
-                
+                respostaServico.Status = 200;
             }
             catch (Exception ex)
             {
@@ -102,21 +104,13 @@ namespace jwtRegisterLogin.Services.AuthBarbeariaService
 
         public async Task<Response<string>> LoginBarbearia(UsuarioLoginDto barbeariaLogin)
         {
-            Response<string> respostaServico = new Response<string>();
-            BarberDetails barberDetails = new BarberDetails();
+            var respostaServico = new Response<string>();
 
             try
             {
                 var barbearia = await _context.Barbershop.FirstOrDefaultAsync(userBanco => userBanco.Email == barbeariaLogin.Login);
 
-                if (barbearia == null)
-                {
-                    respostaServico.Status = 400;
-                    respostaServico.Mensagem = "Credenciais inválidas.";
-                    return respostaServico;
-                }
-
-                if (!_senhaInterface.VerificaSenhaHash(barbeariaLogin.Senha, barbearia.SenhaHash, barbearia.SenhaSalt))
+                if (barbearia == null || !_senhaInterface.VerificaSenhaHash(barbeariaLogin.Senha, barbearia.SenhaHash, barbearia.SenhaSalt))
                 {
                     respostaServico.Status = 400;
                     respostaServico.Mensagem = "Credenciais inválidas.";
@@ -124,41 +118,103 @@ namespace jwtRegisterLogin.Services.AuthBarbeariaService
                 }
 
                 var token = _senhaInterface.CriarTokenBarberia(barbearia);
-
-                // var tokenModel = new TokenModel
-                // {
-                //     Token = token,
-                //     CriadaEm = DateTime.Now.ToString(),
-                //     ExpiraEm = DateTime.Now.AddHours(2).ToString(),
-                //     IdUsuario = barbearia.Id
-                // };
-
-                // _context.TokenDb.Add(tokenModel);
-                // await _context.SaveChangesAsync();
-
-                barberDetails.Token = token;
-                barberDetails.Nome = barbearia.Nome;
-                barberDetails.Email = barbearia.Email;
-                barberDetails.Telefone = barbearia.Telefone;
-                barberDetails.CNPJ = barbearia.CNPJ;
-                barberDetails.Id = barbearia.Id;
+                var barberDetails = new BarberDetails
+                {
+                    Token = token,
+                    Nome = barbearia.Nome,
+                    Email = barbearia.Email,
+                    Telefone = barbearia.Telefone,
+                    CNPJ = barbearia.CNPJ,
+                    Id = barbearia.Id
+                };
 
                 respostaServico.Dados = barberDetails;
-                respostaServico.Mensagem = "Barbearia logado com sucesso!";
+                respostaServico.Mensagem = "Barbearia logada com sucesso!";
                 respostaServico.Status = 200;
-
-
-                return respostaServico;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                Console.Write(exception);
-
                 respostaServico.Status = 500;
-                respostaServico.Mensagem = "Erro ao realizar o login.";
-                return respostaServico;
+                respostaServico.Mensagem = $"Erro ao realizar o login: {ex.Message}";
             }
+
+            return respostaServico;
         }
 
+        public async Task<Response<BarbeariaEdicaoDto>> EditarBarbearia(int id, BarbeariaEdicaoDto barbeariaRegistro)
+        {
+            var respostaServico = new Response<BarbeariaEdicaoDto>();
+
+            try
+            {
+                var barbearia = await _context.Barbershop.FindAsync(id);
+
+                if (barbearia == null)
+                {
+                    respostaServico.Mensagem = "Barbearia não encontrada.";
+                    respostaServico.Status = 405;
+                    return respostaServico;
+                }
+
+                if (VerificarSeEmailJaExiste2(id, barbeariaRegistro))
+                {
+                    respostaServico.Status = 405;
+                    respostaServico.Mensagem = "Email já cadastrado!";
+                    return respostaServico;
+                }
+
+                if (VerificarCNPJJaExisteOuValido2(id, barbeariaRegistro))
+                {
+                    respostaServico.Status = 405;
+                    respostaServico.Mensagem = "CNPJ já cadastrado!";
+                    return respostaServico;
+                }
+
+                if (!string.IsNullOrEmpty(barbeariaRegistro.Email))
+                {
+                    var emailAttribute = new EmailAddressAttribute();
+                    if (!emailAttribute.IsValid(barbeariaRegistro.Email))
+                    {
+                        respostaServico.Status = 405;
+                        respostaServico.Mensagem = "Email inválido!";
+                        return respostaServico;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(barbeariaRegistro.CNPJ))
+                {
+
+                    var validateCnpjAttribute = new BarbeariaCriacaoDto.ValidateCNPJAttribute();
+                    if (!validateCnpjAttribute.IsValid(barbeariaRegistro.CNPJ))
+                    {
+                        respostaServico.Status = 405;
+                        respostaServico.Mensagem = "CNPJ inválido!";
+                        return respostaServico;
+                    }
+                }                
+
+                barbearia.Nome = !string.IsNullOrEmpty(barbeariaRegistro.Nome) ? barbeariaRegistro.Nome : barbearia.Nome;
+                barbearia.Email = !string.IsNullOrEmpty(barbeariaRegistro.Email) ? barbeariaRegistro.Email : barbearia.Email;
+
+                if (!string.IsNullOrEmpty(barbeariaRegistro.Senha))
+                {
+                    _senhaInterface.CriarSenhaHash(barbeariaRegistro.Senha, out byte[] senhaHash, out byte[] senhaSalt);
+                    barbearia.SenhaHash = senhaHash;
+                    barbearia.SenhaSalt = senhaSalt;
+                }
+
+                await _context.SaveChangesAsync();
+
+                respostaServico.Mensagem = "Usuário editado com sucesso";
+                respostaServico.Status = 200;
+            }
+            catch (Exception ex)
+            {
+                respostaServico.Mensagem = ex.Message;
+                respostaServico.Status = 405;
+            }
+
+            return respostaServico;
+        }
     }
 }

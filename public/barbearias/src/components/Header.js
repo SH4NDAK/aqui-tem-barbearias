@@ -38,6 +38,9 @@ export default function Header() {
 
         <div className="relative w-full bg-[#1c1a1a] h-16 shadow-sm shadow-[#242222] mb-4">
             <div className="p-2 w-full h-full flex justify-between">
+                <a href="/">
+                    <img src={logo} width={128} />
+                </a>
                 <div>
                     <a href="/">
                         <img src={logo} width={128} />
