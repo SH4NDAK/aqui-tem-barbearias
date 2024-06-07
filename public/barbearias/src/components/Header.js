@@ -57,16 +57,6 @@ export default function Header() {
                     </button>
                     {user && user?.cargo != ROLES.Cliente && (
                         <>
-
-                            <button
-                                className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
-                                type="button"
-                                onClick={() => navigate("/tipos-servico")}
-                            >
-                                <Briefcase />
-                            </button>
-
-
                             <button
                                 className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
                                 type="button"
