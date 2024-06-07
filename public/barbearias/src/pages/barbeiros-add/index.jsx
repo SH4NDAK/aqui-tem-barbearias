@@ -55,7 +55,7 @@ export default function BarbeirosForm() {
             // Chamada de cadastro de usuário
             const res = 'senha' in data ? await signUpRequest(data) : await editUser(barbeiro.id, data)
 
-            // se der erro de autenticacao volta a mensagen
+            // se der erro de autenticacao volta a mensagem
             if (res.status === false) {
                 return notification.error({
                     message: "Erro",
