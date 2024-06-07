@@ -12,6 +12,8 @@ import { editService, listService } from "../services/service";
 import { Col, Dropdown, Menu, Table, notification } from "antd";
 import { PlusSquareOutlined } from "antd";
 import Header from "../components/Header";
+import CardServiceType from "../components/CardServiceType";
+import useIsTouchDevice from "../utils/isTouchMobile";
 
 
 export default function TipoServicoPage() {
@@ -100,42 +102,45 @@ export default function TipoServicoPage() {
             ),
         },
     ];
-
     return (
-
-        <div className="w-full h-dvh bg-[#242222]">
+        <div className="w-full bg-[#242222] h-dvh pb-8">
             <Header />
-            <div className="w-full flex justify-center">
-                <div className="flex flex-col bg-white w-1/3 shadow-sm shadow-[#242222] rounded-md sm:w-full">
+            <div className="w-full flex justify-center bg-[#242222] ">
+                <div className="flex flex-col bg-white shadow-sm shadow-[#242222] rounded-md sm:w-full m-4 p-4 ">
                     <div className="w-fit self-center">
                         <span className="text-3xl font-semibold">Tipos de serviço</span>
                     </div>
-                    <div className="w-11/12 h-0.5 bg-black self-center pt-4 mb-4 opacity-5"></div>
-                    <form>
-                        <Row>
-                            <Row className="flex justify-center items-center">
-                                <Button
-                                    type={"button"}
-                                    icon={<Plus />}
-                                    onClick={handleCadastroClick}
-                                    variant={"icon"}
-                                    />
-                                <InputText
-                                    label="Nome"
-                                    type="text"
-                                    className="w-64"
-                                    onChange={(e) =>
-                                        setServiceTypeFilter(
-                                            serviceType.filter((y) =>
-                                                y.nomeServico.toLowerCase().includes(e.target.value.toLowerCase())
-                                        )
-                                    )
-                                }
+                    <div className="w-11/12 h-0.5 bg-black self-center pb-4 opacity-5"></div>
+                        <Row className="flex justify-center items-center pl-2">
+                            <Button
+                                type={"button"}
+                                icon={<Plus />}
+                                onClick={handleCadastroClick}
+                                variant={"icon"}
                                 />
-                            </Row>
-                            <Table columns={columns} dataSource={serviceTypeFilter} pagination={{ pageSize: 10 }} scroll={{ y: 240 }}/>
+                            <InputText
+                                label="Nome"
+                                type="text"
+                                className="w-64"
+                                onChange={(e) =>
+                                    setServiceTypeFilter(
+                                        serviceType.filter((y) =>
+                                            y.nomeServico.toLowerCase().includes(e.target.value.toLowerCase())
+                                    )
+                                )
+                            }
+                            />
                         </Row>
-                    </form>
+                        {!useIsTouchDevice() ?
+                            <Table columns={columns} dataSource={serviceTypeFilter} pagination={{ pageSize: 10 }} scroll={{ y: 240 }}/>
+                        : (
+                            <div className="h-96 overflow-y-auto w-full mb-32 pb-12">
+                                {serviceTypeFilter.map(e => (
+                                    <CardServiceType record={e} deleteServiceType={deleteServiceType}/>
+                                ))}
+                            </div>
+                            )
+                        }        
                 </div>
             </div>
         </div>
