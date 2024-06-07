@@ -6,6 +6,8 @@ import { listByCargo } from "../../services/barbeiro";
 import { useEffect, useState } from "react";
 import confirm from "antd/es/modal/confirm";
 import { Modal } from "antd";
+import { deleteUser } from "../../services/auth";
+import { notification } from 'antd';
 
 export default function Barbeiros() {
     const navigate = useNavigate();
@@ -13,12 +15,18 @@ export default function Barbeiros() {
     const [abrirModalExclusao, setAbrirModalExclusao] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
+    useEffect(() => {
+        (async () => {
+            handlePesquisarClick();
+        })();
+    }, [])
+
     const handleCadastroClick = () => {
         navigate("/barbeiros/add")
     }
 
     const handlePesquisarClick = async () => {
-        const response = await listByCargo(4);
+        const response = await listByCargo(4, 'art');
         setBarbeiros(response);
     }
 
@@ -70,12 +78,13 @@ export default function Barbeiros() {
                     </form>
 
                 </div>
-                {
-                    barbeiros.length > 0 ?
+                <div className="self-center w-11/12 bg-white p-2 rounded-md shadow-sm shadow-[#242222]">
 
-                        barbeiros.map(barbeiro => {
-                            return (
-                                <div className="w-11/12 self-center bg-white p-2 rounded-md shadow-sm shadow-[#242222]">
+                    {
+                        barbeiros.length > 0 ?
+
+                            barbeiros.map(barbeiro => {
+                                return (
 
                                     <div>
                                         <div className="flex flex-row w-full justify-between">
@@ -95,18 +104,19 @@ export default function Barbeiros() {
                                             </div>
                                         </div>
                                     </div>
+                                )
+                            })
+                            :
+                            (
+                                <div className="flex justify-center w-full bg-white">
+                                    <span className="w-fit text-lg font-bold">Nenhum barbeiro encontrado</span>
                                 </div>
                             )
-                        })
-                        :
-                        (
-                            <span className="text-lg font-bold self-center"></span>
-                        )
-                }
+                    }
+                </div>
 
                 {
                     <ModalConfirmacao
-                        open={abrirModalExclusao}
                         id={deleteId}
                     />
                 }
@@ -115,16 +125,39 @@ export default function Barbeiros() {
     )
 
 
-    function ModalConfirmacao({ open, id }) {
+    function ModalConfirmacao({ id }) {
 
-        const [abrirModal, setAbrirModal] = useState(open)
+        const excluirBarbeiro = async (id) => {
+            try {
+                const res = await deleteUser(id);
 
-        const excluirBarbeiro = (id) => {
-            console.log(id);
+                // se der erro de autenticacao volta a mensagen
+                if (res.status === false) {
+                    return notification.error({
+                        message: "Erro",
+                        description: res.mensagem
+                    })
+                };
+
+                // envia mensagem de sucesso
+                notification.success({
+                    message: "Sucesso",
+                    description: res.mensagem
+                });
+
+
+            } catch (error) {
+                console.log(error);
+            }
+            finally {
+                handlePesquisarClick();
+                setAbrirModalExclusao(false);
+
+            }
         }
 
         return (
-            abrirModal && (
+            abrirModalExclusao && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
                     {/* Overlay */}
                     <div className="fixed inset-0 bg-black opacity-50 pointer-events-none"></div>
@@ -137,7 +170,7 @@ export default function Barbeiros() {
                             </span>
                             <X
                                 className="cursor-pointer"
-                                onClick={() => setAbrirModal(false)}
+                                onClick={() => setAbrirModalExclusao(false)}
                             />
                         </div>
                         <div>
@@ -147,7 +180,7 @@ export default function Barbeiros() {
                             <button
                                 type="button"
                                 className="font-semibold md:mt-4 flex justify-center text-white bg-[#444444] p-2 rounded-md md:w-fit w-full"
-                                onClick={() => setAbrirModal(false)}
+                                onClick={() => setAbrirModalExclusao(false)}
                             >
                                 <X className="me-1" /> Não
                             </button>

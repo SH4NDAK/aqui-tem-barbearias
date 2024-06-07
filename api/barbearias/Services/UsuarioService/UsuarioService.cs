@@ -20,7 +20,7 @@ namespace jwtRegisterLogin.Services.UsuarioService
             _context = context;
             _cookieService = cookieService;
         }
-        public async Task<List<UsuarioModel>> GetByCargo(CargoEnum cargo, string? nome)
+        public async Task<List<UsuarioModel>> GetByCargo(CargoEnum cargo, string nome = null)
         {
             // Monta a "query" de pesquisa
             var query = _context.Usuario.AsQueryable();
@@ -28,14 +28,19 @@ namespace jwtRegisterLogin.Services.UsuarioService
             // Filtro de cargo (obrigatorio)
             query = query.Where(filtro => filtro.Cargo == cargo);
 
-            // Filtro de nome do usuário
+            // Filtro de nome (opcional)
             if (!string.IsNullOrEmpty(nome))
             {
                 query = query.Where(filtro => filtro.Usuario.Contains(nome));
             }
 
             // Traz os usuários cadastrados
-            return await query.ToListAsync();
+            var result = await query.ToListAsync();
+
+            // Log para debugging
+            Console.WriteLine($"Número de usuários encontrados: {result.Count}");
+
+            return result;
         }
     }
 }

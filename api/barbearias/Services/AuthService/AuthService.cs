@@ -206,5 +206,37 @@ namespace jwtRegisterLogin.Services.AuthService
 
             return respostaServico;
         }
+
+        async public Task<Response<string>> ExcluirUsuario(int id)
+        {
+            Response<string> respostaServico = new Response<string>();
+
+            try
+            {
+                var usuario = await _context.Usuario.FindAsync(id);
+
+                if (usuario == null)
+                {
+                    respostaServico.Mensagem = "Usuário não encontrado.";
+                    respostaServico.Status = 405;
+                    return respostaServico;
+                }
+
+                // Deleta o usuário
+                _context.Usuario.Remove(usuario);
+                await _context.SaveChangesAsync();
+
+                respostaServico.Mensagem = "Usuário excluído com sucesso";
+                respostaServico.Status = 200;
+            }
+            catch (Exception ex)
+            {
+
+                respostaServico.Mensagem = ex.Message;
+                respostaServico.Status = 405;
+            }
+
+            return respostaServico;
+        }
     }
 }

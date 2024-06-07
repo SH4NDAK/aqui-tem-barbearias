@@ -19,16 +19,16 @@ namespace jwtRegisterLogin.Controllers
             _usuarioService = usuarioService;
         }
 
-        [HttpGet("listar/{cargo}/{nome}")]
-        public async Task<ActionResult<List<UsuarioModel>>> GetByCargo(CargoEnum cargo, string? nome)
+        [HttpGet("listar/{cargo}")]
+        public async Task<ActionResult<List<UsuarioModel>>> GetByCargo(CargoEnum cargo, [FromQuery] string nome = null)
         {
             // Traz os usuários pelo cargo informado
             var usuarios = await _usuarioService.GetByCargo(cargo, nome);
 
-            // Se não encontrou, retorna 404
-            if (usuarios == null || usuarios.Count == 0)
+            // Se não encontrou, retorna um array vazio
+            if (usuarios == null)
             {
-                return NotFound("caiu aqui");
+                return new List<UsuarioModel>();
             }
 
             // Retorna os usuários encontrados
