@@ -42,17 +42,6 @@ namespace jwtRegisterLogin.Services.AuthService
                 }
                 
 
-                if (!string.IsNullOrEmpty(usuarioRegistro.BarbeariaId))
-                {
-                    var barbeariaIdExistente = await _context.Barbershop.FindAsync(int.Parse(usuarioRegistro.BarbeariaId));
-                    
-                    if (barbeariaIdExistente == null)
-                    {
-                        respostaServico.Mensagem = "Barbearia com o Id fornecido não foi encontrado.";
-                        respostaServico.Status = 405;
-                        return respostaServico;
-                    }
-                }
                 _senhaInterface.CriarSenhaHash(usuarioRegistro.Senha, out byte[] senhaHash, out byte[] senhaSalt);
 
                 UsuarioModel usuario = new UsuarioModel()

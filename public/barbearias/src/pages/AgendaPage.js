@@ -9,11 +9,8 @@ import InputText from '../components/InputText';
 import Row from '../components/Row';
 import Selectpicker from '../components/Selectpicker';
 import { useForm } from 'react-hook-form';
-import SideBar from '../components/SideBar';
-import LayoutPage from '../components/LayoutPage';
 import { editAgenda, listAgenda, saveAgenda } from '../services/agenda';
 import { Switch, notification } from 'antd';
-import { data } from './data';
 import { useNavigate } from 'react-router-dom';
 import { listService } from '../services/service';
 import Header from '../components/Header';
@@ -62,7 +59,10 @@ export default function AgendaPage() {
                 setAgenda(newAgenda);
 
             } catch (error) {
-                console.log(error);
+                notification.warning({
+                    message: "Error",
+                    description: "Ocorreu um erro inesperado"
+                })
             }
         };
 
@@ -175,12 +175,14 @@ export default function AgendaPage() {
                 });
             }
         } catch (error) {
-            console.log(error);
+            notification.warning({
+                message: "Error",
+                description: "Ocorreu um erro inesperado"
+            })
         }
     }
 
     const onAppointmentUpdated = async (e) => {
-        console.log(e.component._editAppointmentData);
         let findAgenda = agendas.find(i => i.id === e.appointmentData.assigneeId) || {};
         try {
             const { nomeDoCliente, servico, descricao, ativo, pago, preco, duracao, horario, dia } = e.component._editAppointmentData
@@ -212,21 +214,26 @@ export default function AgendaPage() {
         setAgendas(updatedAgendas);
 
         } catch (error) {
-            console.log(error);
+            notification.warning({
+                message: "Error",
+                description: "Ocorreu um erro inesperado"
+            })
         }
     }
     //appointmentData.assigneeId
     // setando o local como brasil
     useEffect(() => {
-            (async () => {
-                try{
-                  const data = await listAgenda()
-                  setAgendas(data.dados)
-                } catch (err) {
-                    console.log(err)
-                }
-            })()
-
+        (async () => {
+            try {
+                const data = await listAgenda()
+                setAgendas(data.dados)
+            } catch (error) {
+                notification.success({
+                    message: "Sucesso ao apagar",
+                    description: "Não foi possivel listar os agendamentos"
+                });
+            }
+        })()
         locale('pt-BR')
     }, []);
 
@@ -312,11 +319,14 @@ const ModalAgendamento = ({ onClose }) => {
 
     useEffect(() => {
         (async () => {
-                try {
+            try {
                 const { dados } = await listService()
                 setServicos(dados)
             } catch (error) {
-                console.log(error);
+                notification.warning({
+                    message: "Error",
+                    description: "Ocorreu um erro inesperado"
+                })
             }
         })()
         locale('pt-BR')

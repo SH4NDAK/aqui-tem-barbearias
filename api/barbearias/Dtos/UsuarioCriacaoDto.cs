@@ -63,6 +63,6 @@ namespace jwtRegisterLogin.Dtos
         [Required(ErrorMessage = "O campo cargo é obrigatório")]
         public CargoEnum Cargo { get; set; }
 
-        public string BarbeariaId { get; set; }
+        public string? BarbeariaId { get; set; }
     }
 }

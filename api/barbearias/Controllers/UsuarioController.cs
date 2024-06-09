@@ -14,10 +14,12 @@ namespace jwtRegisterLogin.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
+        private readonly IAuthInterface _authInterface;
 
-        public UsuarioController(IUsuarioService usuarioService)
+        public UsuarioController(IUsuarioService usuarioService, IAuthInterface authInterface)
         {
             _usuarioService = usuarioService;
+            _authInterface = authInterface;
         }
 
         [HttpGet("listar/{cargo}")]

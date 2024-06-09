@@ -11,8 +11,6 @@ using System.Text;
 using jwtRegisterLogin.Filters;
 using jwtRegisterLogin.Services.AgendaService;
 using jwtRegisterLogin.Services.CookieService;
-using jwtRegisterLogin.Services.AuthBarbeariaService;
-using jwtRegisterLogin.Services.BarbeiroService;
 using jwtRegisterLogin.Services.UsuarioService;
 
 
@@ -43,8 +41,6 @@ builder.Services.AddScoped<IServicoService, ServicoService>();
 builder.Services.AddScoped<IAgendaService, AgendaService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ICookieService, CookieService>();
-builder.Services.AddScoped<IAuthBarbeariaInterface, AuthBarbeariaService>();
-builder.Services.AddScoped<IBarbeiroInterface, BarbeiroService>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
