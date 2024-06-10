@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { useEffect, useState } from "react";
 import { ROLES } from "../../utils/role";
+import { searchBarbearia } from "../../services/barbearia";
+import { notification } from 'antd';
+
 
 
 export default function Home() {
@@ -10,6 +13,7 @@ export default function Home() {
 
     const [user, setUser] = useState();
     const [codigo, setCodigo] = useState();
+    const [barbearia, setBarbearia] = useState(null);
 
     useEffect(() => {
         const user = localStorage.getItem('usuario');
@@ -36,8 +40,21 @@ export default function Home() {
         alert("Em desenvolvimento")
     }
 
-    const handlePesquisarBarbearia = () => {
-                
+    const handlePesquisarBarbearia = async () => {
+        try {
+            const res = await searchBarbearia(codigo);
+
+            if (res.length === 0) {
+                notification.error({
+                    message: "Nenhuma barbearia encontrada"
+                })
+            }
+
+            setBarbearia(res);
+        } catch (e) {
+            console.log(e);
+
+        }
     }
 
 
@@ -93,11 +110,12 @@ export default function Home() {
                                                         type="text"
                                                         className="w-full p-2 rounded-sm bg-gray-50 outline outline-2 outline-[#242222]"
                                                         placeholder="Informe o código da barbearia"
+                                                        maxLength={6}
                                                         onChange={(e) => setCodigo(e.currentTarget.value)}
                                                     />
                                                     <div className="p-1 rounded-md">
                                                         <Search
-                                                            onClick={handlePesquisarBarbearia} 
+                                                            onClick={handlePesquisarBarbearia}
                                                         />
                                                     </div>
                                                 </div>
