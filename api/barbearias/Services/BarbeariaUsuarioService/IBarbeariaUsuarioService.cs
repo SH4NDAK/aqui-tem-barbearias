@@ -6,6 +6,7 @@ namespace jwtRegisterLogin.Services.BarbeariaUsuarioService
     public interface IBarbeariaUsuarioService
     {
         Task<IActionResult> VincularCliente(VincularRequest request);
+        Task<ActionResult<List<BarbeariaModel>>> GetByCliente(int id_usr_cliente);
 
     }
 }

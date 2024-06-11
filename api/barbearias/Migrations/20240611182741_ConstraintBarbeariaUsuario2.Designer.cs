@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using jwtRegisterLogin.Data;
 
@@ -11,9 +12,11 @@ using jwtRegisterLogin.Data;
 namespace jwtRegisterLogin.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240611182741_ConstraintBarbeariaUsuario2")]
+    partial class ConstraintBarbeariaUsuario2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,11 +116,14 @@ namespace jwtRegisterLogin.Migrations
                     b.Property<int>("Id_usuario")
                         .HasColumnType("int");
 
+                    b.Property<int>("UniqueCombination")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Id_usuario", "Id_barbearia");
-
                     b.HasIndex("Id_barbearia");
+
+                    b.HasIndex("Id_usuario");
 
                     b.ToTable("BarbeariaUsuario");
                 });

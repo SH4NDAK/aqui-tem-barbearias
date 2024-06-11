@@ -1,10 +1,11 @@
-import { AlertCircle, ArrowRightCircle, Building, Calendar, MailOpen, PlusCircle, Scissors, Search, User, X } from "lucide-react";
+import { AlertCircle, ArrowRightCircle, Building, Calendar, MailOpen, PlusCircle, Scissors, Search, Store, User, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { useEffect, useState } from "react";
 import { ROLES } from "../../utils/role";
-import { linkClienteBarbearia, searchBarbearia } from "../../services/barbearia";
+import { linkClienteBarbearia, searchBarbearia, searchByCliente } from "../../services/barbearia";
 import { notification } from 'antd';
+import { isAxiosError } from "axios";
 
 
 
@@ -14,11 +15,24 @@ export default function Home() {
     const [user, setUser] = useState();
     const [codigo, setCodigo] = useState();
     const [barbearia, setBarbearia] = useState(null);
+    const [barbearias, setBarbearias] = useState([]);
 
     useEffect(() => {
         const user = localStorage.getItem('usuario');
-        setUser(JSON.parse(user))
-    }, [])
+        setUser(JSON.parse(user));
+    }, []);
+
+    // Quando popula o usuário, se for cliente, pega as barbearias que ele tem vinculo
+    useEffect(() => {
+        if (!!user && user.cargo == ROLES.Cliente) {
+
+            // Pesquisa as barbearias que ele tem vinculo ativo
+            (async () => {
+                handleMinhasBarbearias();
+            })();
+
+        }
+    }, [user])
 
     const handleAgendaClick = () => {
         navigate("/agenda")
@@ -32,13 +46,12 @@ export default function Home() {
         navigate("/barbeiros")
     }
 
-    const handleMinhasBarbearias = () => {
-        alert("Em desenvolvimento")
+    const handleMinhasBarbearias = async () => {
+        const res = await searchByCliente(user);
+        setBarbearias(res);
     }
 
-    const handleAcessarBarbearia = () => {
-        alert("Em desenvolvimento")
-    }
+
 
     const handlePesquisarBarbearia = async () => {
         try {
@@ -55,7 +68,6 @@ export default function Home() {
 
         }
     }
-
 
     return (
         <>
@@ -124,46 +136,15 @@ export default function Home() {
                                             </div>
                                             <div className="w-full self-center h-0.5 bg-[#242222] opacity-5"></div>
                                             <div className="w-full flex flex-row flex-wrap gap-4">
-                                                <div className="md:w-3/12 w-full">
-                                                    <div className="p-1 w-full flex flex-col bg-gray-200 rounded-md shadow-sm shadow-[#242222] gap-2">
-                                                        <div className="w-full flex gap-2 flex-row items-center">
-                                                            <div className="text-white w-16 bg-[#242222] h-16 rounded-full">
-                                                                logo da barbearia se tiver
-                                                            </div>
-                                                            <div className="font-semibold text-lg">
-                                                                Martins
-                                                            </div>
-                                                        </div>
-                                                        <div>
-                                                            <button
-                                                                className="flex flex-row justify-center w-full bg-[#242222] rounded-md shadow-sm shadow-[#242222] p-1.5 text-white font-semibold text-end hover:bg-[#1b1919] transition-colors"
-                                                                onClick={handleAcessarBarbearia}
-                                                            >
-                                                                Acessar <ArrowRightCircle className="ms-1" />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="md:w-3/12 w-full">
-                                                    <div className="p-1 w-full flex flex-col bg-gray-200 rounded-md shadow-sm shadow-[#242222] gap-2">
-                                                        <div className="w-full flex gap-2 flex-row items-center">
-                                                            <div className="text-white w-16 bg-[#242222] h-16 rounded-full">
-                                                                logo da barbearia se tiver
-                                                            </div>
-                                                            <div className="font-semibold text-lg">
-                                                                Martins
-                                                            </div>
-                                                        </div>
-                                                        <div>
-                                                            <button
-                                                                className="flex flex-row justify-center w-full bg-[#242222] rounded-md shadow-sm shadow-[#242222] p-1.5 text-white font-semibold text-end hover:bg-[#1b1919] transition-colors"
-                                                                onClick={handleAcessarBarbearia}
-                                                            >
-                                                                Acessar <ArrowRightCircle className="ms-1" />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                {
+                                                    barbearias.length > 0 && barbearias.map(barbearia => {
+                                                        return (
+                                                            <CardBarbearias
+                                                                barbearia={barbearia}
+                                                            />
+                                                        )
+                                                    })
+                                                }
                                             </div>
                                         </div>
                                     )
@@ -196,9 +177,12 @@ export default function Home() {
                 }
 
                 setBarbearia(null);
+                setCodigo(null);
 
                 // Carregar barbearias vinculadas novamente
             } catch (error) {
+                setBarbearia(null)
+                setCodigo(null);
 
             }
         }
@@ -217,7 +201,7 @@ export default function Home() {
                         />
                     </div>
                     <div>
-                        Você recebeu um convite da barberia <b>{barbearia.nome}</b> para se tornar um cliente, você poderá agendar seus próximos serviços acessando a agenda da barbearia. <br /> Aceita?
+                        Você recebeu um convite da barberia <b>{barbearia.nome}</b> para se tornar um cliente. Você poderá agendar seus próximos serviços acessando a agenda da barbearia. <br /> Aceita?
                     </div>
                     <div className="md:w-full flex md:gap-2 justify-end">
                         <button
@@ -261,5 +245,36 @@ function Card({ onClick, icone, titulo }) {
             </div>
         </div>
     )
+}
+
+function CardBarbearias({ barbearia }) {
+
+    const handleAcessarBarbearia = () => {
+        alert("Em desenvolvimento")
+    }
+
+    return (
+        <div className="md:w-3/12 w-full">
+            <div className="p-1 w-full flex flex-col bg-gray-200 rounded-md shadow-sm shadow-[#242222] gap-2">
+                <div className="w-full flex gap-2 flex-row items-center">
+                    <div className="flex justify-center items-center text-white w-16 bg-[#242222] h-16 rounded-full">
+                        <Store size={48} />
+                    </div>
+                    <div className="font-semibold text-lg">
+                        {barbearia.nome}
+                    </div>
+                </div>
+                <div>
+                    <button
+                        className="flex flex-row justify-center w-full bg-[#242222] rounded-md shadow-sm shadow-[#242222] p-1.5 text-white font-semibold text-end hover:bg-[#1b1919] transition-colors"
+                        onClick={handleAcessarBarbearia}
+                    >
+                        Acessar <ArrowRightCircle className="ms-1" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+
 }
 

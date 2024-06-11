@@ -100,6 +100,7 @@ namespace jwtRegisterLogin.Services.AuthService
                 _context.TokenDb.Add(tokenModel);
                 await _context.SaveChangesAsync();
 
+                userDetails.Id = usuario.Id;
                 userDetails.Token = token;
                 userDetails.Usuario = usuario.Usuario;
                 userDetails.Email = usuario.Email;

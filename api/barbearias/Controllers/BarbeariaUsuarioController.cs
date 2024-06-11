@@ -24,6 +24,13 @@ namespace jwtRegisterLogin.Controllers
             return await _barbeariaService.VincularCliente(request);
         }
 
+        [HttpGet("listar/{id_usr_cliente}")]
+        public async Task<ActionResult<List<BarbeariaModel>>> GetByCliente(int id_usr_cliente)
+        {
+            return await _barbeariaService.GetByCliente(id_usr_cliente);
+
+        }
+
     }
 
 }
