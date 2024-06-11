@@ -1,6 +1,8 @@
 using jwtRegisterLogin.Data;
 using jwtRegisterLogin.Models;
 using jwtRegisterLogin.Services.CookieService;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace jwtRegisterLogin.Services.BarbeariaService

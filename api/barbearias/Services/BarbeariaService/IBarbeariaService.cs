@@ -1,4 +1,5 @@
 using jwtRegisterLogin.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace jwtRegisterLogin.Services.BarbeariaService
 {

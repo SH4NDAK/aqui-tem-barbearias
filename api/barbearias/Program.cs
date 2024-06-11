@@ -13,6 +13,7 @@ using jwtRegisterLogin.Services.AgendaService;
 using jwtRegisterLogin.Services.CookieService;
 using jwtRegisterLogin.Services.UsuarioService;
 using jwtRegisterLogin.Services.BarbeariaService;
+using jwtRegisterLogin.Services.BarbeariaUsuarioService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,7 @@ builder.Services.AddScoped<IServicoService, ServicoService>();
 builder.Services.AddScoped<IAgendaService, AgendaService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IBarbeariaService, BarbeariaService>();
+builder.Services.AddScoped<IBarbeariaUsuarioService, BarbeariaUsuarioService>();
 builder.Services.AddScoped<ICookieService, CookieService>();
 builder.Services.AddHttpContextAccessor();
 

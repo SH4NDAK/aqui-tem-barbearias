@@ -11,3 +11,6 @@ Autenticação do Windows -> "DefaultConnection": "Server=DESKTOP-D1IK3FL\\SQLEX
   
 Autenticação na faculdade -> "DefaultConnection": "Server=LAB02MAQ06; Database=AquiTemBarbearia; User ID=aluno; Password=dba; TrustServerCertificate=true;"
 
+-- conexão note arthur
+// "DefaultConnection": "Server=BOOK-7DLIOPJBOB\\SQLEXPRESS; Database=AquiTemBarbearia; Trusted_Connection=True; TrustServerCertificate=true;"
+

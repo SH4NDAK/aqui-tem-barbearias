@@ -1,9 +1,9 @@
-import { ArrowRightCircle, Building, Calendar, PlusCircle, Scissors, Search, User } from "lucide-react";
+import { AlertCircle, ArrowRightCircle, Building, Calendar, MailOpen, PlusCircle, Scissors, Search, User, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { useEffect, useState } from "react";
 import { ROLES } from "../../utils/role";
-import { searchBarbearia } from "../../services/barbearia";
+import { linkClienteBarbearia, searchBarbearia } from "../../services/barbearia";
 import { notification } from 'antd';
 
 
@@ -49,8 +49,7 @@ export default function Home() {
                     message: "Nenhuma barbearia encontrada"
                 })
             }
-
-            setBarbearia(res);
+            setBarbearia(res[0]);
         } catch (e) {
             console.log(e);
 
@@ -172,9 +171,66 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
+
+                {
+                    barbearia && (
+                        <ModalAuthBarbearia
+                            barbearia={barbearia}
+                        />
+                    )
+                }
             </div>
         </>
     );
+
+    function ModalAuthBarbearia({ barbearia }) {
+
+        const vincularClienteBarbearia = async () => {
+            try {
+                const res = await linkClienteBarbearia(user.id, barbearia.id);
+                console.log(res);
+            } catch (error) {
+                
+            }
+        }
+        return (
+            <div className="fixed inset-0 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black opacity-50 pointer-events-none"></div>
+
+                <div className="relative w-full md:w-3/12 bg-white p-2 rounded-md shadow-sm shadow-[#242222] z-50">
+                    <div className="flex w-full justify-between">
+                        <span className="w-fit flex flex-row items-center font-semibold bold text-lg">
+                            <MailOpen className="text-blue-600 me-1" /> Convite de barbearia
+                        </span>
+                        <X
+                            className="cursor-pointer"
+                            onClick={() => setBarbearia(null)}
+                        />
+                    </div>
+                    <div>
+                        Você recebeu um convite da barberia <b>{barbearia.nome}</b> para se tornar um cliente, você poderá agendar seus próximos serviços acessando a agenda da barbearia. <br /> Aceita?
+                    </div>
+                    <div className="md:w-full flex md:gap-2 justify-end">
+                        <button
+                            type="button"
+                            className="font-semibold md:mt-4 flex justify-center text-white bg-[#444444] p-2 rounded-md md:w-fit w-full"
+                            onClick={() => setBarbearia(null)}
+                        >
+                            <X className="me-1" /> Não
+                        </button>
+                        <button
+                            type="button"
+                            className="font-semibold md:mt-4 flex justify-center text-white bg-[#242222] p-2 rounded-md md:w-fit w-full"
+                            onClick={vincularClienteBarbearia}
+                        >
+                            Sim <ArrowRightCircle className="ms-1" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )
+
+    }
 }
 
 function Card({ onClick, icone, titulo }) {
@@ -197,3 +253,4 @@ function Card({ onClick, icone, titulo }) {
         </div>
     )
 }
+

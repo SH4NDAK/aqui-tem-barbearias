@@ -17,5 +17,6 @@ namespace jwtRegisterLogin.Data
 
         public DbSet<TokenModel> TokenDb { get; set; }
         public DbSet<BarbeariaModel> Barbearia { get; set; }
+        public DbSet<BarbeariaUsuarioModel> BarbeariaUsuario { get; set; }
     }
 }
