@@ -5,7 +5,7 @@ namespace jwtRegisterLogin.Services.BarbeariaService
 {
     public interface IBarbeariaService
     {
-        Task<List<BarbeariaModel>> GetByCodigo(string codigo);
+        Task<(string aviso, List<BarbeariaModel> barbearias)> GetByCodigo(string codigo, int id_usuario);
 
     }
 }

@@ -42,7 +42,7 @@ export default function Home() {
 
     const handlePesquisarBarbearia = async () => {
         try {
-            const res = await searchBarbearia(codigo);
+            const res = await searchBarbearia(codigo, user);
 
             if (res.length === 0) {
                 notification.error({
@@ -188,9 +188,18 @@ export default function Home() {
         const vincularClienteBarbearia = async () => {
             try {
                 const res = await linkClienteBarbearia(user.id, barbearia.id);
-                console.log(res);
+
+                if (!!res.sucesso) {
+                    notification.success({
+                        message: "Convite aceito com sucesso!"
+                    });
+                }
+
+                setBarbearia(null);
+
+                // Carregar barbearias vinculadas novamente
             } catch (error) {
-                
+
             }
         }
         return (

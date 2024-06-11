@@ -1,8 +1,8 @@
 import { setCookie } from 'nookies'
 import api from './api'
 
-export async function searchBarbearia(codigo) {
-    const { data } = await api.get(`Barbearia/listar/${codigo}`)
+export async function searchBarbearia(codigo, user) {
+    const { data } = await api.get(`Barbearia/listar/${codigo}?user=${user.id}`)
     return data
 }
 

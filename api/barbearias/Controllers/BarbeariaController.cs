@@ -20,16 +20,21 @@ namespace jwtRegisterLogin.Controllers
 
         // Rota de buscar a barbearia por código
         [HttpGet("listar/{codigo}")]
-        public async Task<ActionResult<List<BarbeariaModel>>> GetByCodigo(string codigo)
+        public async Task<ActionResult> GetByCodigo(string codigo, [FromQuery] int id_usuario)
         {
-            var barbearia = await _barbeariaService.GetByCodigo(codigo);
+            var (aviso, barbearias) = await _barbeariaService.GetByCodigo(codigo, id_usuario);
 
-            if (barbearia == null)
+            if (aviso != null)
             {
-                return new List<BarbeariaModel>();
+                return BadRequest(aviso);
             }
 
-            return Ok(barbearia);
+            if (barbearias == null || barbearias.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(barbearias);
 
         }
 

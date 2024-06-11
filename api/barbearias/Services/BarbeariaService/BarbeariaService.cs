@@ -1,3 +1,4 @@
+using Azure;
 using jwtRegisterLogin.Data;
 using jwtRegisterLogin.Models;
 using jwtRegisterLogin.Services.CookieService;
@@ -25,8 +26,9 @@ namespace jwtRegisterLogin.Services.BarbeariaService
 
 
         // Função que pesquisa uma barbearia pelo código de autenticação dela
-        async public Task<List<BarbeariaModel>> GetByCodigo(string codigo)
+        async public Task<(string aviso, List<BarbeariaModel> barbearias)> GetByCodigo(string codigo, int id_usuario)
         {
+
             // Monta a "query" de pesquisa
             var query = _context.Barbearia.AsQueryable();
 
@@ -36,8 +38,17 @@ namespace jwtRegisterLogin.Services.BarbeariaService
             // Traz a barbearia com o código
             var result = await query.ToListAsync();
 
+            // Verifica se o cliente já tem vínculo com a barbearia
+            var temVinculo = await _context.BarbeariaUsuario.AnyAsync(bu => bu.Id_usuario == id_usuario && bu.Id_barbearia == result[0].Id && bu.Ativo);
+
+            if (temVinculo)
+            {
+                return ("Você já é um cliente desta barbearia", null);
+            }
+
+
             // Retorna o resultado pra controller
-            return result;
+            return (null, result);
         }
     }
 }

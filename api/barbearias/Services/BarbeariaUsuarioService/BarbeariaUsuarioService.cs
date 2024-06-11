@@ -25,9 +25,26 @@ namespace jwtRegisterLogin.Services.BarbeariaService
         }
 
         // Função que vincula um usuário a uma barbearia
-        public IActionResult VincularCliente(VincularRequest request)
+        public async Task<IActionResult> VincularCliente(VincularRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var barbeariaUsuario = new BarbeariaUsuarioModel
+                {
+                    Id_usuario = request.IdUsuario,
+                    Id_barbearia = request.IdBarbearia
+                };
+
+                _context.BarbeariaUsuario.Add(barbeariaUsuario);
+
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult(new { Sucesso = true });
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(new { Sucesso = false, Mensagem = "Erro ao vincular cliente.", Detalhes = ex.Message });
+            }
         }
     }
 }

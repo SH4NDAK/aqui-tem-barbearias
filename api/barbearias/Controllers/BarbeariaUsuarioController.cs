@@ -10,7 +10,7 @@ namespace jwtRegisterLogin.Controllers
     public class BarbeariaUsuarioController : ControllerBase
     {
         // Definindo o amigo que vai acessar as funções da interface
-        private readonly  IBarbeariaUsuarioService _barbeariaService;
+        private readonly IBarbeariaUsuarioService _barbeariaService;
 
         // Metodo construtor da classe que recebe a interface
         public BarbeariaUsuarioController(IBarbeariaUsuarioService barbeariaService)
@@ -19,9 +19,9 @@ namespace jwtRegisterLogin.Controllers
         }
 
         [HttpPost("vincular")]
-        public IActionResult VincularCliente([FromBody] VincularRequest request)
+        public async Task<IActionResult> VincularCliente([FromBody] VincularRequest request)
         {
-            return Ok(new { Sucesso = true, Usuario = request});
+            return await _barbeariaService.VincularCliente(request);
         }
 
     }
