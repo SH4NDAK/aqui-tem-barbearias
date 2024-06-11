@@ -31,6 +31,12 @@ namespace jwtRegisterLogin.Controllers
 
         }
 
+        [HttpDelete("desvincular")]
+        public async Task<IActionResult> DesvincularCliente([FromQuery] int user, [FromQuery] int barbearia)
+        {
+            return await _barbeariaService.DesvincularCliente(user, barbearia);
+        }
+
     }
 
 }

@@ -1,9 +1,9 @@
-import { AlertCircle, ArrowRightCircle, Building, Calendar, MailOpen, PlusCircle, Scissors, Search, Store, User, X } from "lucide-react";
+import { AlertCircle, ArrowRightCircle, Blocks, Building, Calendar, MailOpen, PlusCircle, Scissors, Search, Store, Trash, User, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { useEffect, useState } from "react";
 import { ROLES } from "../../utils/role";
-import { linkClienteBarbearia, searchBarbearia, searchByCliente } from "../../services/barbearia";
+import { linkClienteBarbearia, searchBarbearia, searchByCliente, unklinkClienteBarbearia } from "../../services/barbearia";
 import { notification } from 'antd';
 import { isAxiosError } from "axios";
 
@@ -13,7 +13,7 @@ export default function Home() {
     const navigate = useNavigate();
 
     const [user, setUser] = useState();
-    const [codigo, setCodigo] = useState();
+    const [codigo, setCodigo] = useState('');
     const [barbearia, setBarbearia] = useState(null);
     const [barbearias, setBarbearias] = useState([]);
 
@@ -51,10 +51,10 @@ export default function Home() {
         setBarbearias(res);
     }
 
-
-
     const handlePesquisarBarbearia = async () => {
         try {
+            if (!codigo) return;
+
             const res = await searchBarbearia(codigo, user);
 
             if (res.length === 0) {
@@ -122,6 +122,7 @@ export default function Home() {
                                                         className="w-full p-2 rounded-sm bg-gray-50 outline outline-2 outline-[#242222]"
                                                         placeholder="Informe o código da barbearia"
                                                         maxLength={6}
+                                                        value={codigo}
                                                         onChange={(e) => setCodigo(e.currentTarget.value)}
                                                     />
                                                     <div className="p-1 rounded-md">
@@ -137,13 +138,21 @@ export default function Home() {
                                             <div className="w-full self-center h-0.5 bg-[#242222] opacity-5"></div>
                                             <div className="w-full flex flex-row flex-wrap gap-4">
                                                 {
-                                                    barbearias.length > 0 && barbearias.map(barbearia => {
+                                                    barbearias.length > 0 ? barbearias.map(barbearia => {
                                                         return (
                                                             <CardBarbearias
                                                                 barbearia={barbearia}
+                                                                user={user}
                                                             />
                                                         )
                                                     })
+                                                        :
+                                                        (
+                                                            <div className="p-2 flex justify-center w-full">
+                                                                <span className="text-2xl font-semibold">Nenhuma barbearia encontrada</span>
+
+                                                            </div>
+                                                        )
                                                 }
                                             </div>
                                         </div>
@@ -177,12 +186,13 @@ export default function Home() {
                 }
 
                 setBarbearia(null);
-                setCodigo(null);
+                setCodigo('');
+                handleMinhasBarbearias();
 
                 // Carregar barbearias vinculadas novamente
             } catch (error) {
                 setBarbearia(null)
-                setCodigo(null);
+                setCodigo('');
 
             }
         }
@@ -224,6 +234,103 @@ export default function Home() {
         )
 
     }
+
+    function CardBarbearias({ user, barbearia }) {
+        const [abrirModalUnlink, setAbrirModalUnlink] = useState(false);
+
+        const handleAcessarBarbearia = () => {
+            alert("Em desenvolvimento");
+        };
+
+        return (
+            <>
+                <div className="md:w-4/12 w-full">
+                    <div className="p-1 w-full flex flex-col bg-gray-200 rounded-md shadow-sm shadow-[#242222] gap-2">
+                        <div className="w-full flex gap-2 flex-row items-center">
+                            <div className="flex justify-center items-center text-white w-16 bg-[#242222] h-16 rounded-full">
+                                <Store size={48} />
+                            </div>
+                            <div className="font-semibold text-lg">
+                                {barbearia.nome}
+                            </div>
+                        </div>
+                        <div className="w-full flex gap-2">
+                            <button
+                                className="flex flex-row justify-center w-full bg-red-600 rounded-md shadow-sm shadow-[#242222] p-1.5 text-white font-semibold text-end hover:bg-[#ae2323] transition-colors"
+                                onClick={() => setAbrirModalUnlink(true)}
+                            >
+                                <Trash className="me-1" /> Desvincular
+                            </button>
+                            <button
+                                className="flex flex-row justify-center w-full bg-[#242222] rounded-md shadow-sm shadow-[#242222] p-1.5 text-white font-semibold text-end hover:bg-[#1b1919] transition-colors"
+                                onClick={handleAcessarBarbearia}
+                            >
+                                Acessar <ArrowRightCircle className="ms-1" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {abrirModalUnlink && (
+                    <ModalDesvincularBarbearia
+                        barbearia={barbearia}
+                        usuario={user}
+                        onClose={() => { setAbrirModalUnlink(false) }}
+                    />
+                )}
+            </>
+        );
+    }
+
+    function ModalDesvincularBarbearia({ usuario, barbearia, onClose }) {
+
+        const desvincularClienteBarbearia = async () => {
+            try {
+                await unklinkClienteBarbearia(usuario.id, barbearia.id);
+                notification.success({ message: "Usuário desvinculado com sucesso" });
+                onClose();
+                handleMinhasBarbearias();
+            } catch (error) {
+                console.log(error);
+
+            }
+        };
+
+        return (
+            <div className="fixed inset-0 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black opacity-50"></div>
+                <div className="relative w-full md:w-3/12 bg-white p-2 rounded-md shadow-sm shadow-[#242222] z-50">
+                    <div className="flex w-full justify-between">
+                        <span className="w-fit flex flex-row items-center font-semibold bold text-lg">
+                            <AlertCircle className="text-red-600 me-1" /> ATENÇÃO
+                        </span>
+                        <X
+                            className="cursor-pointer"
+                            onClick={onClose}
+                        />
+                    </div>
+                    <div>
+                        Ao continuar, você deixará de ser cliente da barbearia <b>{barbearia.nome}</b>. Para voltar a ser um cliente você deverá solicitar o código de autenticação da barbearia <b>{barbearia.nome}</b> novamente. <br /> Continua?
+                    </div>
+                    <div className="md:w-full flex md:gap-2 justify-end">
+                        <button
+                            type="button"
+                            className="font-semibold md:mt-4 flex justify-center text-white bg-[#444444] p-2 rounded-md md:w-fit w-full"
+                            onClick={onClose}
+                        >
+                            <X className="me-1" /> Cancelar
+                        </button>
+                        <button
+                            type="button"
+                            className="font-semibold md:mt-4 flex justify-center text-white bg-red-600 p-2 rounded-md md:w-fit w-full hover:bg-[#ae2323] transition-colors"
+                            onClick={desvincularClienteBarbearia}
+                        >
+                            Desvincular <ArrowRightCircle className="ms-1" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }
 
 function Card({ onClick, icone, titulo }) {
@@ -247,34 +354,4 @@ function Card({ onClick, icone, titulo }) {
     )
 }
 
-function CardBarbearias({ barbearia }) {
-
-    const handleAcessarBarbearia = () => {
-        alert("Em desenvolvimento")
-    }
-
-    return (
-        <div className="md:w-3/12 w-full">
-            <div className="p-1 w-full flex flex-col bg-gray-200 rounded-md shadow-sm shadow-[#242222] gap-2">
-                <div className="w-full flex gap-2 flex-row items-center">
-                    <div className="flex justify-center items-center text-white w-16 bg-[#242222] h-16 rounded-full">
-                        <Store size={48} />
-                    </div>
-                    <div className="font-semibold text-lg">
-                        {barbearia.nome}
-                    </div>
-                </div>
-                <div>
-                    <button
-                        className="flex flex-row justify-center w-full bg-[#242222] rounded-md shadow-sm shadow-[#242222] p-1.5 text-white font-semibold text-end hover:bg-[#1b1919] transition-colors"
-                        onClick={handleAcessarBarbearia}
-                    >
-                        Acessar <ArrowRightCircle className="ms-1" />
-                    </button>
-                </div>
-            </div>
-        </div>
-    )
-
-}
 

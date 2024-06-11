@@ -34,3 +34,22 @@ export async function linkClienteBarbearia(id_usuario, id_barbearia) {
         }
     }
 }
+
+
+export async function unklinkClienteBarbearia(id_usuario, id_barbearia) {
+    console.log(id_usuario);
+    console.log(id_barbearia);
+    let url = `BarbeariaUsuario/desvincular?user=${id_usuario}&barbearia=${id_barbearia}`;
+    try {
+        const { data } = await api.delete(url);
+        return data;
+    } catch (e) {
+        if (!isAxiosError(e)) return;
+
+        notification.error({
+            message: "Ocorreu um erro ao desvincular o cliente da barbearia"
+        })
+    }
+}
+
+

@@ -27,8 +27,7 @@ namespace jwtRegisterLogin.Services.BarbeariaService
 
         public async Task<ActionResult<List<BarbeariaModel>>> GetByCliente(int id_usr_cliente)
         {
-            Console.WriteLine(id_usr_cliente);
-            
+
             var barbearias = await _context.BarbeariaUsuario
                 .Where(bu => bu.Id_usuario == id_usr_cliente)
                 .Select(bu => new BarbeariaModel
@@ -74,6 +73,26 @@ namespace jwtRegisterLogin.Services.BarbeariaService
                 return new BadRequestObjectResult(new { Sucesso = false, Mensagem = "Erro ao vincular cliente.", Detalhes = ex.Message });
             }
         }
+
+
+        async public Task<IActionResult> DesvincularCliente(int id_usuario, int id_barbearia)
+        {
+            var query = await _context.BarbeariaUsuario
+            .FirstOrDefaultAsync(bu => bu.Id_usuario == id_usuario && bu.Id_barbearia == id_barbearia);
+
+            if (query == null)
+            {
+                return new NotFoundObjectResult(new { message = "Vínculo não encontrado" });
+            }
+
+            _context.BarbeariaUsuario.Remove(query);
+            await _context.SaveChangesAsync();
+
+            return new OkObjectResult(new { message = "Usuário desvinculado da barbearia com sucesso." });
+
+        }
+
+
 
     }
 }
