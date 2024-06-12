@@ -75,7 +75,6 @@ namespace jwtRegisterLogin.Services.ServicoService
             {
                 var query = _context.Servico.AsQueryable();
 
-
                 // Chamar o serviço para obter os dados do usuário
                 var resultado = await query.ToListAsync();
 
@@ -95,16 +94,8 @@ namespace jwtRegisterLogin.Services.ServicoService
 
         public async Task<Response<ServicoCriacaoDto>> EditarServico(int id, ServicoCriacaoDto servicoDto)
         {
-            bool cookieValido = await _cookieService.VerificarCookie();
 
             Response<ServicoCriacaoDto> response = new Response<ServicoCriacaoDto>();
-
-            // if (!cookieValido)
-            // {
-            //    response.Mensagem = "Cookie Invalido";
-            //    response.Status = 405;
-            //    return response;
-            // }
 
             try
             {
@@ -112,7 +103,7 @@ namespace jwtRegisterLogin.Services.ServicoService
 
                 if (servico == null)
                 {
-                    response.Mensagem = "Servico não encontrada.";
+                    response.Mensagem = "Servico não encontrado.";
                     response.Status = 405;
                     return response;
                 }
@@ -134,7 +125,6 @@ namespace jwtRegisterLogin.Services.ServicoService
             }
             catch (Exception ex)
             {
-                response.Mensagem = ex.Message;
                 response.Status = 405;
             }
 

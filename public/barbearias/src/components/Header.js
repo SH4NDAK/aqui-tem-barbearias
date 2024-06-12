@@ -15,12 +15,15 @@ export default function Header() {
 
     useEffect(() => {
         const user = localStorage.getItem('usuario');
-        setUser(JSON.parse(user))
-    }, [])
-    const handlePerfilClick = () => {
+        setUser(JSON.parse(user));
+
         if (!user) {
-            return navigate("/login")
+            navigate("/")
         }
+    }, []);
+
+    const handlePerfilClick = () => {
+
         navigate("/perfil")
     }
 
@@ -29,9 +32,7 @@ export default function Header() {
     }
 
     const handleAgendaClick = () => {
-        if (!user) {
-            return navigate("/login")
-        }
+
         navigate("/agenda")
     }
 

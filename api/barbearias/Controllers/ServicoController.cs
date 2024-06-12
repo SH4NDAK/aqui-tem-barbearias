@@ -63,7 +63,6 @@ namespace jwtRegisterLogin.Controllers
         [HttpPut("editar/{id}")]
         public async Task<IActionResult> EditarServico(int id, ServicoCriacaoDto servicoDTO)
         {
-
             var response = await _servicoService.EditarServico(id, servicoDTO);
 
             if (response.Status == 405)

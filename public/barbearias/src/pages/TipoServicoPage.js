@@ -41,12 +41,12 @@ export default function TipoServicoPage() {
         try {
             await editService(record.id, {
                 ativo: "false",
-                descricao: record.descricaoServico,
-                duracao: record.duracaoServico,
-                nome: record.nomeServico,
-                preco: record.precoServico.toString(),
+                descricao: record.descricao,
+                duracao: record.duracao,
+                nome: record.nome,
+                preco: record.preco.toString(),
             })
-            notification.sucess({
+            notification.success({
                 message: "Sucesso",
                 description: "Item excluido com sucesso"
             })
@@ -59,7 +59,7 @@ export default function TipoServicoPage() {
         {
             title: 'Nome',
             dataIndex: 'nomeServico',
-            key: 'nomeServico',
+            key: 'nomeServico'
         },
         {
             title: 'Descrição',
@@ -83,10 +83,10 @@ export default function TipoServicoPage() {
                 <Dropdown
                     overlay={
                         <Menu>
-                            <Menu.Item key="0">
+                            <Menu.Item key="1">
                                 <a onClick={() => navigate(`edit/${record.id}`)}>Editar</a>
                             </Menu.Item>
-                            <Menu.Item key="1" onClick={() => deleteServiceType(record)}>
+                            <Menu.Item key="2" onClick={() => deleteServiceType(record)}>
                                 <Trash />
                             </Menu.Item>
                         </Menu>
@@ -96,6 +96,7 @@ export default function TipoServicoPage() {
                         Ações
                     </a>
                 </Dropdown>
+
             ),
         },
     ];
@@ -118,7 +119,7 @@ export default function TipoServicoPage() {
                                     icon={<Plus />}
                                     onClick={handleCadastroClick}
                                     variant={"icon"}
-                                    />
+                                />
                                 <InputText
                                     label="Nome"
                                     type="text"
@@ -127,12 +128,17 @@ export default function TipoServicoPage() {
                                         setServiceTypeFilter(
                                             serviceType.filter((y) =>
                                                 y.nomeServico.toLowerCase().includes(e.target.value.toLowerCase())
+                                            )
                                         )
-                                    )
-                                }
+                                    }
                                 />
+                                <div>
+                                    
+                                </div>
+                                <input />
+                                <label>Incluir inativos</label>
                             </Row>
-                            <Table columns={columns} dataSource={serviceTypeFilter} pagination={{ pageSize: 10 }} scroll={{ y: 240 }}/>
+                            <Table columns={columns} dataSource={serviceTypeFilter} pagination={{ pageSize: 10 }} scroll={{ y: 240 }} />
                         </Row>
                     </form>
                 </div>
