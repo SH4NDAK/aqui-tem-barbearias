@@ -7,8 +7,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using jwtRegisterLogin.Services.CookieService;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Data.Common;
+using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc;
 
-namespace jwtRegisterLogin.Services.ServicoService 
+namespace jwtRegisterLogin.Services.ServicoService
 {
     public class ServicoService : IServicoService
     {
@@ -21,10 +24,10 @@ namespace jwtRegisterLogin.Services.ServicoService
 
         private readonly ICookieService _cookieService;
 
-        public ServicoService(AppDbContext context, ICookieService cookieService) 
+        public ServicoService(AppDbContext context, ICookieService cookieService)
         {
             _context = context;
-            _cookieService = cookieService; 
+            _cookieService = cookieService;
         }
 
         public async Task<Response<ServicoCriacaoDto>> CriarServico(ServicoCriacaoDto servicoDto)
@@ -33,24 +36,8 @@ namespace jwtRegisterLogin.Services.ServicoService
 
             Response<ServicoCriacaoDto> response = new Response<ServicoCriacaoDto>();
 
-            // if (!cookieValido)
-            // {
-            //    response.Mensagem = "Cookie Invalido";
-            //    response.Status = 405;
-            //    return response;
-            // }
-
             try
             {
-
-                   //Verificar se o usuarioId fornecido existe
-                var usuarioIdExistente = await _context.Usuario.FindAsync(int.Parse(servicoDto.UsuarioId));
-                if (usuarioIdExistente == null)
-                {
-                    response.Mensagem = "Usuário com o Id fornecido não foi encontrado.";
-                    response.Status = 405;
-                    return response;
-                }
 
                 ServicoModel servico = new ServicoModel
                 {
@@ -58,8 +45,7 @@ namespace jwtRegisterLogin.Services.ServicoService
                     Descricao = servicoDto.Descricao,
                     Duracao = servicoDto.Duracao,
                     Preco = decimal.Parse(servicoDto.Preco),
-                    Ativo = bool.Parse(servicoDto.Ativo),
-                    UsuarioId = int.Parse(servicoDto.UsuarioId) // Supondo que o Id do usuário seja fornecido no DTO
+                    Ativo = true
                 };
 
                 // Adiciona o serviço ao contexto do banco de dados
@@ -72,7 +58,7 @@ namespace jwtRegisterLogin.Services.ServicoService
             }
             catch (Exception ex)
             {
-                response.Mensagem = ex.Message;
+                response.Mensagem = "Já existe um tipo de serviço cadastrado com este nome";
                 response.Status = 405;
             }
 
@@ -85,34 +71,13 @@ namespace jwtRegisterLogin.Services.ServicoService
 
             Response<List<ServicoCriacaoDto>> response = new Response<List<ServicoCriacaoDto>>();
 
-            // if (!cookieValido)
-            // {
-            //    response.Mensagem = "Cookie Invalido";
-            //    response.Status = 405;
-            //    return response;
-            // }
-            
             try
             {
-                // Chamar o serviço para obter os dados do usuário
-                var resultadoServico = await _context.Servico.ToListAsync();
-                var resultadoUsuario = await _context.Usuario.ToListAsync();
+                var query = _context.Servico.AsQueryable();
 
-                var resultado = resultadoServico.Join(
-                    resultadoUsuario,
-                    servico => servico.UsuarioId.ToString(),
-                    usuario => usuario.Id.ToString(),
-                    (servico, usuario) => new
-                    {
-                        servico.Id,
-                        NomeServico = servico.Nome,
-                        DescricaoServico = servico.Descricao,
-                        DuracaoServico = servico.Duracao,
-                        PrecoServico = servico.Preco, 
-                        AtivoServico = servico.Ativo,
-                        UsuarioIdServico = servico.UsuarioId,
-                        NomeUsuario = usuario.Usuario
-                    }).ToList();
+
+                // Chamar o serviço para obter os dados do usuário
+                var resultado = await query.ToListAsync();
 
                 response.Dados = resultado;
                 response.Mensagem = "Serviço e usuário exibidos com sucesso.";
@@ -125,7 +90,7 @@ namespace jwtRegisterLogin.Services.ServicoService
             }
 
             return response;
-            
+
         }
 
         public async Task<Response<ServicoCriacaoDto>> EditarServico(int id, ServicoCriacaoDto servicoDto)
@@ -157,7 +122,6 @@ namespace jwtRegisterLogin.Services.ServicoService
                 servico.Duracao = servicoDto.Duracao;
                 servico.Preco = decimal.Parse(servicoDto.Preco);
                 servico.Ativo = bool.Parse(servicoDto.Ativo);
-                servico.UsuarioId = int.Parse(servicoDto.UsuarioId); // Supondo que o Id do usuário seja fornecido no DTO
 
                 // Adiciona o serviço ao contexto do banco de dados
                 _context.Servico.Update(servico);
@@ -183,38 +147,14 @@ namespace jwtRegisterLogin.Services.ServicoService
 
             Response<List<ServicoCriacaoDto>> response = new Response<List<ServicoCriacaoDto>>();
 
-            // if (!cookieValido)
-            // {
-            //    response.Mensagem = "Cookie Invalido";
-            //    response.Status = 405;
-            //    return response;
-            // }
-            
             try
             {
                 // Chamar o serviço para obter os dados do usuário
                 //var resultadoServico = await _context.Servico.ToListAsync();
 
-                var resultadoServico = await _context.Servico
+                var resultado = await _context.Servico
                 .Where(servico => servico.Id == id)
-                .ToListAsync(); 
-                var resultadoUsuario = await _context.Usuario.ToListAsync();
-
-                var resultado = resultadoServico.Join(
-                    resultadoUsuario,
-                    servico => servico.UsuarioId.ToString(),
-                    usuario => usuario.Id.ToString(),
-                    (servico, usuario) => new
-                    {
-                        servico.Id,
-                        NomeServico = servico.Nome,
-                        DescricaoServico = servico.Descricao,
-                        DuracaoServico = servico.Duracao,
-                        PrecoServico = servico.Preco, 
-                        AtivoServico = servico.Ativo,
-                        UsuarioIdServico = servico.UsuarioId,
-                        NomeUsuario = usuario.Usuario
-                    }).ToList();
+                .ToListAsync();
 
                 response.Dados = resultado;
                 response.Mensagem = "Serviço e usuário exibidos com sucesso.";
@@ -227,7 +167,7 @@ namespace jwtRegisterLogin.Services.ServicoService
             }
 
             return response;
-            
+
         }
 
     }

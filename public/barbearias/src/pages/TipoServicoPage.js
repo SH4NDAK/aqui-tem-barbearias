@@ -45,7 +45,6 @@ export default function TipoServicoPage() {
                 duracao: record.duracaoServico,
                 nome: record.nomeServico,
                 preco: record.precoServico.toString(),
-                usuarioId: record.usuarioIdServico.toString()
             })
             notification.sucess({
                 message: "Sucesso",

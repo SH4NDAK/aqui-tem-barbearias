@@ -12,27 +12,41 @@ import Selectpicker from "../components/Selectpicker";
 import LayoutPage from "../components/LayoutPage";
 import { createService } from "../services/service";
 import Header from "../components/Header";
+import { notification } from "antd";
+import { isAxiosError } from "axios";
 
 export default function TipoServicoFormPage() {
     const location = useLocation();
     const navigate = useNavigate();
- 
+
     // verificando se o tipo de serviço foi passado para esta pagina, se sim, é uma edição
     const isCadastro = !location.state?.tipoServico;
- 
+
     // trazendo as operações de formulário da biblioteca hook form
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
- 
+
     // função chamada ao submeter o formulario
     const onSubmit = async (data) => {
         try {
-            await createService(data)
+            await createService(data);
+            notification.success({
+                message: "Tipo de serviço cadastrado com sucesso"
+            });
+
+            setValue("nome", '')
+            setValue("descricao", '')
+            setValue("preco", '')
+            setValue("duracao", '');
+
+
         } catch (error) {
-            console.log(error);
+            if (!isAxiosError(error)) return
+            const { data } = error.response
+            notification.error({ message: data.mensagem });
         }
     }
- 
- 
+
+
     return (
         <div className="w-full h-dvh bg-[#242222]">
             <Header />
@@ -87,7 +101,8 @@ export default function TipoServicoFormPage() {
                             >
                                 <InputText
                                     type="text"
-                                    label="preco"
+                                    placeholder="Informe um preço"
+                                    label="Preço"
                                     monetario={true}
                                     inputMode="numeric"
                                     {...register("preco", {
@@ -100,32 +115,32 @@ export default function TipoServicoFormPage() {
                                     errors={errors.preco}
                                     variant={errors.preco ? 'invalid' : ''}
                                     onChange={(e) => {
- 
+
                                         // formatando o valor em dinheiro
                                         //pegando o valor atual
                                         let valor = e.currentTarget.value;
- 
+
                                         // removendo os caracteres não numéricos
                                         valor = valor.replace(/\D/g, '');
- 
+
                                         // pegando o valor digitado em inteiro (dividindo por 100 pra tratar os centavos)
                                         valor = parseInt(valor, 10) / 100;
- 
+
                                         // se o valor não é valido (não é um numero)
                                         if (isNaN(valor)) {
- 
+
                                             // seta ele como vazio e não continua o código
                                             valor = '';
                                             e.currentTarget.value = valor;
                                             return;
                                         }
- 
+
                                         // se ta tudo certo, formata o valor
                                         valor = valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
- 
+
                                         // atualizando o campo do input com o valor
                                         e.currentTarget.value = valor;
- 
+
                                         // definindo o valor do input como o novo valor e validando no useForm
                                         setValue("preco", e.currentTarget.value, { shouldValidate: true });
                                     }}
@@ -138,6 +153,7 @@ export default function TipoServicoFormPage() {
                             >
                                 <InputText
                                     type="text"
+                                    placeholder="Informe a duração em minutos"
                                     className="w-full"
                                     label="Duração"
                                     inputMode="numeric"
@@ -176,13 +192,8 @@ export default function TipoServicoFormPage() {
                                     }}
                                 />
                             </Col>
-                            <Selectpicker
-                                label="Vincular barbeiros (opcional)"
-                                {...register("usuarioId")}
-                            >
-                            </Selectpicker>
                         </Row>
- 
+
                         <Row>
                             <Col
                                 variant={"full"}
@@ -197,18 +208,18 @@ export default function TipoServicoFormPage() {
                                     >
                                         Voltar
                                     </Button>
- 
+
                                     <Button
                                         type="submit"
                                         icon={<CloudUpload />}
                                     >
                                         Cadastrar
                                     </Button>
- 
+
                                 </div>
                             </Col>
                         </Row>
- 
+
                     </form>
                 </div>
 
@@ -216,5 +227,5 @@ export default function TipoServicoFormPage() {
         </div >
 
     )
- 
+
 }

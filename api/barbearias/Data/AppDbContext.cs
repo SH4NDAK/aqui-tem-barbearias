@@ -24,7 +24,9 @@ namespace jwtRegisterLogin.Data
             modelBuilder.Entity<BarbeariaUsuarioModel>()
                 .HasAlternateKey(c => new { c.Id_usuario, c.Id_barbearia });
 
-            // Outras configurações do modelo...
+            modelBuilder.Entity<ServicoModel>()
+                .HasIndex(s => s.Nome)
+                .IsUnique();
         }
     }
 }

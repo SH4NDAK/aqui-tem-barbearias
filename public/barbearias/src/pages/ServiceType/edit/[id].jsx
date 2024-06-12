@@ -53,7 +53,6 @@ export default function EditTipoServico() {
             await editService(id, {
                 ...record,
                 ativo: serviceData.ativoServico.toString(),
-                usuarioId: serviceData.usuarioIdServico.toString(),
                 duracao: record.duracao.format('HH:mm'),
                 preco: record.preco.toString()
             });

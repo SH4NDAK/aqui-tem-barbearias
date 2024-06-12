@@ -239,7 +239,7 @@ export default function Home() {
         const [abrirModalUnlink, setAbrirModalUnlink] = useState(false);
 
         const handleAcessarBarbearia = () => {
-            alert("Em desenvolvimento");
+            // navigate()
         };
 
         return (

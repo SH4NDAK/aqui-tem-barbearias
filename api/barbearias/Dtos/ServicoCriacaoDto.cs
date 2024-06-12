@@ -17,7 +17,5 @@ namespace jwtRegisterLogin.Dtos
         public string Preco { get; set; }
 
         public string? Ativo { get; set; }
-
-        public string? UsuarioId { get; set; } // Chave estrangeira da tabela User
     }
 }
