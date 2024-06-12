@@ -36,7 +36,10 @@ export default function TipoServicoPage() {
                 setServiceType(dados);
                 setServiceTypeFilter(dados);
             } catch (error) {
-                console.log(error);
+                notification.warning({
+                    message: "Error",
+                    description: "Ocorreu um erro inesperado"
+                })
             }
         })();
     }, []);
@@ -56,7 +59,10 @@ export default function TipoServicoPage() {
                 description: "Item excluido com sucesso"
             })
         } catch (error) {
-            console.log(error)
+            notification.warning({
+                message: "Error",
+                description: "Ocorreu um erro inesperado ao tentar deletar serviço"
+            })
         }
     };
 

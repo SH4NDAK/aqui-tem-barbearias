@@ -27,8 +27,16 @@ export default function Barbeiros() {
     }
 
     const handlePesquisarClick = async () => {
-        const response = await listByCargo(4, nome);
-        setBarbeiros(response);
+        try {
+            
+            const response = await listByCargo(4, nome);
+            setBarbeiros(response);
+        } catch (error) {
+            notification.warning({
+                message: "Error",
+                description: "Ocorreu um erro inesperado"
+            })
+        }
     }
 
     const handleEditarBarbeiro = (id) => {
@@ -149,7 +157,10 @@ export default function Barbeiros() {
 
 
             } catch (error) {
-                console.log(error);
+                notification.warning({
+                    message: "Error",
+                    description: "Ocorreu um erro inesperado"
+                })
             }
             finally {
                 handlePesquisarClick();

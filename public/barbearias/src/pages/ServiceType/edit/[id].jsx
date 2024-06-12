@@ -22,11 +22,13 @@ export default function EditTipoServico() {
     const [serviceData, setServiceData] = useState(null);
 
     const onSubmit = async (data) => {
-        console.log(data);
         try {
-        await editServiceType(data);
+            await editServiceType(data);
         } catch (error) {
-        console.log(error);
+            notification.warning({
+                message: "Error",
+                description: "Ocorreu um erro inesperado"
+            })
         }
     };
 
@@ -42,13 +44,15 @@ export default function EditTipoServico() {
                     setValue("duracao", dayjs(dados[0].duracaoServico, 'HH:mm'));
                 }
             } catch (error) {
-                console.log(error);
+                notification.warning({
+                    message: "Error",
+                    description: "Ocorreu um erro inesperado"
+                })
             }
         })();
     }, []);
 
     const editServiceType = async (record) => {
-        console.log(record)
         try {
             await editService(id, {
                 ...record,
@@ -62,7 +66,10 @@ export default function EditTipoServico() {
                 description: "Item editado com sucesso",
             });
         } catch (error) {
-            console.log(error);
+            notification.warning({
+                message: "Error",
+                description: "Ocorreu um erro inesperado"
+            })
         }
     };
 
@@ -170,19 +177,19 @@ export default function EditTipoServico() {
                     <Row>
                     <Col variant="full">
                         <div className="flex gap-4 justify-end">
-                        <Button
-                            type="button"
-                            icon={<ArrowLeftCircle />}
-                            onClick={() => { navigate(-1) }}
-                        >
-                            Voltar
-                        </Button>
-                        <Button
-                            type="submit"
-                            icon={<CloudUpload />}
-                        >
-                            Editar
-                        </Button>
+                            <Button
+                                type="button"
+                                icon={<ArrowLeftCircle />}
+                                onClick={() => { navigate(-1) }}
+                            >
+                                Voltar
+                            </Button>
+                            <Button
+                                type="submit"
+                                icon={<CloudUpload />}
+                            >
+                                Editar
+                            </Button>
                         </div>
                     </Col>
                     </Row>

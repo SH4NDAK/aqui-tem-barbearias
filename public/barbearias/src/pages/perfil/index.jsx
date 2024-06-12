@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../img/logo.jpg"; 
 import Header from "../../components/Header";
 import SideBar from '../../components/SideBar';
+import { ArrowLeftCircle } from "lucide-react";
 
 export default function Perfil() {
   // trazendo algumas funções úteis da biblioteca react-hook-form
@@ -32,15 +33,24 @@ export default function Perfil() {
   // função chamada no envio do formulário de login
   const onSubmit = async (data) => {
     try {
-        const res = await editUser(user.id, data)
-        setLogoutUser()
-        SetAuthenticationUser({...user, ...data})
-        notification.success({
-            message: "Sucesso",
-            description: res.mensagem
-          })
+        if (data.senha === data.confirmPassword || (isNaN(data.senha) &&  isNaN(data.senha))) {
+            const res = await editUser(user.id, data)
+            setLogoutUser()
+            SetAuthenticationUser({...user, ...data})
+            return notification.success({
+                message: "Sucesso",
+                description: res.mensagem
+              })
+        }
+        return notification.error({
+            message: "Erro",
+            description: "As duas senhas devem coincidir"
+        })      
     } catch (error) {
-        console.log(error);
+        notification.warninga({
+            message: "Sucesso",
+            description: "Ocorreu um erro inesperado"
+          })
     } 
   }
 
@@ -92,10 +102,12 @@ export default function Perfil() {
                 }
                 </div>
                 <InputText
-                label='Senha'
-                type='password'
-                placeholder={'Digite sua senha'}
-                variant={errors.senha ? 'invalid' : ''} 
+                    label='Senha'
+                    type='senha'
+                    defaultValue={""}
+                    placeholder={'Digite sua senha'}
+                    variant={errors.senha ? 'invalid' : ''}
+                    {...register("password")}
                 />
                 <div>
                 {errors.senha && (
@@ -108,10 +120,12 @@ export default function Perfil() {
                 }
                 </div>
                 <InputText
-                label='Confirmar senha'
-                type='password'
-                placeholder={'Digite sua senha'}
-                variant={errors.confirmPassword ? 'invalid' : ''} 
+                    label='Confirmar senha'
+                    type='password'
+                    defaultValue={""}
+                    placeholder={'Digite sua senha'}
+                    variant={errors.confirmPassword ? 'invalid' : ''}
+                    {...register("confirmPassword")}
                 />
                 <div>
                 {errors.confirmPassword && (
@@ -123,13 +137,21 @@ export default function Perfil() {
                 )
                 }
                 </div>
-
-                <Button
-                    type="submit"
-                    className="flex w-full mt-4 justify-center"
-                >
-                Editar
-                </Button>
+                <div className="flex gap-4 justify-end items-center mt-4">
+                    <Button
+                        type="button"
+                        icon={<ArrowLeftCircle />}
+                        onClick={() => { navigate(-1) }}
+                        >
+                        Voltar
+                    </Button>
+                    <Button
+                        type="submit"
+                        className="flex w-full justify-center"
+                        >
+                    Editar
+                    </Button>
+                </div>
             </form>
             </div>
         </div>

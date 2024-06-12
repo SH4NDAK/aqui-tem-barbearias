@@ -7,7 +7,7 @@ import { SetAuthenticationToken, SetAuthenticationUser, signUpRequest } from "..
 import { notification } from 'antd';
 import { useNavigate } from "react-router-dom";
 import logo from "../../img/logo.jpg"; 
-                                    
+import InputMask from 'react-input-mask';
 
 export default function Register() {
   // trazendo algumas funções úteis da biblioteca react-hook-form
@@ -40,14 +40,9 @@ export default function Register() {
         })      
       }
       // faz chamada de autenticação
-      const res = await signUpRequest({...data, role: 4})
+      const res = await signUpRequest({...data, role: 4, telefone: data.telefone.replace(/\D/g, '')})
       // se der erro de autenticacao volta a mensagen
-      if (res.status === false) {
-        return notification.error({
-          message: "Erro",
-          description: res.mensagem
-        })        
-      }
+
       // define o token nos cookies
       SetAuthenticationToken(res.dados.token)
       // define usuario na aplications
@@ -61,12 +56,16 @@ export default function Register() {
       navigate('/home')
     } catch (e) {
       // Mostra uma notificação de erro na tela se der erro
-      if (e.response?.data?.errors?.Email[0]) {
-        notification.warning({
+      if (e?.response?.data?.errors?.Email?.[0]) {
+        return notification.warning({
           message: "Erro",
           description: e.response.data.errors.Email[0]
         })
       }
+      notification.warning({
+        message: "Error",
+        description: "Ocorreu um erro inesperado"
+    })
     }
   }
 
@@ -99,7 +98,7 @@ export default function Register() {
               }
             </div>
             <InputText
-              label='Email ou Telefone'
+              label='Email'
               type='text'
               placeholder={'Digite seu Email ou Telefone'}
               {...register("email", { required: "Campo obrigatório*" })}
@@ -111,6 +110,29 @@ export default function Register() {
                   className="font-semibold text-red-600 text-sm"
                 >
                   {errors.email.message}
+                </span>
+              )
+              }
+            </div>
+            <label            >
+                Telefone
+            </label>
+            <InputMask
+              label='Telefone'
+              type='tel'
+              required
+              className="w-full border border-[#242222] rounded p-2 text-[#242222] outline-none"
+              placeholder='Digite seu Telefone'
+              {...register("telefone", { required: "Campo obrigatório*" })}
+              mask='(99) 99999-9999'
+              variant={errors.telefone ? 'invalid' : ''}
+            />
+            <div>
+              {errors.telefone && (
+                <span
+                  className="font-semibold text-red-600 text-sm"
+                >
+                  {errors.telefone.message}
                 </span>
               )
               }

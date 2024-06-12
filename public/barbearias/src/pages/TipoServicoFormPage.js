@@ -1,17 +1,14 @@
 import { ArrowLeftCircle, CloudUpload } from "lucide-react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import Col from "../components/Col";
-import Container from "../components/Container";
-import FormContainer from "../components/FormContainer";
 import InputText from "../components/InputText";
 import Row from "../components/Row";
-import Label from "../components/Label";
 import Selectpicker from "../components/Selectpicker";
-import LayoutPage from "../components/LayoutPage";
 import { createService } from "../services/service";
 import Header from "../components/Header";
+import { notification } from "antd";
 
 export default function TipoServicoFormPage() {
     const location = useLocation();
@@ -28,7 +25,10 @@ export default function TipoServicoFormPage() {
         try {
             await createService(data)
         } catch (error) {
-            console.log(error);
+            notification.warning({
+                message: "Error",
+                description: "Ocorreu um erro ao criar servico"
+            })
         }
     }
  

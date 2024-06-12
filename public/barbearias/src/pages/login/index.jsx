@@ -57,12 +57,16 @@ export default function App() {
       navigate('/home')
     } catch (e) {
       // Mostra uma notificação de erro na tela se der erro
-      if (e.response.data.mensagem) {
-        notification.warning({
+      if (e?.response?.data?.mensagem) {
+        return notification.warning({
           message: "Erro",
           description: e.response.data.mensagem
         })
       }
+      notification.warning({
+        message: "Error",
+        description: "Ocorreu um erro inesperado"
+    })
     }
   }
 
