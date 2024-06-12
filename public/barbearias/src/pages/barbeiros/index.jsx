@@ -1,18 +1,21 @@
-import { AlertCircle, ArrowRight, ArrowRightCircle, Pen, Pencil, Plus, Search, Trash, X } from "lucide-react";
+import { AlertCircle, ArrowRight, ArrowRightCircle, BriefcaseBusiness, Pen, Pencil, Plus, Search, Trash, X } from "lucide-react";
 import Header from "../../components/Header";
 import InputText from "../../components/InputText";
 import { useNavigate } from "react-router-dom";
-import { listByCargo } from "../../services/barbeiro";
+import { getServicos, listByCargo } from "../../services/barbeiro";
 import { useEffect, useState } from "react";
 import confirm from "antd/es/modal/confirm";
 import { Modal } from "antd";
 import { deleteUser } from "../../services/auth";
 import { notification } from 'antd';
+import { listService } from "../../services/service";
 
 export default function Barbeiros() {
     const navigate = useNavigate();
     const [barbeiros, setBarbeiros] = useState([]);
     const [abrirModalExclusao, setAbrirModalExclusao] = useState(false);
+    const [barbeiroLink, setBarbeiroLink] = useState(null);
+    const [abrirModalLink, setAbrirModalLink] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [nome, setNome] = useState();
 
@@ -40,6 +43,11 @@ export default function Barbeiros() {
     const handleExcluirBarbeiro = async (id) => {
         setAbrirModalExclusao(true);
         setDeleteId(id);
+    }
+
+    const handleVincularServicos = (barbeiro) => {
+        setAbrirModalLink(true);
+        setBarbeiroLink(barbeiro)
     }
 
     return (
@@ -100,6 +108,9 @@ export default function Barbeiros() {
                                                 <button onClick={() => handleEditarBarbeiro(barbeiro.id)}>
                                                     <Pencil />
                                                 </button>
+                                                <button onClick={() => handleVincularServicos(barbeiro)}>
+                                                    <BriefcaseBusiness />
+                                                </button>
                                                 <button onClick={() => handleExcluirBarbeiro(barbeiro.id)}>
                                                     <Trash />
                                                 </button>
@@ -120,6 +131,11 @@ export default function Barbeiros() {
                 {
                     <ModalConfirmacao
                         id={deleteId}
+                    />
+                }
+                {
+                    <ModalLinkTipoServico
+                        barbeiro={barbeiroLink}
                     />
                 }
             </div>
@@ -199,6 +215,71 @@ export default function Barbeiros() {
             )
         );
 
+    }
+
+    function ModalLinkTipoServico({ barbeiro }) {
+
+        const [servicos, setServicos] = useState([]);
+        const [servicosBarbeiro, setServicosBarbeiro] = useState([]);
+
+        useEffect(() => {
+            (async () => {
+
+                // Todos os serviços
+                const servicos = await listService();
+
+                // Serviços ja vinculados ao barbeiro
+                const servicos_barbeiro = await getServicos(barbeiro.id);
+
+                setServicos(servicos.dados);
+                setServicosBarbeiro(servicos_barbeiro.dados);
+            })();
+        }, [barbeiro.id])
+
+        return (
+            abrirModalLink && (
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    {/* Overlay */}
+                    <div className="fixed inset-0 bg-black opacity-50 pointer-events-none"></div>
+
+                    {/* Modal */}
+                    <div className="relative w-full md:w-3/12 bg-white p-2 rounded-md shadow-sm shadow-[#242222] z-50">
+                        <div className="flex w-full justify-between">
+                            <span className="w-fit flex flex-row items-center font-semibold bold text-lg">
+                                <BriefcaseBusiness className="text-blue-600 me-1" /> Serviços prestados por {barbeiro.usuario}
+                            </span>
+                            <X
+                                className="cursor-pointer"
+                                onClick={() => setAbrirModalLink(false)}
+                            />
+                        </div>
+                        <div className="flex flex-col w-full gap-4">
+                            <div className="flex w-full mt-4">
+                                <div className="w-full">
+                                    <label className="block font-semibold">Serviço</label>
+                                    <select className="w-full rounded-sm border-b border-[#242222] p-1 text-[#242222] outline-none uppercase">
+                                        <option value={''}>SELECIONE 1 SERVIÇO</option>
+                                        {
+                                            servicos.filter(servico => !servicosBarbeiro.some(
+                                                s => s.id === servico.id
+                                            )).map(service => {
+                                                return (
+                                                    <option value={service.id}>{service.nome}</option>
+                                                )
+                                            })
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="w-full">
+                                tipos de serviço vinculados
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            )
+        )
     }
 }
 

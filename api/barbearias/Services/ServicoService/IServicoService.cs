@@ -13,6 +13,7 @@ namespace jwtRegisterLogin.Services.ServicoService
 
         Task<Response<List<ServicoCriacaoDto>>> ListarUnicoServico(int Id);
     
+        Task<Response<List<ServicoCriacaoDto>>> ListByBarbeiro(int Id);
     }
 }
 

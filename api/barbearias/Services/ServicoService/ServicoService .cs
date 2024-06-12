@@ -160,5 +160,36 @@ namespace jwtRegisterLogin.Services.ServicoService
 
         }
 
+        async public Task<Response<List<ServicoCriacaoDto>>> ListByBarbeiro(int id)
+        {
+            Response<List<ServicoCriacaoDto>> response = new Response<List<ServicoCriacaoDto>>();
+
+            try
+            {
+                var resultado = await _context.ServicoUsuario
+                    .Where(servicoUsuario => servicoUsuario.Id_usuario == id)
+                    .Join(
+                        _context.Servico, // Tabela com a qual você quer fazer o join
+                        servicoUsuario => servicoUsuario.Id_tipo_servico, // Chave estrangeira em ServicoUsuario
+                        servico => servico.Id, // Chave primária em Servico
+                        (servicoUsuario, servico) => new
+                        {
+                            ServicoUsuario = servicoUsuario,
+                            Servico = servico
+                        } // Resultado do join
+                    )
+                    .ToListAsync();
+
+                response.Dados = resultado;
+                response.Status = 200;
+
+            }
+            catch (Exception ex)
+            {
+                response.Mensagem = ex.Message;
+                response.Status = 405;
+            }
+            return response;
+        }
     }
 }

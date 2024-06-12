@@ -24,7 +24,7 @@ namespace jwtRegisterLogin.Controllers
         [HttpPost("cadastrar")] // Renomeei o endpoint para "cadastrar"
         public async Task<IActionResult> CadastrarServico(ServicoCriacaoDto servicoDto)
         {
-            
+
             // Chama o ServicoService para criar o serviço
             var response = await _servicoService.CriarServico(servicoDto);
 
@@ -56,10 +56,10 @@ namespace jwtRegisterLogin.Controllers
             {
                 return BadRequest(response);
             }
-            
+
             return Ok(response);
         }
-        
+
         [HttpPut("editar/{id}")]
         public async Task<IActionResult> EditarServico(int id, ServicoCriacaoDto servicoDTO)
         {
@@ -85,9 +85,18 @@ namespace jwtRegisterLogin.Controllers
             return Ok(response);
         }
 
-        private string GetDebuggerDisplay()
+
+        [HttpGet("listar/{id_barbeiro}")]
+        public async Task<IActionResult> ListByBarbeiro(int id_barbeiro)
         {
-            return ToString();
+            var response = await _servicoService.ListByBarbeiro(id_barbeiro);
+
+            if (response.Status == 405)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
     }
 }

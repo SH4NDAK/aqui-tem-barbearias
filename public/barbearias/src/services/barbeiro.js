@@ -15,3 +15,14 @@ export async function listByCargo(cargo, nome) {
         throw error;
     }
 }
+
+export async function getServicos(id_barbeiro) {
+    try {
+        const { data } = await api.get(`Servico/listar/${id_barbeiro}`)
+        return data
+    } catch (error) {
+
+        console.error('Erro ao listar barbeiros:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+}
