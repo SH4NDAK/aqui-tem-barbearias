@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Layout, Menu } from 'antd'
+import { setLogoutUser } from '../services/auth';
+import { LogOutIcon } from 'lucide-react';
 
 export default function SideBar({ children }) {
   const navigate = useNavigate();
@@ -22,6 +24,10 @@ export default function SideBar({ children }) {
     setSelectedMenuItem(item.key);
     navigate(item.path);
   };
+  const signOut = () => {
+    setLogoutUser()
+    return navigate("/")
+  }
 
   return (
     <Layout>
@@ -37,6 +43,9 @@ export default function SideBar({ children }) {
           </Menu.Item>
           <Menu.Item key='2' onClick={() => handleMenuItemClick({ key: '2', path: '/agenda' })}>
             Agenda
+          </Menu.Item>
+          <Menu.Item key='2' onClick={() => signOut()}>
+            <LogOutIcon />
           </Menu.Item>
         </Menu>
       </Layout.Sider>

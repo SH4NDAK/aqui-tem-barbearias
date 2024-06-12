@@ -1,11 +1,9 @@
-import { ArrowLeft, ArrowLeftCircle, Plus } from "lucide-react";
 import Button from "../components/Button";
 import Col from "../components/Col";
 import Container from "../components/Container";
 import FormContainer from "../components/FormContainer";
 import InputText from "../components/InputText";
 import Row from "../components/Row";
-import logo from "../img/logo.jpg"
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from "react";
@@ -46,7 +44,7 @@ export default function RegisterPage() {
                                 <InputText
                                     label="Senha"
                                     type={verSenha ? 'text' : 'password'}
-                                    placeholder="Digite sua senha"
+                                    placeholder="Confirme sua senha"
                                     icon={verSenha ? <EyeOff /> : <Eye />}
                                     onIconClick={handleIconClick}
                                 />

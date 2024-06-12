@@ -1,19 +1,45 @@
-import { ArrowLeft, ArrowLeftCircle, Plus } from "lucide-react";
 import Button from "../components/Button";
 import Col from "../components/Col";
 import Container from "../components/Container";
 import FormContainer from "../components/FormContainer";
 import InputText from "../components/InputText";
 import Row from "../components/Row";
-import logo from "../img/logo.jpg"
 import { useNavigate } from "react-router-dom";
+import { listByEmail } from "../services/barbeiro";
+import { useContext, useState } from "react";
+import axios from "axios";
 
 
 export default function RegisterPage() {
 
     const navigate = useNavigate(false);
 
+    const [email, setEmail] = useState()
 
+    const [OTP, setOTP] = useState();
+
+
+    function navigateToOtp(){
+        if (email){
+            const OTP = Math.floor(Math.random() * 9000 + 1000);
+            console.log(OTP);
+            setOTP(OTP);
+
+            axios
+                .post("http://localhost:3000/send_recovery_email",{
+                    OTP,
+                    recient_email: email
+                })
+                .then(()=>navigate("/verification"))
+                .catch(console.log);
+                return;
+        }
+    }
+
+    const ListarUsuarioEmail = async () => {
+        const res = await listByEmail(email);
+        // navigate("/verification", { state: res })   
+    }
     return (
         <Container>
             <FormContainer
@@ -27,15 +53,21 @@ export default function RegisterPage() {
                                     label="E-mail"
                                     type="email"
                                     placeholder="Digite seu e-mail"
+                                    onChange={(e) => {
+                                        setEmail(e.currentTarget.value)
+                                    }}
                                 />
                             </Col>
                         </Row>
                         <Row>
                             <div className="flex w-full  justify-center">
                                 <Button
-                                    type="submit"
+                                    type="button"
                                     className="w-full"
-                                    onClick={() => navigate("/verification")}
+                                    // onClick={() => ListarUsuarioEmail(email)}
+                                    onClick={() => {ListarUsuarioEmail(email);
+                                        navigateToOtp()}}
+                                                    
                                 >
                                     Enviar e-mail de redefinição de senha
                                 </Button>

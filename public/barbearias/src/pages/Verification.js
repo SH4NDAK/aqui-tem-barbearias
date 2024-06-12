@@ -1,17 +1,18 @@
-import { ArrowLeft, ArrowLeftCircle, Plus } from "lucide-react";
 import Button from "../components/Button";
 import Col from "../components/Col";
 import Container from "../components/Container";
 import FormContainer from "../components/FormContainer";
 import InputText from "../components/InputText";
 import Row from "../components/Row";
-import logo from "../img/logo.jpg"
-import { useNavigate } from "react-router-dom";
-
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
 
+    const location = useLocation()
     const navigate = useNavigate(false);
+    console.log(location.state)
+
+    // const{email, otp, setPage} = useContext(RecoveryContext);
 
 
     return (
