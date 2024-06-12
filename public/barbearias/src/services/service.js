@@ -21,6 +21,11 @@ export async function takeUniqueService(id) {
 }
 
 export async function linkServicoBarbeiro(id_tipo_servico, id_barbeiro) {
-    const { data } = await api.post(`ServicoUsuario/vincular?servico=${id_tipo_servico}&user=${id_barbeiro}`);
+    const payload = {
+        id_tipo_servico,
+        id_barbeiro
+    }
+
+    const { data } = await api.post(`ServicoUsuario/vincular`, payload);
     return data;
 }

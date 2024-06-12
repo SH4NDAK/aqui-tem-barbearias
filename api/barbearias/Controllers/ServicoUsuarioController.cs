@@ -14,6 +14,12 @@ namespace jwtRegisterLogin.Controllers
             _servicoService = servicoService;
         }
 
+        // [HttpPost("vincular")]
+        // public async Task<IActionResult> VincularCliente([FromBody] VincularRequest request)
+        // {
+        //     return await _barbeariaService.VincularCliente(request);
+        // }
+
 
     }
 }
