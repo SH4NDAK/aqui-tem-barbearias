@@ -1,4 +1,4 @@
-import { AlertCircle, ArrowRight, ArrowRightCircle, BriefcaseBusiness, Pen, Pencil, Plus, Search, Trash, X } from "lucide-react";
+import { AlertCircle, ArrowRight, ArrowRightCircle, BriefcaseBusiness, Link, Pen, Pencil, Plus, Search, Trash, X } from "lucide-react";
 import Header from "../../components/Header";
 import InputText from "../../components/InputText";
 import { useNavigate } from "react-router-dom";
@@ -221,6 +221,7 @@ export default function Barbeiros() {
 
         const [servicos, setServicos] = useState([]);
         const [servicosBarbeiro, setServicosBarbeiro] = useState([]);
+        const [servicoSelecionado, setServicoSelecionado] = useState('');
 
         useEffect(() => {
             (async () => {
@@ -235,6 +236,11 @@ export default function Barbeiros() {
                 setServicosBarbeiro(servicos_barbeiro.dados);
             })();
         }, [barbeiro.id])
+
+        const handleVincularServico = async () => {
+            if (!servicoSelecionado) return
+
+        }
 
         return (
             abrirModalLink && (
@@ -253,26 +259,65 @@ export default function Barbeiros() {
                                 onClick={() => setAbrirModalLink(false)}
                             />
                         </div>
-                        <div className="flex flex-col w-full gap-4">
+                        <div className="flex flex-col w-full gap-4 p-2">
                             <div className="flex w-full mt-4">
-                                <div className="w-full">
-                                    <label className="block font-semibold">Serviço</label>
-                                    <select className="w-full rounded-sm border-b border-[#242222] p-1 text-[#242222] outline-none uppercase">
-                                        <option value={''}>SELECIONE 1 SERVIÇO</option>
-                                        {
-                                            servicos.filter(servico => !servicosBarbeiro.some(
-                                                s => s.id === servico.id
-                                            )).map(service => {
-                                                return (
-                                                    <option value={service.id}>{service.nome}</option>
-                                                )
-                                            })
-                                        }
-                                    </select>
+                                <div className="flex flex-row w-full gap-4">
+                                    <div className="w-full">
+                                        <label className="block font-semibold">Serviço</label>
+                                        <select
+                                            className="w-full rounded-sm border-b border-[#242222] p-1 text-[#242222] outline-none uppercase"
+                                            onChange={(e) => setServicoSelecionado(e.currentTarget.value)}
+                                        >
+                                            <option value={''}>SELECIONE 1 SERVIÇO</option>
+                                            {
+                                                servicos.filter(servico => !servicosBarbeiro.some(
+                                                    s => s.id === servico.id
+                                                )).map(service => {
+                                                    return (
+                                                        <option value={service.id}>{service.nome}</option>
+                                                    )
+                                                })
+                                            }
+                                        </select>
+                                    </div>
+                                    <div className="w-fit">
+                                        <button
+                                            className="mt-1 w-full h-fit flex justify-center items-center bg-[#242222] p-2  rounded-md text-white font-semibold text-sm hover:bg-[#272525] shadow-sm shadow-black transition-colors"
+                                            onClick={handleVincularServico}
+                                        >
+                                            Vincular <Link className="ms-1" />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="w-full">
-                                tipos de serviço vinculados
+                            <div className="self-center w-11/12 bg-white p-2 rounded-md shadow-sm shadow-[#242222]">
+
+                                {
+                                    servicosBarbeiro.length > 0 ?
+
+                                        servicosBarbeiro.map(servico => {
+                                            return (
+
+                                                <div>
+                                                    <div className="flex flex-row w-full justify-between">
+
+                                                        <div>
+                                                            <span className="text-lg">{servico.nome}</span>
+                                                        </div>
+                                                        <div className="flex flex-row gap-4">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                        :
+                                        (
+                                            <div className="flex justify-center w-full bg-white">
+                                                <span className="w-fit text-lg font-bold">Nenhum tipo de serviço vinculado</span>
+                                            </div>
+                                        )
+                                }
                             </div>
                         </div>
 

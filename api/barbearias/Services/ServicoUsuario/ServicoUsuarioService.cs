@@ -1,14 +1,12 @@
 using jwtRegisterLogin.Data;
 using jwtRegisterLogin.Models;
 using jwtRegisterLogin.Services.CookieService;
-using Microsoft.AspNetCore.Http.HttpResults;
+using jwtRegisterLogin.Services.ServicoUsuarioService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 
-namespace jwtRegisterLogin.Services.BarbeariaService
+namespace jwtRegisterLogin.Services.ServicoUsuarioService
 {
-    public class ServicoUsuarioService
+    public class ServicoUsuarioService : IServicoUsuarioService
     {
         // Variável de conexão com banco de dados
         private readonly AppDbContext _context;
@@ -24,5 +22,9 @@ namespace jwtRegisterLogin.Services.BarbeariaService
             _cookieService = cookieService;
         }
 
+        public Task<IActionResult> VincularBarbeiro(int id_tipo_servico, int id_barbeiro)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
