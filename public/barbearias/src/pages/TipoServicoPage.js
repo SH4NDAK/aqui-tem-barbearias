@@ -19,6 +19,9 @@ export default function TipoServicoPage() {
     const navigate = useNavigate();
     const [serviceType, setServiceType] = useState([]);
     const [serviceTypeFilter, setServiceTypeFilter] = useState([]);
+    const [nome, setNome] = useState("");
+    const [ativos, setInativos] = useState(false);
+
 
     // função chamada ao clicar no botão '+' da lista de tipos de serviço, para cadastrar um
     const handleCadastroClick = () => {
@@ -30,7 +33,7 @@ export default function TipoServicoPage() {
             try {
                 const { dados } = await listService();
                 setServiceType(dados);
-                setServiceTypeFilter(dados);
+                setServiceTypeFilter(dados.filter(dado => dado.ativo));
             } catch (error) {
                 console.log(error);
             }
@@ -120,23 +123,35 @@ export default function TipoServicoPage() {
                                     onClick={handleCadastroClick}
                                     variant={"icon"}
                                 />
-                                <InputText
-                                    label="Nome"
-                                    type="text"
-                                    className="w-64"
-                                    onChange={(e) =>
-                                        setServiceTypeFilter(
-                                            serviceType.filter((y) =>
-                                                y.nomeServico.toLowerCase().includes(e.target.value.toLowerCase())
+                                <div className="w-fit">
+
+                                    <InputText
+                                        label="Nome"
+                                        type="text"
+                                        className="w-64"
+                                        onChange={(e) =>
+                                            setServiceTypeFilter(
+                                                serviceType.filter((y) =>
+                                                    y.nome.toLowerCase().includes(e.currentTarget.value.toLowerCase())
+                                                )
                                             )
-                                        )
-                                    }
-                                />
-                                <div>
-                                    
+                                        }
+
+                                    />
                                 </div>
-                                <input />
-                                <label>Incluir inativos</label>
+                                <div className="flex gap-1 w-fit">
+                                    <input
+                                        id="incluir_inativos"
+                                        type="checkbox"
+                                        value={ativos}
+                                        onChange={(e) => {
+                                            setInativos(!ativos)
+                                            setServiceTypeFilter(!ativos ? serviceType : serviceType.filter(service => service.ativo));
+
+                                        }}
+                                    />
+                                    <label htmlFor="incluir_inativos">Incluir inativos</label>
+                                </div>
                             </Row>
                             <Table columns={columns} dataSource={serviceTypeFilter} pagination={{ pageSize: 10 }} scroll={{ y: 240 }} />
                         </Row>
