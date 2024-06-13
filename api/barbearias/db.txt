@@ -13,4 +13,6 @@ Autenticação na faculdade -> "DefaultConnection": "Server=LAB02MAQ06; Database
 
 -- conexão note arthur
 // "DefaultConnection": "Server=BOOK-7DLIOPJBOB\\SQLEXPRESS; Database=AquiTemBarbearia; Trusted_Connection=True; TrustServerCertificate=true;"
+-- pc arthur
+"DefaultConnection": "Server=ARTHUR; Database=AquiTemBarbearia; Trusted_Connection=True; TrustServerCertificate=true;"
 

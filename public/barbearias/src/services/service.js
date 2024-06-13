@@ -29,3 +29,8 @@ export async function linkServicoBarbeiro(id_tipo_servico, id_barbeiro) {
     const { data } = await api.post(`ServicoUsuario/vincular`, payload);
     return data;
 }
+
+export async function unlinkServicoBarbeiro(id_barbeiro, id_tipo_servico) {
+    const { data } = await api.delete(`ServicoUsuario/desvincular?barbeiro=${id_barbeiro}&tipo_servico=${id_tipo_servico}`);
+    return data;
+}

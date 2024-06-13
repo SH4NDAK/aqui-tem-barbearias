@@ -169,14 +169,10 @@ namespace jwtRegisterLogin.Services.ServicoService
                 var resultado = await _context.ServicoUsuario
                     .Where(servicoUsuario => servicoUsuario.Id_usuario == id)
                     .Join(
-                        _context.Servico, // Tabela com a qual você quer fazer o join
-                        servicoUsuario => servicoUsuario.Id_tipo_servico, // Chave estrangeira em ServicoUsuario
-                        servico => servico.Id, // Chave primária em Servico
-                        (servicoUsuario, servico) => new
-                        {
-                            ServicoUsuario = servicoUsuario,
-                            Servico = servico
-                        } // Resultado do join
+                        _context.Servico,
+                        servicoUsuario => servicoUsuario.Id_tipo_servico,
+                        servico => servico.Id,
+                        (servicoUsuario, servico) => servico // Projeção direta para o tipo Servico
                     )
                     .ToListAsync();
 

@@ -14,11 +14,18 @@ namespace jwtRegisterLogin.Controllers
             _servicoService = servicoService;
         }
 
-        // [HttpPost("vincular")]
-        // public async Task<IActionResult> VincularCliente([FromBody] VincularRequest request)
-        // {
-        //     return await _barbeariaService.VincularCliente(request);
-        // }
+        [HttpPost("vincular")]
+        public async Task<IActionResult> VincularBarbeiro([FromBody] VincularServicoUsuarioRequest request)
+        {
+            return await _servicoService.VincularBarbeiro(request);
+        }
+
+        [HttpDelete("desvincular")]
+        public async Task<IActionResult> DesvincularBarbeiro([FromQuery] int barbeiro, [FromQuery] int tipo_servico)
+        {
+            return await _servicoService.DesvincularBarbeiro(barbeiro, tipo_servico);
+        }
+
 
 
     }

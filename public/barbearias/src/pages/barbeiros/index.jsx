@@ -8,7 +8,8 @@ import confirm from "antd/es/modal/confirm";
 import { Modal } from "antd";
 import { deleteUser } from "../../services/auth";
 import { notification } from 'antd';
-import { listService } from "../../services/service";
+import { linkServicoBarbeiro, listService, unlinkServicoBarbeiro } from "../../services/service";
+import { isAxiosError } from "axios";
 
 export default function Barbeiros() {
     const navigate = useNavigate();
@@ -129,14 +130,17 @@ export default function Barbeiros() {
                 </div>
 
                 {
-                    <ModalConfirmacao
-                        id={deleteId}
-                    />
+                    deleteId && (
+                        <ModalConfirmacao
+                            id={deleteId}
+                        />
+                    )
                 }
-                {
+                {barbeiroLink && (
                     <ModalLinkTipoServico
                         barbeiro={barbeiroLink}
                     />
+                )
                 }
             </div>
         </div>
@@ -220,6 +224,7 @@ export default function Barbeiros() {
     function ModalLinkTipoServico({ barbeiro }) {
 
         const [servicos, setServicos] = useState([]);
+        const [servicosFiltrados, setServicosFiltrados] = useState([]);
         const [servicosBarbeiro, setServicosBarbeiro] = useState([]);
         const [servicoSelecionado, setServicoSelecionado] = useState('');
 
@@ -231,15 +236,57 @@ export default function Barbeiros() {
 
                 // Serviços ja vinculados ao barbeiro
                 const servicos_barbeiro = await getServicos(barbeiro.id);
-
                 setServicos(servicos.dados);
-                setServicosBarbeiro(servicos_barbeiro.dados);
+
+                // Serviços que o barbeiro ainda nao tem vinculo
+                const servicos_filtrados = servicos.dados.filter(servico =>
+                    !servicos_barbeiro.dados.some(vinculo => vinculo.id === servico.id)
+                );
+
+                const servicos_vinculados = servicos.dados.filter(servico =>
+                    servicos_barbeiro.dados.some(vinculo => vinculo.id === servico.id)
+                );
+
+                setServicosBarbeiro(servicos_vinculados);
+                setServicosFiltrados(servicos_filtrados);
             })();
         }, [barbeiro.id])
 
         const handleVincularServico = async () => {
             if (!servicoSelecionado) return
 
+            try {
+                const res = await linkServicoBarbeiro(servicoSelecionado, barbeiro.id);
+                notification.success({ message: "Tipo de serviço vinculado com sucesso" });
+                setServicosFiltrados(servicosFiltrados.filter(servico => servico.id != servicoSelecionado));
+                setServicosBarbeiro([...servicosBarbeiro, servicos.find(servico => servico.id == servicoSelecionado)]);
+                setServicoSelecionado(''); // Reseta a seleção
+
+            } catch (error) {
+                if (!isAxiosError(error)) return;
+                const { mensagem } = error.response.data;
+                notification.error({ message: mensagem })
+            }
+
+        }
+
+        const handleExcluirVinculo = async (servico) => {
+            try {
+                const res = await unlinkServicoBarbeiro(barbeiro.id, servico.id);
+                notification.success({ message: "Vínculo excluído com sucesso" });
+
+                // Atualiza o estado de servicosBarbeiro removendo o serviço excluído
+                setServicosBarbeiro(servicosBarbeiro.filter(s => s.id !== servico.id));
+
+                // Atualiza o estado de servicosFiltrados adicionando o serviço excluído
+                setServicosFiltrados([...servicosFiltrados, servico]);
+
+            } catch (error) {
+                if (!isAxiosError(error)) return;
+                const { mensagem } = error.response.data;
+                notification.error({ message: mensagem })
+
+            }
         }
 
         return (
@@ -266,17 +313,14 @@ export default function Barbeiros() {
                                         <label className="block font-semibold">Serviço</label>
                                         <select
                                             className="w-full rounded-sm border-b border-[#242222] p-1 text-[#242222] outline-none uppercase"
-                                            onChange={(e) => setServicoSelecionado(e.currentTarget.value)}
+                                            value={servicoSelecionado} // Define o valor do select com o estado
+                                            onChange={(e) => setServicoSelecionado(e.currentTarget.value)} // Atualiza o estado quando a seleção muda
                                         >
-                                            <option value={''}>SELECIONE 1 SERVIÇO</option>
+                                            <option value=''>{servicosFiltrados.length == 0 ? 'NENHUM SERVIÇO ENCONTRADO' : 'SELECIONE 1 SERVIÇO'}</option>
                                             {
-                                                servicos.filter(servico => !servicosBarbeiro.some(
-                                                    s => s.id === servico.id
-                                                )).map(service => {
-                                                    return (
-                                                        <option value={service.id}>{service.nome}</option>
-                                                    )
-                                                })
+                                                servicosFiltrados.map(service => (
+                                                    <option key={service.id} value={service.id}>{service.nome}</option>
+                                                ))
                                             }
                                         </select>
                                     </div>
@@ -290,14 +334,11 @@ export default function Barbeiros() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="self-center w-11/12 bg-white p-2 rounded-md shadow-sm shadow-[#242222]">
-
-                                {
-                                    servicosBarbeiro.length > 0 ?
-
-                                        servicosBarbeiro.map(servico => {
-                                            return (
-
+                            {
+                                servicosBarbeiro.length > 0 ?
+                                    servicosBarbeiro.map(servico => {
+                                        return (
+                                            <div className="self-center w-11/12 bg-white p-2 rounded-md shadow-sm shadow-[#242222]">
                                                 <div>
                                                     <div className="flex flex-row w-full justify-between">
 
@@ -305,23 +346,27 @@ export default function Barbeiros() {
                                                             <span className="text-lg">{servico.nome}</span>
                                                         </div>
                                                         <div className="flex flex-row gap-4">
-
+                                                            <button
+                                                                onClick={() => handleExcluirVinculo(servico)}
+                                                            >
+                                                                <Trash className="text-red-600" />
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            )
-                                        })
-                                        :
-                                        (
-                                            <div className="flex justify-center w-full bg-white">
-                                                <span className="w-fit text-lg font-bold">Nenhum tipo de serviço vinculado</span>
                                             </div>
                                         )
-                                }
-                            </div>
+                                    })
+                                    :
+                                    (
+                                        <div className="flex justify-center w-full bg-white">
+                                            <span className="w-fit text-lg font-bold">Nenhum tipo de serviço vinculado</span>
+                                        </div>
+                                    )
+                            }
                         </div>
-
                     </div>
+
                 </div>
             )
         )

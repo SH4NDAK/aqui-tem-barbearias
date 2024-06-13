@@ -16,7 +16,6 @@ export default function BarbeirosForm() {
     const isEdicao = Object.entries(barbeiro).length > 0;
 
     useEffect(() => {
-        console.log(barbeiro);
         if (isEdicao) {
             setValue("usuario", barbeiro.usuario)
             setValue("email", barbeiro.email)
