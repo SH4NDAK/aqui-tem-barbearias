@@ -5,21 +5,39 @@ using jwtRegisterLogin.Data;
 using jwtRegisterLogin.Dtos;
 using jwtRegisterLogin.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.Linq;
+using jwtRegisterLogin.Services.CookieService;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace jwtRegisterLogin.Services.AgendaService 
 {
     public class AgendaService : IAgendaService
     {
         private readonly AppDbContext _context;
+        private readonly ICookieService _cookieService;
 
-        public AgendaService(AppDbContext context)
+        public AgendaService(AppDbContext context, ICookieService cookieService) 
         {
             _context = context;
+            _cookieService = cookieService; 
         }
 
         public async Task<Response<AgendaCriacaoDto>> CriarAgendamento(AgendaCriacaoDto agendaCriacaoDto)
-        {
+        {   
+            
+            bool cookieValido = await _cookieService.VerificarCookie();
+
             Response<AgendaCriacaoDto> response = new Response<AgendaCriacaoDto>();
+
+            // if (!cookieValido)
+            // {
+            //    response.Mensagem = "Cookie Invalido";
+            //    response.Status = 405;
+            // //    return response;
+            //    response.Status = StatusCodes.Status200OK;
+
+            // }
 
             try
             {
@@ -48,12 +66,12 @@ namespace jwtRegisterLogin.Services.AgendaService
 
                 response.Dados = agendaCriacaoDto;
                 response.Mensagem = "Agenda cadastrada com sucesso.";
-                response.Status = true;
+                response.Status = 200;
             }
             catch (Exception ex)
             {
                 response.Mensagem = ex.Message;
-                response.Status = false;
+                response.Status = 405;
             }
 
             return response;
@@ -61,7 +79,17 @@ namespace jwtRegisterLogin.Services.AgendaService
 
         public async Task<Response<List<AgendaCriacaoDto>>> ListarAgendamentos()
         {
+             bool cookieValido = await _cookieService.VerificarCookie();
+
             Response<List<AgendaCriacaoDto>> response = new Response<List<AgendaCriacaoDto>>();
+
+            // if (!cookieValido)
+            // {
+            //    response.Mensagem = "Cookie Invalido";
+            // //    response.Status = 405;
+            //    response.Status = StatusCodes.Status401Unauthorized;
+            //    return response;
+            // }
 
             try
             {
@@ -87,14 +115,16 @@ namespace jwtRegisterLogin.Services.AgendaService
                         Id = agenda.Id
 
                     }).ToList();
-
+                Console.WriteLine(resultado);
                 response.Dados = resultado;
-                response.Status = true;
+                // response.Status = 200;
+                response.Status = StatusCodes.Status200OK;
             }
             catch (Exception ex)
             {
                 response.Mensagem = ex.Message;
-                response.Status = false;    
+                // response.Status = 405;  
+                response.Status = StatusCodes.Status500InternalServerError;  
             }
 
             return response;
@@ -102,7 +132,17 @@ namespace jwtRegisterLogin.Services.AgendaService
 
         public async Task<Response<AgendaCriacaoDto>> EditarAgendamento(int id, AgendaCriacaoDto agendaAtualizacaoDto)
         {
+            bool cookieValido = await _cookieService.VerificarCookie();
+            Console.WriteLine(cookieValido);
             Response<AgendaCriacaoDto> response = new Response<AgendaCriacaoDto>();
+
+            // if (!cookieValido)
+            // {
+            //    response.Mensagem = "Cookie Invalido";
+            // //    response.Status = 405;
+            //    response.Status = StatusCodes.Status401Unauthorized;
+            //    return response;
+            // }
 
             try
             {
@@ -111,7 +151,8 @@ namespace jwtRegisterLogin.Services.AgendaService
                 if (agenda == null)
                 {
                     response.Mensagem = "Agenda não encontrada.";
-                    response.Status = false;
+                    // response.Status = 405;
+                    response.Status = StatusCodes.Status404NotFound;
                     return response;
                 }
 
@@ -128,12 +169,14 @@ namespace jwtRegisterLogin.Services.AgendaService
 
                 response.Dados = agendaAtualizacaoDto;
                 response.Mensagem = "Agenda editada com sucesso.";
-                response.Status = true;
+                // response.Status = 200;
+                response.Status = StatusCodes.Status200OK;
             }
             catch (Exception ex)
             {
                 response.Mensagem = ex.Message;
-                response.Status = false;
+                // response.Status = 405;
+                response.Status = StatusCodes.Status500InternalServerError;
             }
 
             return response;

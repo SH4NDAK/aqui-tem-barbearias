@@ -10,29 +10,38 @@ import Row from "../components/Row";
 import Label from "../components/Label";
 import Selectpicker from "../components/Selectpicker";
 import LayoutPage from "../components/LayoutPage";
+import { createService } from "../services/service";
+import Header from "../components/Header";
 
 export default function TipoServicoFormPage() {
     const location = useLocation();
     const navigate = useNavigate();
-
+ 
     // verificando se o tipo de serviço foi passado para esta pagina, se sim, é uma edição
     const isCadastro = !location.state?.tipoServico;
-
+ 
     // trazendo as operações de formulário da biblioteca hook form
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
-
+ 
     // função chamada ao submeter o formulario
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async (data) => {
+        try {
+            await createService(data)
+        } catch (error) {
+            console.log(error);
+        }
     }
-
-
+ 
+ 
     return (
-        <LayoutPage>
-            <Container>
-                <FormContainer
-                    title={`Tipos de Serviço - ${isCadastro ? "Cadastro" : "Edição"}`}
-                >
+        <div className="w-full h-dvh bg-[#242222]">
+            <Header />
+            <div className="w-full flex justify-center p-1">
+                <div className="flex flex-col bg-white md:w-1/3 p-2 shadow-sm shadow-[#242222] rounded-md w-full">
+                    <div className="w-fit self-center">
+                        <span className="text-3xl font-semibold">Tipos de serviço - Cadastro</span>
+                    </div>
+                    <div className="w-11/12 h-0.5 bg-black self-center mt-4 mb-4 opacity-5"></div>
                     <form
                         onSubmit={handleSubmit(onSubmit)}
                     >
@@ -56,51 +65,69 @@ export default function TipoServicoFormPage() {
                                 />
                             </Col>
                             <Col
+                                variant="auto"
+                            >
+                                <InputText
+                                    type="text"
+                                    placeholder="Digite um nome"
+                                    label="Descrição"
+                                    {...register("descricao", {
+                                        required: "Campo obrigatório",
+                                        minLength: {
+                                            value: 3,
+                                            message: "Informe pelo menos 3 caracteres"
+                                        }
+                                    })}
+                                    errors={errors.descricao}
+                                    variant={errors.descricao ? 'invalid' : ''}
+                                />
+                            </Col>
+                            <Col
                                 variant={"auto"}
                             >
                                 <InputText
                                     type="text"
-                                    label="Valor"
+                                    label="preco"
                                     monetario={true}
                                     inputMode="numeric"
-                                    {...register("valor", {
+                                    {...register("preco", {
                                         required: "Campo obrigatório",
                                         min: {
                                             value: 0,
-                                            message: "Digite um valor válido"
+                                            message: "Digite um preco válido"
                                         }
                                     })}
-                                    errors={errors.valor}
-                                    variant={errors.valor ? 'invalid' : ''}
+                                    errors={errors.preco}
+                                    variant={errors.preco ? 'invalid' : ''}
                                     onChange={(e) => {
-
+ 
                                         // formatando o valor em dinheiro
-                                        //pegando o valor atual 
+                                        //pegando o valor atual
                                         let valor = e.currentTarget.value;
-
+ 
                                         // removendo os caracteres não numéricos
                                         valor = valor.replace(/\D/g, '');
-
+ 
                                         // pegando o valor digitado em inteiro (dividindo por 100 pra tratar os centavos)
                                         valor = parseInt(valor, 10) / 100;
-
+ 
                                         // se o valor não é valido (não é um numero)
                                         if (isNaN(valor)) {
-
+ 
                                             // seta ele como vazio e não continua o código
                                             valor = '';
                                             e.currentTarget.value = valor;
                                             return;
                                         }
-
+ 
                                         // se ta tudo certo, formata o valor
                                         valor = valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-
+ 
                                         // atualizando o campo do input com o valor
                                         e.currentTarget.value = valor;
-
+ 
                                         // definindo o valor do input como o novo valor e validando no useForm
-                                        setValue("valor", e.currentTarget.value, { shouldValidate: true });
+                                        setValue("preco", e.currentTarget.value, { shouldValidate: true });
                                     }}
                                 />
                             </Col>
@@ -132,7 +159,7 @@ export default function TipoServicoFormPage() {
 
                                         // removendo os caracteres não numéricos
                                         duracao = duracao.replace(/\D/g, '');
-                                        
+
                                         // se o duracao não é valido (não é um numero)
                                         if (isNaN(duracao)) {
                                             // seta ele como vazio e não continua o código
@@ -151,12 +178,11 @@ export default function TipoServicoFormPage() {
                             </Col>
                             <Selectpicker
                                 label="Vincular barbeiros (opcional)"
+                                {...register("usuarioId")}
                             >
-                                <option>martins</option>
-
                             </Selectpicker>
                         </Row>
-
+ 
                         <Row>
                             <Col
                                 variant={"full"}
@@ -171,22 +197,24 @@ export default function TipoServicoFormPage() {
                                     >
                                         Voltar
                                     </Button>
-
+ 
                                     <Button
                                         type="submit"
                                         icon={<CloudUpload />}
                                     >
                                         Cadastrar
                                     </Button>
-
+ 
                                 </div>
                             </Col>
                         </Row>
-
+ 
                     </form>
-                </FormContainer>
-            </Container >
-        </LayoutPage>
-    )
+                </div>
 
+            </div>
+        </div >
+
+    )
+ 
 }

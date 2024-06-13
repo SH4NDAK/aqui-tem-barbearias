@@ -1,7 +1,7 @@
 using jwtRegisterLogin.Data;
 using jwtRegisterLogin.Services.AuthService;
 using jwtRegisterLogin.Services.SenhaService;
-using jwtRegisterLogin.Services.ServicoService; // Certifique-se de importar o namespace correto
+using jwtRegisterLogin.Services.ServicoService; 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -10,6 +10,12 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using jwtRegisterLogin.Filters;
 using jwtRegisterLogin.Services.AgendaService;
+using jwtRegisterLogin.Services.CookieService;
+using jwtRegisterLogin.Services.UsuarioService;
+//adicionei isso aqui
+using jwtRegisterLogin.Services.MailService;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,9 +40,13 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAuthInterface, AuthService>();
 builder.Services.AddScoped<ISenhaInterface, SenhaService>();
-builder.Services.AddScoped<IServicoService, ServicoService>(); // Adicione esta linha para registrar IServicoService
+builder.Services.AddScoped<IServicoService, ServicoService>(); 
 builder.Services.AddScoped<IAgendaService, AgendaService>();
-
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<ICookieService, CookieService>();
+//adicionei isso aqui tbm
+builder.services.AddScoped<IMailService, MailService>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -82,7 +92,6 @@ if (app.Environment.IsDevelopment())
     // Desabilitar a verificação do certificado SSL em ambiente de desenvolvimento
     app.UseDeveloperExceptionPage();
     System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-
 
 }
 

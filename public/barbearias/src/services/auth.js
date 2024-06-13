@@ -11,6 +11,7 @@ export async function signInRequest(  // Cria rota de login com retorno de data
 }
 
 export async function signUpRequest(signUpData) {   // Cria rota de registro com retorno de data
+  
   const { data } = await api.post('auth/register', signUpData)
   return data
 }
@@ -28,4 +29,9 @@ export function SetAuthenticationUser(user) {  // Define o usuario na Aplicaçã
 
 export function setLogoutUser() {
   return localStorage.removeItem('usuario') // remove o usuario na aplications
+}
+
+export async function editUser(id, payload) {
+  const { data } = await api.put(`auth/editarUsuario/${id}`, payload)
+  return data
 }

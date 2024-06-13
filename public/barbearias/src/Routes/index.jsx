@@ -7,21 +7,24 @@ import App from "../App"
 import Home from "../pages/home"
 import TipoServicoPage from "../pages/TipoServicoPage"
 import TipoServicoFormPage from "../pages/TipoServicoFormPage"
-import ResetPassword from "../pages/ResetPassword"
+import EditTipoServico from "../pages/ServiceType/edit/[id]"
+import Perfil from "../pages/perfil/index"
+import Barbeiros from "../pages/barbeiros"
+import BarbeirosForm from "../pages/barbeiros-add"
 import Verification from "../pages/Verification"
+import ResetPassword from "../pages/ResetPassword"
 
 
 // isso é para registrar rotas do projeto, o primeiro pametro é a rota o 2 é o componente
-
 export const router = createBrowserRouter([
   {
-    path:"/",     // Aqui define a rota
-    element: <App /> // Aqui define o componente
+    path: "/",     // Aqui define a rota
+    element: <Login /> // Aqui define o componente
   },
-  {
-    path:"/login",
-    element: <App />
-  },
+  // {
+  //   path: "/login",
+  //   element: <Login />
+  // },
   {
     path: "/cadastro",
     element: <Register />
@@ -35,17 +38,34 @@ export const router = createBrowserRouter([
     element: <TipoServicoFormPage />
   },
   {
+    path: "/tipos-servico/edit/:id",
+    element: <EditTipoServico />
+  },
+  {
     path: "/recovery",
     element: <RecoveryPage />
   },
   {
-    path: "agenda",
+    path: "/agenda",
     element: <AgendaPage />
   },
   {
-    path: "/home", 
+    path: "/home",
     element: <Home />
   },
+  {
+    path: "/perfil",
+    element: <Perfil />
+  },
+  {
+    path: "/barbeiros",
+    element: <Barbeiros />
+  },
+  {
+    path: "/barbeiros/add",
+    element: <BarbeirosForm />
+  },
+
   {
     path: "/verification", 
     element: <Verification />
@@ -53,6 +73,6 @@ export const router = createBrowserRouter([
   {
     path: "/reset", 
     element: <ResetPassword />
-  }
+  },
 
 ])

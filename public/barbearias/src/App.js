@@ -10,6 +10,7 @@ import Container from "./components/Container";
 import FormContainer from "./components/FormContainer";
 import { SetAuthenticationToken, SetAuthenticationUser, signInRequest } from './services/auth';
 import { notification } from 'antd';
+import logo from "./img/logo.jpg";
 
 
 export default function App() {
@@ -17,11 +18,11 @@ export default function App() {
   // trazendo a função que navega entre as rotas do sistema
   const navigate = useNavigate()
 
-  // Se o usuario estiver logado direciona ele para tela de tipos-servico
+  // Se o usuario estiver logado direciona ele para tela de home
   useEffect(() => {
     const user = localStorage.getItem('usuario');
     if (user !== null) {
-      navigate("/tipos-servico")
+      navigate("/home")
     }
   }, [])
 
@@ -44,13 +45,6 @@ export default function App() {
     try {
       // faz chamada de autenticação
       const res = await signInRequest(data)
-      // se der erro de autenticacao volta a mensagen
-      if (res.status === false) {
-        return notification.error({
-          message: "Erro",
-          description: res.mensagem
-        })
-      }
       // define o token nos cookies
       SetAuthenticationToken(res.dados.token)
       // define usuario na aplications
@@ -61,14 +55,13 @@ export default function App() {
         description: res.mensagem
       })
       // direciona o usuario para tipos serviços
-      navigate('/tipos-servico')
+      navigate('/home')
     } catch (e) {
-      console.log(e);
       // Mostra uma notificação de erro na tela se der erro
-      if (e.response?.data?.errors?.Email[0]) {
+      if (e.response.data.mensagem) {
         notification.warning({
           message: "Erro",
-          description: e.response.data.errors.Email[0]
+          description: e.response.data.mensagem
         })
       }
     }
@@ -78,7 +71,7 @@ export default function App() {
     <Container>
       <FormContainer>
         <div className="w-full flex justify-center font-bold text-5xl">
-          LOGO
+          <img src={logo} width={"60%"}/>
         </div>
         <div className="w-full flex flex-col gap-2">
           <form
@@ -115,11 +108,11 @@ export default function App() {
                 type="submit"
                 className="w-full"
               >
-                Entrar
+                ENTRAR
               </Button>
             </div>
             <div
-              className="flex text-sm mt-4 mb-4 font-bold justify-center"
+              className="flex text-sm mt-2 mb-2 font-bold justify-center"
             >
               OU
             </div>
@@ -138,5 +131,4 @@ export default function App() {
       </FormContainer>
     </Container>
   );
-
 }
