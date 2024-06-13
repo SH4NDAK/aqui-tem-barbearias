@@ -19,14 +19,14 @@ namespace jwtRegisterLogin.Services.MailService
             }
         }
 
-        public void SendMail(string[] emails, string subject, string body, bool isHtml = false)
+        public void SendMail(string[] emails, string subject, string body, string code, bool isHtml = false)
         {
             using(MailMessage mailMessage = new MailMessage())
             {
                 mailMessage.From = new MailAddress(emailFromAddress);
                 AddEmailsToMailMessage(mailMessage, emails);
                 mailMessage.Subject = subject;
-                mailMessage.Body = body;
+                mailMessage.Body = $"{body}\n\nEste é o seu código: {code}";
                 mailMessage.IsBodyHtml = isHtml;
                 using(SmtpClient smtp = new SmtpClient(smtpAddress, portNumber))
                 {
@@ -36,6 +36,21 @@ namespace jwtRegisterLogin.Services.MailService
                     smtp.Send(mailMessage);
                 }
             }
+        }
+
+        public void SendMail(string[] emails, string subject, string body, string code, string oTP)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SendMail(string[] emails, string subject, string body, bool isHtml = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SendMail(string[] emails, string subject, string body, string oTP)
+        {
+            throw new NotImplementedException();
         }
     }
 }

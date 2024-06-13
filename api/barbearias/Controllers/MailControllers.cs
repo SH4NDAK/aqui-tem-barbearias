@@ -1,7 +1,4 @@
-using jwtRegisterLogin.Models;
 using Microsoft.AspNetCore.Mvc;
-using jwtRegisterLogin.Dtos;
-using jwtRegisterLogin.Models;
 using jwtRegisterLogin.Services.MailService;
 
 namespace jwtRegisterLogin.Controllers
@@ -16,13 +13,21 @@ namespace jwtRegisterLogin.Controllers
             _mailService = mailService;
         }
 
-        [HttpPost]
-        public IActionResult SendMail([FromBody] SendMailViewModel sendMailViewModel)
+         [HttpPost("send-recovery-email")]
+        public IActionResult SendRecoveryEmail([FromBody] EmailRequest emailRequest)
         {
-            _mailService.SendMail(sendMailViewModel.Emails, sendMailViewModel.Subject, sendMailViewModel.Body,
-                sendMailViewModel.IsHtml);
-
-            return Ok();
+            var emails = new[] { emailRequest.RecipientEmail }; // E-mail do destinatário vindo da requisição
+            var subject = "Seu Código de Recuperação";
+            var body = "Aqui está o código que você solicitou:";
+            _mailService.SendMail(emails, subject, body, emailRequest.OTP);
+            return Ok(new { message = "Email enviado com sucesso!" });
         }
     }
+
+    public class EmailRequest
+    {
+        public string OTP { get; set; }
+        public string RecipientEmail { get; set; }
+    }
 }
+

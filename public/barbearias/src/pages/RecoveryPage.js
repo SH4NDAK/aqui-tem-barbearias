@@ -24,15 +24,15 @@ export default function RegisterPage() {
             const OTP = Math.floor(Math.random() * 9000 + 1000);
             console.log(OTP);
             setOTP(OTP);
-
+    
             axios
-                .post("http://localhost:3000/send_recovery_email",{
+                .post("http://localhost:3n000/email/send-recovery-email", {  
                     OTP,
-                    recient_email: email
+                    recipient_email: email
                 })
-                .then(()=>navigate("/verification"))
+                .then(() => navigate("/verification"))
                 .catch(console.log);
-                return;
+            return;
         }
     }
 

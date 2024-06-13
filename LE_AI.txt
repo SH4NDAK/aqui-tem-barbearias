@@ -1,6 +1,6 @@
 -- API DE ENVIAR E-MAIL
 
-toda a "api" que eu desenvolvi os arquivos estão as pastas "Controllers", "Models", "Services -> MailService"
+toda a "api" que eu desenvolvi os arquivos estão nas pastas "Controllers", "Models", "Services -> MailService"
 
 adicionei tbm as dependências no Program.cs
 
@@ -9,7 +9,3 @@ adicionei tbm as dependências no Program.cs
 na página RECOVERYPAGE.JS fica a página de receber o e-mail do usuário e após clicar no botão de enviar e-mail a função "navigatetoOtp" é a responsável por gerar o código de 4 dígitos
 
 após o envio do e-mail chama a tela de verification que faz a verificação do código, caso estiver OK chama a tela "RESETPASSWORD.JS" responsável pela alteração da senha.
-
--- DENTRO DA PASTA PUBLIC --> 2MANEIRA ESTÁ A SEGUNDA MANEIRA QUE EU PENSEI EM FAZER A FUNCIONALIDADE
-
-basicamente a classe SendEmail é a responsável pelo envio do e-mail. Ai nos campos body seria o título pré definido, o Subject seria o código gerado. A funcionalidade é executada dentro do "Program.cs" no qual dentro da linha "SendEmail.Send("");" é definido o e-mail vindo do formulário
