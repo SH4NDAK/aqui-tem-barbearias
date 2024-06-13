@@ -238,8 +238,8 @@ export default function Home() {
     function CardBarbearias({ user, barbearia }) {
         const [abrirModalUnlink, setAbrirModalUnlink] = useState(false);
 
-        const handleAcessarBarbearia = () => {
-            // navigate()
+        const handleAcessarBarbearia = (barbearia) => {
+            navigate("/agenda", { state: barbearia })
         };
 
         return (
@@ -263,7 +263,7 @@ export default function Home() {
                             </button>
                             <button
                                 className="flex flex-row justify-center w-full bg-[#242222] rounded-md shadow-sm shadow-[#242222] p-1.5 text-white font-semibold text-end hover:bg-[#1b1919] transition-colors"
-                                onClick={handleAcessarBarbearia}
+                                onClick={() => handleAcessarBarbearia(barbearia)}
                             >
                                 Acessar <ArrowRightCircle className="ms-1" />
                             </button>

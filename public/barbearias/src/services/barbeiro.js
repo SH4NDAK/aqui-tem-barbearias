@@ -26,3 +26,16 @@ export async function getServicos(id_barbeiro) {
         throw error;
     }
 }
+
+// Barbeiros que trabalham com x tipo-serviço
+export async function listByServico(id_tipo_servico) {
+    try {
+        const { data } = await api.get(`usuario/listarServico/${id_tipo_servico}`);
+        return data;
+        
+    } catch (error) {
+        console.error('Erro ao listar barbeiros:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+
+}

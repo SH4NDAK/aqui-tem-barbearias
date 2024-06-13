@@ -35,5 +35,14 @@ namespace jwtRegisterLogin.Controllers
             return Ok(usuarios);
         }
 
+        [HttpGet("listarServico/{id_tipo_servico}")]
+        public async Task<Response<List<UsuarioModel>>> GetByServico(int id_tipo_servico)
+        {
+            return await _usuarioService.GetByServico(id_tipo_servico);
+
+        }
+
+
+
     }
 }

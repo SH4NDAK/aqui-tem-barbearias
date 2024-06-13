@@ -1,7 +1,7 @@
 import Scheduler from 'devextreme-react/scheduler';
 import { locale } from 'devextreme/localization';
 import { ArrowLeftCircle, CloudUpload, Plus, X } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useDeferredValue, useEffect, useState } from 'react';
 import Button from '../components/Button';
 import Col from '../components/Col';
 import FormContainer from '../components/FormContainer';
@@ -14,20 +14,30 @@ import LayoutPage from '../components/LayoutPage';
 import { editAgenda, listAgenda, saveAgenda } from '../services/agenda';
 import { Switch, notification } from 'antd';
 import { data } from './data';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { listService } from '../services/service';
 import Header from '../components/Header';
+import { ROLES } from '../utils/role';
+import { listByCargo, listByServico } from '../services/barbeiro';
+import Label from '../components/Label';
 
 const currentDate = new Date();
 const views = ['agenda', 'day'];
 
 export default function AgendaPage() {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [abrirModalAgendamento, setAbrirModalAgendamento] = useState(false);
     const [agendas, setAgendas] = useState([])
+    const [user, setUser] = useState(null);
+    const [servicos, setServicos] = useState([]);
+    const [servicoSelecionado, setServicoSelecionado] = useState('');
+    const [barbeiros, setBarbeiros] = useState(null);
+    const [barbeiroSelecionado, setBarbeiroSelecionado] = useState('');
 
     const Appointment = (e) => {
-        let findAgenda = agendas.find(i => i.id === e.data.targetedAppointmentData.assigneeId) || {};        
-        const [agenda, setAgenda] = useState(findAgenda); 
+        let findAgenda = agendas.find(i => i.id === e.data.targetedAppointmentData.assigneeId) || {};
+        const [agenda, setAgenda] = useState(findAgenda);
 
         const onChangePay = async () => {
             try {
@@ -74,7 +84,6 @@ export default function AgendaPage() {
             </div>
         );
     };
-
 
     const onAppointmentFormOpening = (e) => { // quando a edição de agenda estiver pronto retornar isso
         let findAgenda = agendas.find(i => i.id === e.appointmentData.assigneeId) || {};
@@ -200,8 +209,8 @@ export default function AgendaPage() {
                     description: res.mensagem
                 });
             }
-        const updatedAgendas = agendas.map((item) => (item.id === newAgenda.id ? newAgenda : item));
-        setAgendas(updatedAgendas);
+            const updatedAgendas = agendas.map((item) => (item.id === newAgenda.id ? newAgenda : item));
+            setAgendas(updatedAgendas);
 
         } catch (error) {
             console.log(error);
@@ -210,17 +219,70 @@ export default function AgendaPage() {
     //appointmentData.assigneeId
     // setando o local como brasil
     useEffect(() => {
-            (async () => {
-                try{
-                  const data = await listAgenda()
-                  setAgendas(data.dados)
-                } catch (err) {
-                    console.log(err)
-                }
-            })()
+        (async () => {
 
-        locale('pt-BR')
+            await new Promise(async resolve => {
+                const usuario = JSON.parse(localStorage.getItem('usuario'));
+                console.log(usuario);
+                if (!usuario) {
+                    navigate("/");
+                }
+
+                setUser(usuario);
+
+                // Carrega a agenda do dia só se for o barbeiro acessando
+                if (usuario.cargo == ROLES.Barbeiro || usuario.cargo == ROLES.Administrador) {
+                    await handleCarregarAgenda();
+                }
+
+                // Se for cliente, carrega os tipos de serviço da barbearia
+                if (usuario.cargo == ROLES.Cliente) {
+                    (async () => {
+
+                        // Serviços da barbearia
+                        const { dados } = await listService();
+                        setServicos(dados);
+
+
+                    })();
+                }
+                resolve()
+            });
+
+        })();
+
+        locale('pt-BR');
     }, []);
+
+    const handlePesquisarBarbeiros = async (servicoSelecionado) => {
+        setServicoSelecionado(servicoSelecionado)
+        if (!servicoSelecionado || servicoSelecionado == '') {
+            setBarbeiros(null);
+            setBarbeiroSelecionado('');
+            return false;
+        }
+
+        // Barbeiros que trabalham com este serviço
+        const { dados } = await listByServico(servicoSelecionado)
+        setBarbeiros(dados);
+    }
+
+    const handleCarregarAgenda = async (barbeiroSelecionado) => {
+        setBarbeiroSelecionado(barbeiroSelecionado);
+        if (!barbeiroSelecionado) {
+            setAgendas([]);
+            return false;
+        }
+
+        try {
+            const data = await listAgenda()
+            setAgendas(data.dados)
+        } catch (err) {
+            console.log(err)
+        }
+
+
+    }
 
     // a altura da agenda, sera o tamanho da tela do usuario -150 pixels
     const height = window.innerHeight - 150;
@@ -244,53 +306,120 @@ export default function AgendaPage() {
         return endDate;
     }
 
-
-
     return (
         <>
-            <div className='w-full flex flex-col justify-center h-dvh bg-[#242222]'>
+            <div className={`w-full flex flex-col h-${agendas.length > 0 ? 'full' : 'dvh'} bg-[#242222]`}>
                 <Header />
-                    <div className='flex flex-col justify-center'>
-                        <div className='bg-white w-full p-1 flex flex-col justify-center items-center text-3xl font-semibold rounded-t-md'>
-                            <div>Agenda</div>
-                            <Button
-                                variant="icon"
-                                icon={<Plus />}
-                                onClick={handleNovoAgendamento}
-                            />
+                <div className='flex flex-col justify-center'>
+                    {
+                        // Agenda pelo cliente
+                        location.state
+                        && (
+                            <div className='mt-4 bg-white w-full p-1 flex flex-col justify-center items-center rounded-md md:w-11/12 self-center'>
+                                <div className='text-3xl font-semibold'>
+                                    Barbearia {(location.state.nome).toUpperCase()}
+                                </div>
+                                <div className='w-full md:w-11/12 mt-4 mb-4'>
+                                    <div className='self-start text-xl'>
+                                        E ai <b>{(user?.usuario)}</b>, que bom te ter por aqui, gostaria de agendar um serviço?
+                                    </div>
+                                </div>
+                                <div className='w-full md:w-11/12'>
+                                    <div>
+                                        <Selectpicker
+                                            label="Serviço"
+                                            value={servicoSelecionado}
+                                            onChange={(e) => {
+                                                handlePesquisarBarbeiros(e.currentTarget.value)
+                                            }}
+                                        >
+                                            <option value=''>{servicos.length == 0 ? 'NENHUM SERVIÇO ENCONTRADO' : 'SELECIONE 1'}</option>
+                                            {
+                                                servicos.map(servico => {
+                                                    return (
+                                                        <option value={servico.id}>{servico.nome}</option>
+                                                    )
+                                                })
+                                            }
+                                        </Selectpicker>
 
-                        </div>
-                        <div className='w-full h-full bg-white rounded-b-md'>
-                            <Scheduler
-                                timeZone="America/Sao_Paulo"
+                                        {
+                                            !!barbeiros && (
+                                                <div className='mt-4 transition-all'>
+                                                    <Selectpicker
+                                                        label="Barbeiro"
+                                                        value={barbeiroSelecionado}
+                                                        onChange={(e) => {
+                                                            handleCarregarAgenda(e.currentTarget.value)
+                                                        }}
+                                                    >
+                                                        <option value=''>SELECIONE 1</option>
+                                                        {
+                                                            barbeiros.map(barbeiro => {
+                                                                return (
+                                                                    <option value={barbeiro.id}>{barbeiro.usuario}</option>
+                                                                )
+                                                            })
+                                                        }
+                                                    </Selectpicker>
+                                                </div>
+                                            )
+                                        }
+                                    </div>
 
-                                dataSource={agendas?.map(compromisso => {
-                                    return {
-                                        text: compromisso.servico,
-                                        startDate: new Date(compromisso.data + 'T' + compromisso.horario),
-                                        endDate: calcularEndDate(compromisso.data, compromisso.horario, compromisso.duracao),
-                                        assigneeId: compromisso.id, // ou qualquer outra propriedade que desejar usar
+                                </div>
+                            </div>
+                        )
+                    }
 
-                                        priorityId: 1 // ou qualquer outra propriedade que desejar usar
-                                    };
-                                })}
-                                views={views}
-                                currentView="agenda"
-                                defaultCurrentDate={currentDate}
-                                height={height}
-                                appointmentComponent={Appointment}
-                                onAppointmentDeleted={onAppointmentFormDelete}
-                                onAppointmentFormOpening={onAppointmentFormOpening}
-                                onAppointmentUpdated={onAppointmentUpdated}
-                            />
-                        </div>
-                    </div>
+                    {
+                        agendas.length > 0 && (
+                            <div className='w-full md:w-11/12 self-center mt-4 h-full'>
+
+                                <div className='bg-white w-full p-1 flex flex-col justify-center items-center text-3xl font-semibold rounded-t-md'>
+                                    <div>Agenda</div>
+                                    <Button
+                                        variant="icon"
+                                        icon={<Plus />}
+                                        onClick={handleNovoAgendamento}
+                                    />
+
+                                </div>
+                                <div className='w-full h-full bg-white rounded-b-md'>
+                                    <Scheduler
+                                        timeZone="America/Sao_Paulo"
+                                        dataSource={agendas?.map(compromisso => {
+                                            return {
+                                                text: compromisso.servico,
+                                                startDate: new Date(compromisso.data + 'T' + compromisso.horario),
+                                                endDate: calcularEndDate(compromisso.data, compromisso.horario, compromisso.duracao),
+                                                assigneeId: compromisso.id, // ou qualquer outra propriedade que desejar usar
+
+                                                priorityId: 1 // ou qualquer outra propriedade que desejar usar
+                                            };
+                                        })}
+                                        views={views}
+                                        currentView="agenda"
+                                        defaultCurrentDate={currentDate}
+                                        height={height}
+                                        appointmentComponent={Appointment}
+                                        onAppointmentDeleted={onAppointmentFormDelete}
+                                        onAppointmentFormOpening={onAppointmentFormOpening}
+                                        onAppointmentUpdated={onAppointmentUpdated}
+                                    />
+                                </div>
+                            </div>
+                        )
+                    }
+
+                </div>
             </div>
             {abrirModalAgendamento && (
                 <ModalAgendamento
                     onClose={() => { setAbrirModalAgendamento(false) }}
                 />
-            )}
+            )
+            }
         </>
 
     )
@@ -304,7 +433,7 @@ const ModalAgendamento = ({ onClose }) => {
 
     useEffect(() => {
         (async () => {
-                try {
+            try {
                 const { dados } = await listService()
                 setServicos(dados)
             } catch (error) {
