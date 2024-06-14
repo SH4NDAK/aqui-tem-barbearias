@@ -96,11 +96,11 @@ export default function App() {
             />
 
             <div>
-              <span
+              {/* <span
                 className="text-sm"
               >
                 Esqueceu a senha? Clique <a className="text-blue-700 font-bold" href="/recovery">aqui!</a>
-              </span>
+              </span> */}
             </div>
             <div className="flex w-full mt-4 justify-center">
               <Button

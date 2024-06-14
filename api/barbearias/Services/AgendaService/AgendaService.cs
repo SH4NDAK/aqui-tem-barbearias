@@ -77,7 +77,7 @@ namespace jwtRegisterLogin.Services.AgendaService
         public async Task<IActionResult> CancelarSolicitacao(int id)
         {
             var query = await _context.Agenda
-            .FirstOrDefaultAsync(bu => bu.Id == id && bu.Aprovado == false);
+            .FirstOrDefaultAsync(bu => bu.Id == id && bu.Aprovado == null);
 
             if (query == null)
             {
@@ -100,7 +100,7 @@ namespace jwtRegisterLogin.Services.AgendaService
             {
                 // Primeiro, encontre o agendamento existente no banco de dados pelo ID
                 var agendaExistente = await _context.Agenda
-                    .FirstOrDefaultAsync(a => a.NomeDoCliente == agendaCriacaoDto.NomeDoCliente && a.Aprovado == false);
+                    .FirstOrDefaultAsync(a => a.NomeDoCliente == agendaCriacaoDto.NomeDoCliente && a.Aprovado == null);
 
                 if (agendaExistente == null)
                 {

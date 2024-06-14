@@ -243,7 +243,7 @@ export default function Barbeiros() {
 
                 // Serviços ja vinculados ao barbeiro
                 const servicos_barbeiro = await getServicos(barbeiro.id);
-                setServicos(servicos.dados);
+                setServicos(servicos.dados.filter(servico => servico.ativo));
 
                 // Serviços que o barbeiro ainda nao tem vinculo
                 const servicos_filtrados = servicos.dados.filter(servico =>

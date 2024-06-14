@@ -25,11 +25,12 @@ export default function Agenda() {
     const [modalAgendamento, setModalAgendamento] = useState(false);
     const [isEdicao, setIsEdicao] = useState(false);
 
+    const [cancelar, setCancelar] = useState();
+
     // Pesquisa de agendamentos
     const [data, setData] = useState(null);
     const [cliente, setCliente] = useState(null);
     const [aprovados, setAprovados] = useState(false);
-
     const [agendamentos, setAgendamentos] = useState([]);
 
     useEffect(() => {
@@ -46,7 +47,7 @@ export default function Agenda() {
                 if (usuario.cargo === ROLES.Cliente) {
 
                     const res = await verificarCliente(usuario.usuario);
-                    console.log(res);
+
                     if (res.dados) {
                         res.dados.forEach(dado => {
                             dado.data = formatarData(res.dados[0].data);
@@ -57,7 +58,7 @@ export default function Agenda() {
 
                     // Serviços da barbearia
                     const { dados } = await listService();
-                    setServicos(dados);
+                    setServicos(dados.filter(servico => !!servico.ativo || servico.ativo == 'true'));
                 }
                 resolve();
             })
@@ -83,7 +84,7 @@ export default function Agenda() {
         setAgendamentos(dados);
     }
 
-    const handleEditar = async () => {
+    const handleEditar = async (solicitado) => {
         const dados = solicitado;
         setIsEdicao(true);
         setSolicitado(false);
@@ -95,8 +96,9 @@ export default function Agenda() {
         setValue("observacao", dados.observacao)
     }
 
-    const handleCancelarAgendamento = () => {
-        setModalCancelamento(true)
+    const handleCancelarAgendamento = (solicitado) => {
+        setCancelar(solicitado);
+        setModalCancelamento(true);
     }
 
     const handleAprovarReprovarAgendamento = async (agendamento, aprovar) => {
@@ -153,6 +155,13 @@ export default function Agenda() {
 
         } catch (error) {
             console.error(error);
+        }
+        finally {
+            setValue("NomeDoCliente", "");
+            setValue("id_tipo_servico", '');
+            setValue("data", '');
+            setValue("horario", '');
+            setValue("observacao", '');
         }
 
     };
@@ -272,7 +281,7 @@ export default function Agenda() {
                                                                     variant="gray"
                                                                     type="button"
                                                                     icon={<ArrowLeftCircle className="me-1" />}
-                                                                    onClick={() => navigate("/home")}
+                                                                    onClick={() => user.cargo == ROLES.Barbeiro ? setModalAgendamento(false) : navigate("/home")}
                                                                     className="w-full"
                                                                 >
                                                                     Voltar
@@ -445,7 +454,7 @@ export default function Agenda() {
                 {
                     modalCancelamento && (
                         <ModalCancelamento
-                            solicitado={solicitado}
+                            solicitado={cancelar}
                         />
                     )
                 }
@@ -495,11 +504,18 @@ export default function Agenda() {
 
     function ModalCancelamento({ solicitado }) {
 
-        const handleCancelar = async () => {
-            await cancelarSolicitacao(solicitado.id);
-            notification.success({ message: "Solicitação cancelada com sucesso" });
-            navigate(0);
-            setModalCancelamento(false)
+
+        const handleCancelar = async (solicitado) => {
+            try {
+                const res = await cancelarSolicitacao(solicitado.id);
+                notification.success({ message: "Solicitação cancelada com sucesso" });
+                setTimeout(() => {
+                    navigate(0);
+                }, 1000);
+                setModalCancelamento(false)
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         return (
@@ -530,7 +546,7 @@ export default function Agenda() {
                         <button
                             type="button"
                             className="font-semibold md:mt-4 flex justify-center text-white bg-[#242222] p-2 rounded-md md:w-fit w-full"
-                            onClick={handleCancelar}
+                            onClick={() => handleCancelar(solicitado)}
                         >
                             Sim <ArrowRightCircle className="ms-1" />
                         </button>
@@ -580,7 +596,7 @@ export default function Agenda() {
                                     errors={errors.servico}
                                 >
                                     <option value=''>{servicos.length === 0 ? 'NENHUM SERVIÇO ENCONTRADO' : 'SELECIONE 1'}</option>
-                                    {servicos.map(servico => (
+                                    {servicos.filter(servico => servico.ativo).map(servico => (
                                         <option key={servico.id} value={servico.id}>{servico.nome}</option>
                                     ))}
                                 </Selectpicker>
@@ -629,7 +645,7 @@ export default function Agenda() {
                                             <InputText
                                                 type="text"
                                                 label="Observação (opcional)"
-                                                placeholder="Alguma observação para este agendamento"
+                                                placeholder="Alguma observação para este agendaento"
                                                 {...register("observacao")}
                                             />
                                         </div>
@@ -639,7 +655,7 @@ export default function Agenda() {
                                                 variant="gray"
                                                 type="button"
                                                 icon={<ArrowLeftCircle className="me-1" />}
-                                                onClick={() => navigate("/home")}
+                                                onClick={() => user.cargo == ROLES.Barbeiro ? setModalAgendamento(false) : navigate("/home")}
                                                 className="w-full"
                                             >
                                                 Voltar

@@ -15,7 +15,6 @@ export default function Perfil() {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
     const navigate = useNavigate()
     const [user, setUser] = useState()
-    const [verSenha, setVerSenha] = useState(false);
 
     useEffect(() => {
         const user = localStorage.getItem('usuario');
@@ -94,25 +93,9 @@ export default function Perfil() {
                                 }
                             </div>
                             <InputText
-                                label='Senha'
-                                type='password'
-                                placeholder={'Digite sua senha'}
-                                variant={errors.senha ? 'invalid' : ''}
-                            />
-                            <div>
-                                {errors.senha && (
-                                    <span
-                                        className="font-semibold text-red-600 text-sm"
-                                    >
-                                        {errors.senha.message}
-                                    </span>
-                                )
-                                }
-                            </div>
-                            <InputText
                                 label='Confirmar senha'
                                 type='password'
-                                placeholder={'Digite sua senha'}
+                                placeholder={'Digite a sua senha'}
                                 variant={errors.confirmPassword ? 'invalid' : ''}
                             />
                             <div>
