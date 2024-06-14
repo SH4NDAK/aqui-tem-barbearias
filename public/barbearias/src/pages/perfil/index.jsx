@@ -39,6 +39,7 @@ export default function Perfil() {
                 message: "Sucesso",
                 description: res.mensagem
             })
+            navigate("/home");
         } catch (error) {
             console.log(error);
         }
