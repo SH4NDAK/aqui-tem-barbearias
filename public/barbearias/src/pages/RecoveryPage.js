@@ -1,44 +1,35 @@
-import Button from "../components/Button";
-import Col from "../components/Col";
-import Container from "../components/Container";
-import FormContainer from "../components/FormContainer";
-import InputText from "../components/InputText";
-import Row from "../components/Row";
-import { useNavigate } from "react-router-dom";
-import { listByEmail } from "../services/barbeiro";
-import { useContext, useState } from "react";
-import axios from "axios";
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import OtpContext from '../pages/Otpcontext'; // Verifique o caminho de importação
+import { listByEmail } from '../services/barbeiro';
+import Button from '../components/Button';
+import Col from '../components/Col';
+import Container from '../components/Container';
+import FormContainer from '../components/FormContainer';
+import InputText from '../components/InputText';
+import Row from '../components/Row';
 
 
-export default function RegisterPage() {
+export default function RecoveryPage() {
 
-    const navigate = useNavigate(false);
-
-    const [email, setEmail] = useState()
-
-    const [OTP, setOTP] = useState();
+    const [email, setEmail] = useState('');
+    const { updateOtp } = useContext(OtpContext);
+    const navigate = useNavigate();
 
 
     function navigateToOtp(){
         if (email){
             const OTP = Math.floor(Math.random() * 9000 + 1000);
             console.log(OTP);
-            setOTP(OTP);
-    
-            axios
-                .post("http://localhost:3n000/email/send-recovery-email", {  
-                    OTP,
-                    recipient_email: email
-                })
-                .then(() => navigate("/verification"))
-                .catch(console.log);
-            return;
+            updateOtp(OTP);
+            navigate('/verification');
+
         }
     }
 
     const ListarUsuarioEmail = async () => {
         const res = await listByEmail(email);
-        // navigate("/verification", { state: res })   
+        navigate({ state: res })   
     }
     return (
         <Container>

@@ -11,6 +11,9 @@ import FormContainer from "./components/FormContainer";
 import { SetAuthenticationToken, SetAuthenticationUser, signInRequest } from './services/auth';
 import { notification } from 'antd';
 import logo from "./img/logo.jpg";
+import { RouterProvider } from "react-router-dom";
+import { OtpProvider } from './pages/Otpcontext';
+import router from './Routes/index';  
 
 
 export default function App() {
@@ -68,6 +71,8 @@ export default function App() {
   }
 
   return (
+  <OtpProvider>  
+    <RouterProvider router={router} />
     <Container>
       <FormContainer>
         <div className="w-full flex justify-center font-bold text-5xl">
@@ -130,5 +135,6 @@ export default function App() {
         </div>
       </FormContainer>
     </Container>
+  </OtpProvider>
   );
 }
