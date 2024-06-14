@@ -1,17 +1,12 @@
-import { Lightbulb, Link, Pencil, Plus, Search, Trash, ListPlus } from "lucide-react";
-import Button from "../components/Button";
-import Container from "../components/Container";
-import FormContainer from "../components/FormContainer";
-import InputText from "../components/InputText";
-import { useNavigate } from "react-router-dom";
-import Row from "../components/Row";
-import LayoutPage from "../components/LayoutPage";
-import SideBar from "../components/SideBar";
+import { Dropdown, Menu, Table, notification } from "antd";
+import { Pencil, Plus, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
-import { editService, listService } from "../services/service";
-import { Col, Dropdown, Menu, Table, notification } from "antd";
-import { PlusSquareOutlined } from "antd";
+import { useNavigate } from "react-router-dom";
+import Button from "../components/Button";
 import Header from "../components/Header";
+import InputText from "../components/InputText";
+import Row from "../components/Row";
+import { editService, listService } from "../services/service";
 import { ROLES } from "../utils/role";
 
 
@@ -20,7 +15,6 @@ export default function TipoServicoPage() {
     const navigate = useNavigate();
     const [serviceType, setServiceType] = useState([]);
     const [serviceTypeFilter, setServiceTypeFilter] = useState([]);
-    const [nome, setNome] = useState("");
     const [ativos, setInativos] = useState(false);
 
 
@@ -115,8 +109,8 @@ export default function TipoServicoPage() {
 
         <div className="w-full h-dvh bg-[#242222]">
             <Header />
-            <div className="w-full flex justify-center">
-                <div className="flex flex-col bg-white w-1/3 shadow-sm shadow-[#242222] rounded-md sm:w-full">
+            <div className="w-full flex flex-col gap-4 justify-center items-center mt-4">
+                <div className="flex flex-col bg-white w-11/12 shadow-sm shadow-[#242222] rounded-md ">
                     <div className="w-fit self-center">
                         <span className="text-3xl font-semibold">Tipos de serviço</span>
                     </div>
@@ -160,9 +154,40 @@ export default function TipoServicoPage() {
                                     <label htmlFor="incluir_inativos">Incluir inativos</label>
                                 </div>
                             </Row>
-                            <Table columns={columns} dataSource={serviceTypeFilter} pagination={{ pageSize: 10 }} scroll={{ y: 240 }} />
                         </Row>
                     </form>
+                </div>
+                <div className="self-center w-11/12 bg-white p-2 rounded-md shadow-sm shadow-[#242222]">
+                    {
+                        serviceTypeFilter.length > 0 ?
+                            serviceTypeFilter.map(servico => {
+                                return (
+                                    <div>
+                                        <div className="flex flex-row w-full justify-between">
+                                            <div>
+                                                <span className="text-lg"><b>{servico.nome}</b></span>
+                                                <br />
+                                                <span className="text-sm">R${servico.preco} <br /> <span className="text-blue-600">{servico.duracao}min</span></span>
+                                            </div>
+                                            <div className="flex flex-row gap-4">
+                                                <button onClick={() => navigate(`edit/${servico.id}`)}>
+                                                    <Pencil />
+                                                </button>
+                                                <button onClick={() => deleteServiceType(servico)}>
+                                                    <Trash />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                            :
+                            (
+                                <div className="flex justify-center w-full bg-white">
+                                    <span className="w-fit text-lg font-bold">Nenhum tipo de serviço encontrado</span>
+                                </div>
+                            )
+                    }
                 </div>
             </div>
         </div>

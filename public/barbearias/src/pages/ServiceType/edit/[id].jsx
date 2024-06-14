@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { TimePicker, notification } from "antd";
 import dayjs from "dayjs";
 import { isAxiosError } from "axios";
+import Header from "../../../components/Header";
 
 export default function EditTipoServico() {
     const navigate = useNavigate();
@@ -71,9 +72,14 @@ export default function EditTipoServico() {
     };
 
     return (
-        <LayoutPage>
-            <Container>
-                <FormContainer title={`Tipos de Serviço - Edição`}>
+        <div className="w-full h-dvh bg-[#242222]">
+            <Header />
+            <div className="w-full flex justify-center p-1 mt-4">
+                <div className="flex flex-col bg-white md:w-1/3 p-2 shadow-sm shadow-[#242222] rounded-md w-full">
+                    <div className="w-fit self-center">
+                        <span className="text-3xl font-semibold">Tipos de serviço - Edição</span>
+                    </div>
+                    <div className="w-11/12 h-0.5 bg-black self-center mt-4 mb-4 opacity-5"></div>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         {/* Campos do formulário */}
                         <Row>
@@ -208,23 +214,23 @@ export default function EditTipoServico() {
                                 <div className="flex gap-4 justify-end">
                                     <Button
                                         type="button"
-                                        icon={<ArrowLeftCircle />}
+                                        icon={<ArrowLeftCircle className="me-1" />}
                                         onClick={() => { navigate(-1) }}
                                     >
                                         Voltar
                                     </Button>
                                     <Button
                                         type="submit"
-                                        icon={<CloudUpload />}
+                                        icon={<CloudUpload className="me-1" />}
                                     >
-                                        Editar
+                                        Salvar edição
                                     </Button>
                                 </div>
                             </Col>
                         </Row>
                     </form>
-                </FormContainer>
-            </Container>
-        </LayoutPage>
+                </div>
+            </div>
+        </div>
     );
 }
