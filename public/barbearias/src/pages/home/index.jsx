@@ -102,11 +102,17 @@ export default function Home() {
                                                 />
                                             )
                                         }
-                                        <Card
-                                            onClick={handleAgendaClick}
-                                            icone={<Calendar className="me-1" />}
-                                            titulo={"Agenda"}
-                                        />
+                                        {
+                                            user?.cargo == ROLES.Barbeiro &&
+                                            (
+                                                <Card
+                                                    onClick={handleAgendaClick}
+                                                    icone={<Calendar className="me-1" />}
+                                                    titulo={"Agenda"}
+                                                />
+
+                                            )
+                                        }
                                     </>
                                 )
                                     : (

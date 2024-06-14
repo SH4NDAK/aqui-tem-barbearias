@@ -58,5 +58,45 @@ namespace jwtRegisterLogin.Controllers
             return Ok(response);
         }
 
+        [HttpPatch("editar")]
+        public async Task<IActionResult> EditarSolicitacao(AgendaCriacaoDto agendaDTO)
+        {
+            var response = await _agendaService.EditarSolicitacao(agendaDTO);
+
+            if (response == null)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("listar/{id_barbeiro}")]
+        public async Task<IActionResult> ListarAgendamentos(int id_barbeiro, [FromQuery] string? data, [FromQuery] string? cliente, [FromQuery] bool? aprovados)
+        {
+            var response = await _agendaService.ListarAgendamentos(id_barbeiro, data, cliente, aprovados);
+
+            if (response == null)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPatch("aprovacao")]
+        public async Task<IActionResult> AprovarReprovarAgendamento(AgendaStatusDTO agendaStatus)
+        {
+            var response = await _agendaService.AprovarReprovarAgendamento(agendaStatus);
+
+            if (response == null)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+
     }
 }

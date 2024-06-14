@@ -1,4 +1,4 @@
-import { ArrowLeftCircle, ArrowRightCircle, CalendarDays, MailOpen, Pencil, WandIcon, X } from "lucide-react";
+import { ArrowLeftCircle, ArrowRightCircle, CalendarDays, CheckCircle, MailOpen, Pencil, Plus, Search, WandIcon, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -6,43 +6,56 @@ import Button from "../../components/Button";
 import Header from "../../components/Header";
 import InputText from "../../components/InputText";
 import Selectpicker from "../../components/Selectpicker";
-import { cancelarSolicitacao, saveAgenda, verificarCliente } from "../../services/agenda";
-import { listByServico } from "../../services/barbeiro";
+import { aprovarReprovarAgendamento, cancelarSolicitacao, editarAgendamento, listarAgendamentos, saveAgenda, verificarCliente } from "../../services/agenda";
+import { listByCargo, listByServico } from "../../services/barbeiro";
 import { listService } from "../../services/service";
 import { ROLES } from "../../utils/role";
 import { notification } from "antd";
+import Label from "../../components/Label";
 
 export default function Agenda() {
     const location = useLocation();
     const navigate = useNavigate();
-    const [agendas, setAgendas] = useState([]);
     const [user, setUser] = useState(null);
     const [servicos, setServicos] = useState([]);
     const [barbeiros, setBarbeiros] = useState(null);
     const [modalConfirmacao, setModalConfirmacao] = useState(false);
     const [solicitado, setSolicitado] = useState(null);
     const [modalCancelamento, setModalCancelamento] = useState(false);
+    const [isEdicao, setIsEdicao] = useState(false);
 
+    // Pesquisa de agendamentos
+    const [data, setData] = useState(null);
+    const [cliente, setCliente] = useState(null);
+    const [aprovados, setAprovados] = useState(false);
+
+    const [agendamentos, setAgendamentos] = useState([]);
 
     useEffect(() => {
         (async () => {
-            const usuario = JSON.parse(localStorage.getItem('usuario'));
-            setUser(usuario);
+            await new Promise(async resolve => {
+                const usuario = JSON.parse(localStorage.getItem('usuario'));
+                setUser(usuario);
 
-            // Se for cliente, carrega os tipos de serviço da barbearia e verifica se ele tem algum agendamento pendente
-            if (usuario.cargo === ROLES.Cliente) {
+                // Se for cliente, carrega os tipos de serviço da barbearia e verifica se ele tem algum agendamento pendente
+                if (usuario.cargo === ROLES.Cliente) {
 
-                const res = await verificarCliente(usuario.usuario);
-                if (res.dados[0]) {
-                    res.dados[0].data = formatarData(res.dados[0].data);
+                    const res = await verificarCliente(usuario.usuario);
+                    console.log(res);
+                    if (res.dados) {
+                        res.dados.forEach(dado => {
+                            dado.data = formatarData(res.dados[0].data);
+                        })
+                    }
+
+                    setSolicitado(res.dados);
+
+                    // Serviços da barbearia
+                    const { dados } = await listService();
+                    setServicos(dados);
                 }
-
-                setSolicitado(res.dados[0]);
-
-                // Serviços da barbearia
-                const { dados } = await listService();
-                setServicos(dados);
-            }
+                resolve();
+            })
         })();
     }, []);
 
@@ -60,11 +73,15 @@ export default function Agenda() {
         setBarbeiros(dados);
     };
 
+    const handlePesquisarAgendamentos = async () => {
+        const { dados } = await listarAgendamentos(user.id, data, cliente, aprovados);
+        setAgendamentos(dados);
+    }
+
     const handleEditar = async () => {
         const dados = solicitado;
+        setIsEdicao(true);
         setSolicitado(false);
-
-        console.log(dados);
         setValue("id_tipo_servico", dados.id_tipo_servico, { shouldValidate: true });
         await handlePesquisarBarbeiros(dados.id_tipo_servico);
         setValue("id_usuario_dono", dados.id_usuario_dono);
@@ -77,6 +94,39 @@ export default function Agenda() {
         setModalCancelamento(true)
     }
 
+    const handleAprovarReprovarAgendamento = async (agendamento, aprovar) => {
+        try {
+            const { dados } = await aprovarReprovarAgendamento(agendamento, aprovar);
+
+            // Função para encontrar o agendamento no array baseado em critérios
+            const findAgendamento = (item) => {
+                return (
+                    item.data === agendamento.data &&
+                    item.horario === agendamento.horario &&
+                    item.id_tipo_servico === agendamento.id_tipo_servico &&
+                    item.id_usuario_dono === agendamento.id_usuario_dono
+                    // Adicione mais critérios se necessário
+                );
+            };
+
+            // Encontrar o índice do agendamento no array de agendamentos
+            const index = agendamentos.findIndex(findAgendamento);
+
+            if (index !== -1) {
+                // Substituir o agendamento antigo pelo agendamento atualizado
+                agendamentos[index] = dados;
+
+                // Atualizar o estado dos agendamentos (se você estiver usando React)
+                setAgendamentos([...agendamentos]);
+            }
+
+            notification.success({ message: `Solicitação de agendamento ${aprovar ? 'aprovada' : 'reprovada'} com sucesso` });
+        } catch (error) {
+            console.error(error);
+            notification.error({ message: `Erro ao ${aprovar ? 'aprovar' : 'reprovar'} agendamento` });
+        }
+    };
+
     const onSubmit = async (data) => {
 
         // Adiciona o nome do cliente se o agendamento tiver sendo feito por ele
@@ -85,7 +135,7 @@ export default function Agenda() {
         }
 
         try {
-            await saveAgenda(data);
+            isEdicao ? await editarAgendamento(data) : await saveAgenda(data);
             setModalConfirmacao(true);
         } catch (error) {
             console.error(error);
@@ -103,170 +153,256 @@ export default function Agenda() {
         return [dia, mes, ano].join('/');
     }
 
-    const validarData = (value) => {
-        console.log(value);
-        const selectedDate = new Date(value);
-        const today = new Date();
-
-        // Comparando as datas
-        if (selectedDate < today) {
-            return "A data não pode ser anterior a hoje";
-        }
-
-        return true;
-    };
-
-
     return (
         <div className="w-full h-dvh bg-[#242222]">
             <Header />
             <div className='flex flex-col justify-center'>
-                {location.state && (
-                    <div className='w-full mt-4 bg-white p-1 flex flex-col justify-center items-center rounded-md md:w-11/12 self-center'>
-                        <div className='text-3xl font-semibold'>
-                            Barbearia {(location.state.nome).toUpperCase()}
-                        </div>
-                        {
-                            !solicitado ? (
-                                <>
-                                    <div className='w-full md:w-11/12 mt-4 mb-4'>
-                                        <div className='self-start text-xl'>
-                                            Olá <b>{user?.usuario}</b>! Que bom te ter por aqui, vamos agendar seu próximo serviço?
-                                        </div>
-                                    </div>
-                                    <div className='w-full md:w-11/12'>
-                                        <form onSubmit={handleSubmit(onSubmit)}>
-                                            <div>
-                                                <Selectpicker
-                                                    label="Serviço"
-                                                    {...register("id_tipo_servico", {
-                                                        required: "Campo obrigatório",
-                                                        onChange: (e) => {
-                                                            setValue("id_tipo_servico", e.currentTarget.value, { shouldValidate: true });
-                                                            handlePesquisarBarbeiros(e.currentTarget.value);
-                                                        }
-                                                    })}
-                                                    errors={errors.servico}
-                                                >
-                                                    <option value=''>{servicos.length === 0 ? 'NENHUM SERVIÇO ENCONTRADO' : 'SELECIONE 1'}</option>
-                                                    {servicos.map(servico => (
-                                                        <option key={servico.id} value={servico.id}>{servico.nome}</option>
-                                                    ))}
-                                                </Selectpicker>
-
-                                                {barbeiros && (
-                                                    <>
-                                                        <div className='mt-4 transition-all'>
-                                                            <Selectpicker
-                                                                label="Barbeiro"
-                                                                onChange={(e) => {
-                                                                    const barbeiroId = e.currentTarget.value;
-                                                                    setValue("id_usuario_dono", barbeiroId, { shouldValidate: true });
-                                                                }}
-                                                                {...register("id_usuario_dono", {
-                                                                    required: "Campo obrigatório"
-                                                                })}
-                                                                errors={errors.barbeiro}
-                                                            >
-                                                                <option value=''>SELECIONE 1</option>
-                                                                {barbeiros.map(barbeiro => (
-                                                                    <option key={barbeiro.id} value={barbeiro.id}>{barbeiro.usuario}</option>
-                                                                ))}
-                                                            </Selectpicker>
-                                                        </div>
-
-                                                        <div className='flex flex-col md:flex-row gap-4 w-full'>
-                                                            <div className="md:w-1/2">
-                                                                <InputText
-                                                                    type="date"
-                                                                    label="Data"
-                                                                    {...register("data", {
-                                                                        required: "Campo Obrigatório",
-                                                                        validate: validarData
-                                                                    })}
-                                                                    variant={errors.data ? 'invalid' : ''}
-                                                                />
-                                                            </div>
-                                                            <div className="md:w-1/2">
-                                                                <InputText
-                                                                    type="time"
-                                                                    label="Horario"
-                                                                    inputMode="numeric"
-                                                                    {...register("horario", { required: "Campo Obrigatório" })}
-                                                                    variant={errors.horario ? 'invalid' : ''}
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className='w-full'>
-                                                            <InputText
-                                                                type="text"
-                                                                label="Observação (opcional)"
-                                                                placeholder="Alguma observação para este agendamento"
-                                                                {...register("observacao")}
-                                                            />
-                                                        </div>
-
-                                                        <div className='md:mt-4 w-full gap-4 flex flex-col md:flex-row'>
-                                                            <Button
-                                                                variant="gray"
-                                                                type="button"
-                                                                icon={<ArrowLeftCircle className="me-1" />}
-                                                                onClick={() => navigate("/home")}
-                                                                className="w-full"
-                                                            >
-                                                                Voltar
-                                                            </Button>
-                                                            <Button
-                                                                icon={<CalendarDays className='me-1' />}
-                                                                className="w-full"
-                                                            >
-                                                                Solicitar agendamento
-                                                            </Button>
-                                                        </div>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </form>
-
-                                    </div>
-                                </>
-                            )
-                                : (
+                {
+                    location.state ? (
+                        <div className='w-full mt-4 bg-white p-1 flex flex-col justify-center items-center rounded-md md:w-11/12 self-center'>
+                            <div className='text-3xl font-semibold'>
+                                Barbearia {(location.state.nome).toUpperCase()}
+                            </div>
+                            {
+                                !solicitado ? (
                                     <>
-                                        <div className="text-lg">
-                                            Bem vindo de volta <b>{(user.usuario).toUpperCase()}</b>!, verificamos que você solicitou um agendamento na nossa barbearia, aqui está:
+                                        <div className='w-full md:w-11/12 mt-4 mb-4'>
+                                            <div className='self-start text-xl'>
+                                                Olá <b>{user?.usuario}</b>! Que bom te ter por aqui, vamos agendar seu próximo serviço?
+                                            </div>
                                         </div>
-                                        <div className="w-full md:w-6/12 bg-gray-100 p-2 rounded-md shadow-sm shadow-[#242222]">
-                                            <div className="text-base"><b>Data: </b> {solicitado.data}</div>
-                                            <div className="text-base"><b>Horário: </b> {solicitado.horario}h</div>
-                                            <div className="text-base"><b>Observação: </b> {solicitado.observacao}</div>
-                                            <div className="text-base"><b>Status: </b> <span className={`font-semibold ${solicitado.aprovado ? 'text-blue-600' : 'text-yellow-400'}`}>{solicitado.aprovado ? 'APROVADO' : 'PENDENTE'}</span></div>
-                                            {
-                                                !solicitado.aprovado && (
-                                                    <div className="w-full flex flex-col md:flex-row gap-4 justify-end">
-                                                        <button
-                                                            className="w-full md:w-fit flex flex-row justify-center items-center bg-[#242222] p-2 shadow-sm shadow-[#242222] text-white font-semibold rounded-md"
-                                                            onClick={() => handleEditar(solicitado)}
-                                                        >
-                                                            <Pencil className="me-1" /> Editar dados
-                                                        </button>
-                                                        <button
-                                                            className="w-full md:w-fit flex flex-row justify-center items-center bg-red-600 p-2 shadow-sm shadow-[#242222] text-white font-semibold rounded-md"
-                                                            onClick={() => handleCancelarAgendamento(solicitado)}
-                                                        >
-                                                            <X className="me-1" /> Cancelar agendamento
-                                                        </button>
-                                                    </div>
-                                                )
-                                            }
+                                        <div className='w-full md:w-11/12'>
+                                            <form onSubmit={handleSubmit(onSubmit)}>
+                                                <div>
+                                                    <Selectpicker
+                                                        label="Serviço"
+                                                        {...register("id_tipo_servico", {
+                                                            required: "Campo obrigatório",
+                                                            onChange: (e) => {
+                                                                setValue("id_tipo_servico", e.currentTarget.value, { shouldValidate: true });
+                                                                handlePesquisarBarbeiros(e.currentTarget.value);
+                                                            }
+                                                        })}
+                                                        errors={errors.servico}
+                                                    >
+                                                        <option value=''>{servicos.length === 0 ? 'NENHUM SERVIÇO ENCONTRADO' : 'SELECIONE 1'}</option>
+                                                        {servicos.map(servico => (
+                                                            <option key={servico.id} value={servico.id}>{servico.nome}</option>
+                                                        ))}
+                                                    </Selectpicker>
+
+                                                    {barbeiros && (
+                                                        <>
+                                                            <div className='mt-4 transition-all'>
+                                                                <Selectpicker
+                                                                    label="Barbeiro"
+                                                                    onChange={(e) => {
+                                                                        const barbeiroId = e.currentTarget.value;
+                                                                        setValue("id_usuario_dono", barbeiroId, { shouldValidate: true });
+                                                                    }}
+                                                                    {...register("id_usuario_dono", {
+                                                                        required: "Campo obrigatório"
+                                                                    })}
+                                                                    errors={errors.barbeiro}
+                                                                >
+                                                                    <option value=''>SELECIONE 1</option>
+                                                                    {barbeiros.map(barbeiro => (
+                                                                        <option key={barbeiro.id} value={barbeiro.id}>{barbeiro.usuario}</option>
+                                                                    ))}
+                                                                </Selectpicker>
+                                                            </div>
+
+                                                            <div className='flex flex-col md:flex-row gap-4 w-full'>
+                                                                <div className="md:w-1/2">
+                                                                    <InputText
+                                                                        type="date"
+                                                                        label="Data"
+                                                                        {...register("data", {
+                                                                            required: "Campo Obrigatório"
+                                                                        })}
+                                                                        variant={errors.data ? 'invalid' : ''}
+                                                                    />
+                                                                </div>
+                                                                <div className="md:w-1/2">
+                                                                    <InputText
+                                                                        type="time"
+                                                                        label="Horario"
+                                                                        inputMode="numeric"
+                                                                        {...register("horario", { required: "Campo Obrigatório" })}
+                                                                        variant={errors.horario ? 'invalid' : ''}
+                                                                    />
+                                                                </div>
+                                                            </div>
+
+                                                            <div className='w-full'>
+                                                                <InputText
+                                                                    type="text"
+                                                                    label="Observação (opcional)"
+                                                                    placeholder="Alguma observação para este agendamento"
+                                                                    {...register("observacao")}
+                                                                />
+                                                            </div>
+
+                                                            <div className='md:mt-4 w-full gap-4 flex flex-col md:flex-row'>
+                                                                <Button
+                                                                    variant="gray"
+                                                                    type="button"
+                                                                    icon={<ArrowLeftCircle className="me-1" />}
+                                                                    onClick={() => navigate("/home")}
+                                                                    className="w-full"
+                                                                >
+                                                                    Voltar
+                                                                </Button>
+                                                                <Button
+                                                                    icon={<CalendarDays className='me-1' />}
+                                                                    className="w-full"
+                                                                >
+                                                                    Solicitar agendamento
+                                                                </Button>
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </form>
+
                                         </div>
                                     </>
                                 )
-                        }
+                                    : (
+                                        <>
+                                            <div className="md:w-fit w-full">
+                                                <Button
+                                                    onClick={() => setSolicitado(false)}
+                                                >
+                                                    <Plus className="me-1" /> Novo agendamento
+                                                </Button>
+                                            </div>
+                                            <div className="text-xl">
+                                                Meus agendamentos
+                                            </div>
+                                            {solicitado.map(s => {
+                                                return (
+                                                    <div className="w-full md:w-6/12 bg-gray-100 p-2 rounded-md shadow-sm shadow-[#242222] mb-2">
+                                                        <div className="text-base"><b>Data: </b> {s.data}</div>
+                                                        <div className="text-base"><b>Horário: </b> {s.horario}h</div>
+                                                        <div className="text-base"><b>Observação: </b> {s.observacao}</div>
+                                                        <div className="text-base"><b>Status: </b> <span className={`font-semibold ${!!s.aprovado ? 'text-blue-600' : s.aprovado === null ? 'text-yellow-400' : 'text-red-600'}`}>{s.aprovado ? 'APROVADO' : s.aprovado === null ? 'PENDENTE' : 'REPROVADO'}</span></div>
+                                                        {
+                                                            s.aprovado === null && (
+                                                                <div className="w-full flex flex-col md:flex-row gap-4 justify-end">
+                                                                    <button
+                                                                        className="w-full md:w-fit flex flex-row justify-center items-center bg-[#242222] p-2 shadow-sm shadow-[#242222] text-white font-semibold rounded-md"
+                                                                        onClick={() => handleEditar(s)}
+                                                                    >
+                                                                        <Pencil className="me-1" /> Editar dados
+                                                                    </button>
+                                                                    <button
+                                                                        className="w-full md:w-fit flex flex-row justify-center items-center bg-red-600 p-2 shadow-sm shadow-[#242222] text-white font-semibold rounded-md"
+                                                                        onClick={() => handleCancelarAgendamento(s)}
+                                                                    >
+                                                                        <X className="me-1" /> Cancelar agendamento
+                                                                    </button>
+                                                                </div>
+                                                            )
+                                                        }
+                                                    </div>
+                                                )
 
-                    </div>
-                )}
+
+                                            })
+                                            }
+                                        </>
+
+
+
+                                    )
+                            }
+                        </div>
+                    ) :
+                        (
+                            <div className='w-full mt-4 bg-white p-1 flex flex-col gap-4 justify-center items-center rounded-md md:w-11/12 self-center'>
+                                <div className="text-3xl font-semibold">
+                                    Agenda - {user?.usuario}
+                                </div>
+                                <div className="w-11/12">
+                                    <div className="flex gap-4 md:flex-row flex-col w-full">
+                                        <div className="md:w-1/3">
+                                            <InputText
+                                                type="date"
+                                                label="Agendamentos do dia"
+                                                value={data}
+                                                onChange={(e) => setData(e.currentTarget.value)}
+                                            />
+                                        </div>
+                                        <div className="md:w-1/3">
+                                            <InputText
+                                                type="text"
+                                                label="Cliente"
+                                                value={cliente}
+                                                onChange={(e) => setCliente(e.currentTarget.value)}
+                                            />
+                                        </div>
+                                        <div className="flex mt-1 gap-1 items-center md:w-fit">
+                                            <input
+                                                id="apenas_aprovados"
+                                                type="checkbox"
+                                                value={aprovados}
+                                                onChange={(e) => setAprovados(!aprovados)}
+                                            />
+                                            <Label
+                                                label="Apenas aprovados"
+                                                htmlFor="apenas_aprovados"
+                                            />
+                                        </div>
+                                        <div className="mt-3 md:w-fit">
+                                            <button
+                                                className="w-full md:w-fit h-fit flex justify-center items-center bg-[#242222] p-2  rounded-md text-white font-semibold text-sm hover:bg-[#272525] shadow-sm shadow-black transition-colors"
+                                                onClick={handlePesquisarAgendamentos}
+                                            >
+                                                <Search className="me-1" /> Pesquisar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {
+                                    agendamentos.length > 0 ?
+                                        agendamentos.map(agendamento => {
+                                            return (
+                                                <div className="w-full md:w-6/12 bg-gray-100 p-2 rounded-md shadow-sm shadow-[#242222]">
+                                                    <div className="text-base"><b>Cliente: </b> {agendamento.nomeDoCliente}</div>
+                                                    <div className="text-base"><b>Serviço: </b> {agendamento.nomeTipoServico}</div>
+                                                    <div className="text-base"><b>Data: </b> {formatarData(agendamento.data)}</div>
+                                                    <div className="text-base"><b>Horário: </b> {agendamento.horario}h</div>
+                                                    <div className="text-base"><b>Observação: </b> {agendamento.observacao}</div>
+                                                    <div className="text-base"><b>Status: </b> <span className={`font-semibold ${agendamento.aprovado ? 'text-blue-600' : agendamento.aprovado === null ? 'text-yellow-400' : 'text-red-600'}`}>{agendamento.aprovado ? 'APROVADO' : agendamento.aprovado === null ? 'PENDENTE' : 'REPROVADO'}</span></div>
+                                                    {
+                                                        agendamento.aprovado === null && (
+                                                            <div className="w-full flex flex-col md:flex-row gap-4 justify-end">
+                                                                <button
+                                                                    className="w-full md:w-fit flex flex-row justify-center items-center bg-red-600 p-2 shadow-sm shadow-[#242222] text-white font-semibold rounded-md"
+                                                                    onClick={() => handleAprovarReprovarAgendamento(agendamento, false)}
+                                                                >
+                                                                    <X className="me-1" /> Reprovar soliticação
+                                                                </button>
+                                                                <button
+                                                                    className="w-full md:w-fit flex flex-row justify-center items-center bg-green-600 p-2 shadow-sm shadow-[#242222] text-white font-semibold rounded-md"
+                                                                    onClick={() => handleAprovarReprovarAgendamento(agendamento, true)}
+                                                                >
+                                                                    <CheckCircle className="me-1" /> Aprovar solicitação
+                                                                </button>
+                                                            </div>
+                                                        )
+                                                    }
+                                                </div>
+                                            )
+                                        })
+                                        :
+                                        (<span className="text-2xl font-semibold">Nenhum agendamento encontrado</span>)
+                                }
+                            </div>
+                        )
+
+                }
 
                 {
                     modalConfirmacao && (

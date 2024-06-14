@@ -16,7 +16,7 @@ namespace jwtRegisterLogin.Models
         public string Data { get; set; }
         public string Horario { get; set; }
         public string NomeDoCliente { get; set; }
-        public bool? Aprovado { get; set; } = false;
+        public bool? Aprovado { get; set; }
         public bool? Ativo { get; set; } = true;
         public bool? Dat_Cad { get; set; } = true;
 
