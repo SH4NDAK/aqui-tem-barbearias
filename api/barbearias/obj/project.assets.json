@@ -4370,19 +4370,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {}
+    "C:\\Users\\franc\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
+      "projectUniqueName": "C:\\Users\\franc\\OneDrive\\Documentos\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
       "projectName": "jwtRegisterLogin",
-      "projectPath": "C:\\Users\\User\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\Documents\\GitHub\\aqui-tem-barbearias\\api\\barbearias\\obj\\",
+      "projectPath": "C:\\Users\\franc\\OneDrive\\Documentos\\aqui-tem-barbearias\\api\\barbearias\\jwtRegisterLogin.csproj",
+      "packagesPath": "C:\\Users\\franc\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\franc\\OneDrive\\Documentos\\aqui-tem-barbearias\\api\\barbearias\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\franc\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -4400,11 +4400,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -4467,7 +4462,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

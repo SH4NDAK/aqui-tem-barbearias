@@ -45,7 +45,7 @@ builder.Services.AddScoped<IAgendaService, AgendaService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ICookieService, CookieService>();
 //adicionei isso aqui tbm
-builder.services.AddScoped<IMailService, MailService>();
+// builder.services.AddScoped<IMailService, MailService>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<AppDbContext>(options =>

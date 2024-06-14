@@ -1,30 +1,24 @@
-import { createBrowserRouter } from "react-router-dom"
-import Login from "../pages/login/index"
-import Register from "../pages/register"
-import RecoveryPage from "../pages/RecoveryPage"
-import AgendaPage from "../pages/AgendaPage"
-import App from "../App"
-import Home from "../pages/home"
-import TipoServicoPage from "../pages/TipoServicoPage"
-import TipoServicoFormPage from "../pages/TipoServicoFormPage"
-import EditTipoServico from "../pages/ServiceType/edit/[id]"
-import Perfil from "../pages/perfil/index"
-import Barbeiros from "../pages/barbeiros"
-import BarbeirosForm from "../pages/barbeiros-add"
-import Verification from "../pages/Verification"
-import ResetPassword from "../pages/ResetPassword"
+// src/Routes/index.jsx
+import { createBrowserRouter } from "react-router-dom";
+import Login from "../pages/login/index";
+import Register from "../pages/register";
+import RecoveryPage from "../pages/RecoveryPage";
+import AgendaPage from "../pages/AgendaPage";
+import Home from "../pages/home";
+import TipoServicoPage from "../pages/TipoServicoPage";
+import TipoServicoFormPage from "../pages/TipoServicoFormPage";
+import EditTipoServico from "../pages/ServiceType/edit/[id]";
+import Perfil from "../pages/perfil/index";
+import Barbeiros from "../pages/barbeiros";
+import BarbeirosForm from "../pages/barbeiros-add";
+import Verification from "../pages/Verification";
+import ResetPassword from "../pages/ResetPassword";
 
-
-// isso é para registrar rotas do projeto, o primeiro pametro é a rota o 2 é o componente
-export const router = createBrowserRouter([
+const router = createBrowserRouter([
   {
-    path: "/",     // Aqui define a rota
-    element: <Login /> // Aqui define o componente
+    path: "/",
+    element: <Login />
   },
-  // {
-  //   path: "/login",
-  //   element: <Login />
-  // },
   {
     path: "/cadastro",
     element: <Register />
@@ -65,14 +59,14 @@ export const router = createBrowserRouter([
     path: "/barbeiros/add",
     element: <BarbeirosForm />
   },
-
   {
-    path: "/verification", 
+    path: "/verification",
     element: <Verification />
   },
   {
-    path: "/reset", 
+    path: "/reset",
     element: <ResetPassword />
-  },
+  }
+]);
 
-])
+export default router;
