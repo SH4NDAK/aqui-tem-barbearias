@@ -188,7 +188,7 @@ export default function Agenda() {
                                 Barbearia {(location.state.nome).toUpperCase()}
                             </div>
                             {
-                                !solicitado ? (
+                                !solicitado || solicitado.length == 0 ? (
                                     <>
                                         <div className='w-full md:w-11/12 mt-4 mb-4'>
                                             <div className='self-start text-xl'>
@@ -304,6 +304,7 @@ export default function Agenda() {
                                             <div className="text-xl">
                                                 Meus agendamentos
                                             </div>
+
                                             {solicitado.map(s => {
                                                 return (
                                                     <div className="w-full md:w-6/12 bg-gray-100 p-2 rounded-md shadow-sm shadow-[#242222] mb-2">

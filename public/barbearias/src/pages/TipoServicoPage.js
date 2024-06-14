@@ -49,61 +49,19 @@ export default function TipoServicoPage() {
                 duracao: record.duracao,
                 nome: record.nome,
                 preco: record.preco.toString(),
-            })
+            });
+            
             notification.success({
                 message: "Sucesso",
-                description: "Item excluido com sucesso"
-            })
+                description: "Tipo de serviço"
+            });
+
+            setServiceTypeFilter(serviceTypeFilter.filter(dado => dado.id != record.id));
+
         } catch (error) {
             console.log(error)
         }
     };
-
-    const columns = [
-        {
-            title: 'Nome',
-            dataIndex: 'nomeServico',
-            key: 'nomeServico'
-        },
-        {
-            title: 'Descrição',
-            dataIndex: 'descricaoServico',
-            key: 'descricaoServico',
-        },
-        {
-            title: 'Duração',
-            dataIndex: 'duracaoServico',
-            key: 'duracaoServico',
-        },
-        {
-            title: 'Preço',
-            dataIndex: 'precoServico',
-            key: 'precoServico',
-        },
-        {
-            title: 'Ações',
-            key: 'actions',
-            render: (record) => (
-                <Dropdown
-                    overlay={
-                        <Menu>
-                            <Menu.Item key="1">
-                                <a onClick={() => navigate(`edit/${record.id}`)}>Editar</a>
-                            </Menu.Item>
-                            <Menu.Item key="2" onClick={() => deleteServiceType(record)}>
-                                <Trash />
-                            </Menu.Item>
-                        </Menu>
-                    }
-                >
-                    <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-                        Ações
-                    </a>
-                </Dropdown>
-
-            ),
-        },
-    ];
 
     return (
 

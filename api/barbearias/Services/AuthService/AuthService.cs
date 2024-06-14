@@ -76,7 +76,7 @@ namespace jwtRegisterLogin.Services.AuthService
                 if (usuario == null)
                 {
                     respostaServico.Status = 400;
-                    respostaServico.Mensagem = "Usuário não existe.";
+                    respostaServico.Mensagem = "Usuário ou senha incorretos. Verifique.";
                     return respostaServico;
                 }
 
