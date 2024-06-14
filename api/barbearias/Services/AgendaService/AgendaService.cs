@@ -166,7 +166,7 @@ namespace jwtRegisterLogin.Services.AgendaService
                         servico => servico.Id,
                         (agenda, servico) => new AgendaCriacaoDto
                         {
-                            Aprovado = agenda.Aprovado == true,
+                            Aprovado = agenda.Aprovado,
                             Observacao = agenda.Observacao,
                             NomeDoCliente = agenda.NomeDoCliente,
                             Data = agenda.Data,

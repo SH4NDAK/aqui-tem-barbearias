@@ -2,7 +2,7 @@ import React from 'react'
 import Col from "./Col";
 import Label from "./Label";
 
-const Selectpicker = React.forwardRef(({ label, children, ...props }, ref) => {
+const Selectpicker = React.forwardRef(({ label, children, className, ...props }, ref) => {
     return (
         <Col
             variant={"auto"}
@@ -14,7 +14,7 @@ const Selectpicker = React.forwardRef(({ label, children, ...props }, ref) => {
                 />
                 <select
                     ref={ref}
-                    className="w-full rounded-sm border-b border-[#242222] p-1 text-[#242222] outline-none uppercase"
+                    className={"w-full rounded-sm border-b border-[#242222] p-1 text-[#242222] outline-none uppercase" + className}
                     {...props}
                 >
                     {children}

@@ -1,4 +1,4 @@
-import { ArrowLeftCircle, ArrowRightCircle, CalendarDays, CheckCircle, MailOpen, Pencil, Plus, Search, WandIcon, X } from "lucide-react";
+import { ArrowLeftCircle, ArrowRightCircle, Calendar, CalendarDays, CheckCircle, CloudUpload, MailOpen, Pencil, Plus, Search, WandIcon, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -7,7 +7,7 @@ import Header from "../../components/Header";
 import InputText from "../../components/InputText";
 import Selectpicker from "../../components/Selectpicker";
 import { aprovarReprovarAgendamento, cancelarSolicitacao, editarAgendamento, listarAgendamentos, saveAgenda, verificarCliente } from "../../services/agenda";
-import { listByCargo, listByServico } from "../../services/barbeiro";
+import { getServicos, listByCargo, listByServico } from "../../services/barbeiro";
 import { listService } from "../../services/service";
 import { ROLES } from "../../utils/role";
 import { notification } from "antd";
@@ -22,6 +22,7 @@ export default function Agenda() {
     const [modalConfirmacao, setModalConfirmacao] = useState(false);
     const [solicitado, setSolicitado] = useState(null);
     const [modalCancelamento, setModalCancelamento] = useState(false);
+    const [modalAgendamento, setModalAgendamento] = useState(false);
     const [isEdicao, setIsEdicao] = useState(false);
 
     // Pesquisa de agendamentos
@@ -134,9 +135,18 @@ export default function Agenda() {
             data.NomeDoCliente = user.usuario
         }
 
+        if (user.cargo == ROLES.Barbeiro) {
+            data.aprovado = true;
+        }
+
         try {
             isEdicao ? await editarAgendamento(data) : await saveAgenda(data);
-            setModalConfirmacao(true);
+            user.cargo == ROLES.Cliente ? setModalConfirmacao(true) : setModalAgendamento(false);
+
+            if (user.cargo == ROLES.Barbeiro) {
+                notification.success({ message: "Agendamento cadastrado com sucesso" });
+            }
+
         } catch (error) {
             console.error(error);
         }
@@ -153,8 +163,18 @@ export default function Agenda() {
         return [dia, mes, ano].join('/');
     }
 
+    const handleModalAgendamento = () => {
+        (async () => {
+            const { dados } = await getServicos(user.id);
+            setServicos(dados);
+            setBarbeiros([user]);
+            setValue("id_usuario_dono", user.id)
+        })();
+        setModalAgendamento(true);
+    }
+
     return (
-        <div className="w-full h-dvh bg-[#242222]">
+        <div className="w-full h-dvh min-h-full bg-[#242222]">
             <Header />
             <div className='flex flex-col justify-center'>
                 {
@@ -324,6 +344,13 @@ export default function Agenda() {
                                 <div className="text-3xl font-semibold">
                                     Agenda - {user?.usuario}
                                 </div>
+                                <div className="w-full md:w-fit">
+                                    <Button
+                                        onClick={handleModalAgendamento}
+                                    >
+                                        <Plus /> Novo agendamento
+                                    </Button>
+                                </div>
                                 <div className="w-11/12">
                                     <div className="flex gap-4 md:flex-row flex-col w-full">
                                         <div className="md:w-1/3">
@@ -417,6 +444,11 @@ export default function Agenda() {
                         />
                     )
                 }
+                {
+                    modalAgendamento && (
+                        <ModalAgendamento />
+                    )
+                }
             </div>
         </div>
     );
@@ -497,6 +529,127 @@ export default function Agenda() {
                         >
                             Sim <ArrowRightCircle className="ms-1" />
                         </button>
+
+                    </div>
+                </div>
+            </div>
+        )
+
+    }
+
+    function ModalAgendamento() {
+
+        return (
+            <div className="fixed inset-0 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black opacity-50 pointer-events-none"></div>
+
+                <div className="relative w-full md:w-3/12 bg-white p-2 rounded-md shadow-sm shadow-[#242222] z-50">
+                    <div className="flex w-full justify-between">
+                        <span className="w-fit flex flex-row items-center font-semibold bold text-lg">
+                            <Calendar className="me-1" /> Novo agendamento - {user.usuario}
+                        </span>
+                        <X
+                            className="cursor-pointer"
+                            onClick={() => setModalAgendamento(false)}
+                        />
+                    </div>
+                    <div className='w-full'>
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <div className="w-full">
+                                <InputText
+                                    type="text"
+                                    label="Cliente"
+                                    placeholder="Digite o nome do cliente"
+                                    {...register("NomeDoCliente", {
+                                        required: "Campo Obrigatório"
+                                    })}
+                                    variant={errors.NomeDoCliente ? 'invalid' : ''}
+                                />
+                            </div>
+                            <div>
+                                <Selectpicker
+                                    label="Serviço"
+                                    {...register("id_tipo_servico", {
+                                        required: "Campo obrigatório",
+                                    })}
+                                    errors={errors.servico}
+                                >
+                                    <option value=''>{servicos.length === 0 ? 'NENHUM SERVIÇO ENCONTRADO' : 'SELECIONE 1'}</option>
+                                    {servicos.map(servico => (
+                                        <option key={servico.id} value={servico.id}>{servico.nome}</option>
+                                    ))}
+                                </Selectpicker>
+
+                                {barbeiros && (
+                                    <>
+                                        <div className='mt-4 transition-all'>
+                                            <Selectpicker
+                                                label="Barbeiro"
+                                                {...register("id_usuario_dono", {
+                                                    required: "Campo obrigatório"
+                                                })}
+                                                disabled
+                                                errors={errors.barbeiro}
+                                            >
+                                                <option value=''>SELECIONE 1</option>
+                                                {barbeiros.map(barbeiro => (
+                                                    <option key={barbeiro.id} value={barbeiro.id}>{barbeiro.usuario}</option>
+                                                ))}
+                                            </Selectpicker>
+                                        </div>
+
+                                        <div className='flex flex-col md:flex-row gap-4 w-full'>
+                                            <div className="md:w-1/2">
+                                                <InputText
+                                                    type="date"
+                                                    label="Data"
+                                                    {...register("data", {
+                                                        required: "Campo Obrigatório"
+                                                    })}
+                                                    variant={errors.data ? 'invalid' : ''}
+                                                />
+                                            </div>
+                                            <div className="md:w-1/2">
+                                                <InputText
+                                                    type="time"
+                                                    label="Horario"
+                                                    inputMode="numeric"
+                                                    {...register("horario", { required: "Campo Obrigatório" })}
+                                                    variant={errors.horario ? 'invalid' : ''}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className='w-full'>
+                                            <InputText
+                                                type="text"
+                                                label="Observação (opcional)"
+                                                placeholder="Alguma observação para este agendamento"
+                                                {...register("observacao")}
+                                            />
+                                        </div>
+
+                                        <div className='md:mt-4 w-full gap-4 flex flex-col md:flex-row'>
+                                            <Button
+                                                variant="gray"
+                                                type="button"
+                                                icon={<ArrowLeftCircle className="me-1" />}
+                                                onClick={() => navigate("/home")}
+                                                className="w-full"
+                                            >
+                                                Voltar
+                                            </Button>
+                                            <Button
+                                                icon={<CloudUpload className='me-1' />}
+                                                className="w-full"
+                                            >
+                                                Agendar
+                                            </Button>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </form>
 
                     </div>
                 </div>

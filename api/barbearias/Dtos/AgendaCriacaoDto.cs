@@ -19,7 +19,7 @@ namespace jwtRegisterLogin.Dtos
         [Required(ErrorMessage = "O campo Telefone do Cliente é obrigatório.")]
         public int Id_tipo_servico { get; set; }
         public string? NomeTipoServico { get; set; }
-        public bool Aprovado { get; set; }
+        public bool? Aprovado { get; set; }
 
         public int Id_usuario_dono { get; set; }
     }
