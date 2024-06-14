@@ -27,10 +27,6 @@ export default function Header() {
         navigate("/perfil")
     }
 
-    const handleNotificationsClick = () => {
-        alert("em desenvolvimento")
-    }
-
     const handleAgendaClick = () => {
 
         navigate("/agenda")
@@ -56,7 +52,7 @@ export default function Header() {
                     >
                         <Home />
                     </button>
-                    {user && user?.cargo != ROLES.Cliente && (
+                    {user && user?.cargo == ROLES.Barbeiro && (
                         <>
                             <button
                                 className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
@@ -67,15 +63,6 @@ export default function Header() {
                             </button>
                         </>
                     )
-                    }
-                    {user &&
-                        <button
-                            className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"
-                            type="button"
-                            onClick={handleNotificationsClick}
-                        >
-                            <Bell />
-                        </button>
                     }
                     <button
                         className="outline outline-1 p-1.5 outline-white rounded-sm text-white hover:bg-white hover:text-black transition-colors"

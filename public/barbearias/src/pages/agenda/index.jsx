@@ -38,6 +38,10 @@ export default function Agenda() {
                 const usuario = JSON.parse(localStorage.getItem('usuario'));
                 setUser(usuario);
 
+                if (usuario.cargo === ROLES.Administrador) {
+                    navigate("/home");
+                }
+
                 // Se for cliente, carrega os tipos de serviço da barbearia e verifica se ele tem algum agendamento pendente
                 if (usuario.cargo === ROLES.Cliente) {
 

@@ -24,7 +24,7 @@ export default function Home() {
 
     // Quando popula o usuário, se for cliente, pega as barbearias que ele tem vinculo
     useEffect(() => {
-        if (!!user && user.cargo == ROLES.Cliente) {
+        if (!!user && user.cargo == ROLES.Cliente && barbearias.length == 0) {
 
             // Pesquisa as barbearias que ele tem vinculo ativo
             (async () => {
@@ -53,16 +53,17 @@ export default function Home() {
 
     const handlePesquisarBarbearia = async () => {
         try {
-            if (!codigo) return;
+            if (!codigo || codigo.length != 6) return;
 
-            const res = await searchBarbearia(codigo, user);
-
-            if (res.length === 0) {
+            try {
+                const res = await searchBarbearia(codigo, user);
+                setBarbearia(res[0]);
+            } catch (error) {
                 notification.error({
-                    message: "Nenhuma barbearia encontrada"
+                    message: "Nenhuma barbearia encontrada com o código informado"
                 })
+
             }
-            setBarbearia(res[0]);
         } catch (e) {
             console.log(e);
 

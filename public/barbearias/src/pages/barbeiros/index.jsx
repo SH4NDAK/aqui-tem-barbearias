@@ -10,6 +10,7 @@ import { deleteUser } from "../../services/auth";
 import { notification } from 'antd';
 import { linkServicoBarbeiro, listService, unlinkServicoBarbeiro } from "../../services/service";
 import { isAxiosError } from "axios";
+import { ROLES } from "../../utils/role";
 
 export default function Barbeiros() {
     const navigate = useNavigate();
@@ -22,6 +23,12 @@ export default function Barbeiros() {
 
     useEffect(() => {
         (async () => {
+
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            if (user.cargo != ROLES.Administrador) {
+                navigate("/home");
+            }
+
             handlePesquisarClick();
         })();
     }, [])

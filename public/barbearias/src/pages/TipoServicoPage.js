@@ -12,6 +12,7 @@ import { editService, listService } from "../services/service";
 import { Col, Dropdown, Menu, Table, notification } from "antd";
 import { PlusSquareOutlined } from "antd";
 import Header from "../components/Header";
+import { ROLES } from "../utils/role";
 
 
 export default function TipoServicoPage() {
@@ -25,10 +26,16 @@ export default function TipoServicoPage() {
 
     // função chamada ao clicar no botão '+' da lista de tipos de serviço, para cadastrar um
     const handleCadastroClick = () => {
-        navigate("/tipo-servico/add");
+        navigate("/tipos-servico/add");
     };
 
     useEffect(() => {
+
+        const user = JSON.parse(localStorage.getItem('usuario'));
+        if (user.cargo == ROLES.Cliente) {
+            navigate("/home");
+        }
+
         (async () => {
             try {
                 const { dados } = await listService();

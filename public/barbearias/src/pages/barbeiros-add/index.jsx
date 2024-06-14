@@ -22,8 +22,12 @@ export default function BarbeirosForm() {
             setValue("telefone", barbeiro.telefone)
         }
 
-        const user = localStorage.getItem('usuario');
-        setUser(JSON.parse(user))
+        const user = JSON.parse(localStorage.getItem('usuario'));
+        setUser(user);
+
+        if (user.cargo != ROLES.Administrador) {
+            navigate("/home");
+        }
 
     }, []);
 
@@ -154,7 +158,7 @@ export default function BarbeirosForm() {
                             )
                         }
                         <div className="flex gap-4 w-full">
-                            <div className="w-1/2">
+                            <div className="w-full">
                                 <InputText
                                     label="E-mail"
                                     placeholder="Informe um e-mail"
@@ -174,7 +178,7 @@ export default function BarbeirosForm() {
                                     )
                                 }
                             </div>
-                            <div className="w-1/2">
+                            {/* <div className="w-1/2">
                                 <InputText
                                     label="Telefone"
                                     placeholder="Informe um telefone"
@@ -206,7 +210,7 @@ export default function BarbeirosForm() {
                                         <span className="text-red-600">{formState.errors.telefone.message}</span>
                                     )
                                 }
-                            </div>
+                            </div> */}
                         </div>
                         {
                             !isEdicao && (

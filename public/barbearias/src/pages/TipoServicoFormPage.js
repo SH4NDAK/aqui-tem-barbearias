@@ -14,10 +14,19 @@ import { createService } from "../services/service";
 import Header from "../components/Header";
 import { notification } from "antd";
 import { isAxiosError } from "axios";
+import { useEffect } from "react";
+import { ROLES } from "../utils/role";
 
 export default function TipoServicoFormPage() {
     const location = useLocation();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('usuario'));
+        if (user.cargo == ROLES.Cliente) {
+            navigate("/home");
+        }
+    }, [])
 
     // verificando se o tipo de serviço foi passado para esta pagina, se sim, é uma edição
     const isCadastro = !location.state?.tipoServico;
