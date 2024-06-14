@@ -6,8 +6,9 @@ import { Radio, Switch } from "antd";
 import { SetAuthenticationToken, SetAuthenticationUser, signUpRequest } from "../../services/auth";
 import { notification } from 'antd';
 import { useNavigate } from "react-router-dom";
-import logo from "../../img/logo.jpg"; 
-                                    
+import logo from "../../img/logo.jpg";
+import { isAxiosError } from "axios";
+
 
 export default function Register() {
   // trazendo algumas funções úteis da biblioteca react-hook-form
@@ -37,16 +38,21 @@ export default function Register() {
         return notification.error({
           message: "Erro",
           description: "As duas senhas devem coincidir"
-        })      
+        })
       }
       // faz chamada de autenticação
-      const res = await signUpRequest({...data, role: 4})
+      const res = await signUpRequest({ ...data, role: 4 })
+
       // se der erro de autenticacao volta a mensagen
       if (res.status === false) {
         return notification.error({
           message: "Erro",
           description: res.mensagem
-        })        
+        })
+      }
+
+      if (res.status === 405) {
+        return notification.error({ message: res.mensagem })
       }
       // define o token nos cookies
       SetAuthenticationToken(res.dados.token)
@@ -61,12 +67,6 @@ export default function Register() {
       navigate('/home')
     } catch (e) {
       // Mostra uma notificação de erro na tela se der erro
-      if (e.response?.data?.errors?.Email[0]) {
-        notification.warning({
-          message: "Erro",
-          description: e.response.data.errors.Email[0]
-        })
-      }
     }
   }
 
@@ -75,7 +75,7 @@ export default function Register() {
     <div className="flex justify-center items-center w-screen h-dvh bg-[#242222]">
       <div className="flex flex-col bg-white p-12 rounded-lg gap-4">
         <div className="w-full flex justify-center font-bold text-5xl">
-          <img src={logo} width={"50%"}/>
+          <img src={logo} width={"50%"} />
         </div>
         <div className="w-full flex flex-col gap-2">
           <form
@@ -86,7 +86,7 @@ export default function Register() {
               type={'text'}
               placeholder={'Insira o seu nome'}
               {...register("usuario", { required: "Campo obrigatório*" })}
-              variant={errors.usuario ? 'invalid' : ''} 
+              variant={errors.usuario ? 'invalid' : ''}
             />
             <div>
               {errors.usuario && (
@@ -99,11 +99,11 @@ export default function Register() {
               }
             </div>
             <InputText
-              label='Email ou Telefone'
+              label='Email'
               type='text'
-              placeholder={'Digite seu Email ou Telefone'}
+              placeholder={'Digite seu email'}
               {...register("email", { required: "Campo obrigatório*" })}
-              variant={errors.email ? 'invalid' : ''} 
+              variant={errors.email ? 'invalid' : ''}
             />
             <div>
               {errors.email && (
@@ -120,7 +120,7 @@ export default function Register() {
               type='password'
               placeholder={'Digite sua senha'}
               {...register("senha", { required: "Campo obrigatório*" })}
-              variant={errors.senha ? 'invalid' : ''} 
+              variant={errors.senha ? 'invalid' : ''}
             />
             <div>
               {errors.senha && (
@@ -137,7 +137,7 @@ export default function Register() {
               type='password'
               placeholder={'Digite sua senha'}
               {...register("confirmPassword", { required: "Campo obrigatório*" })}
-              variant={errors.confirmPassword ? 'invalid' : ''} 
+              variant={errors.confirmPassword ? 'invalid' : ''}
             />
             <div>
               {errors.confirmPassword && (
@@ -151,9 +151,9 @@ export default function Register() {
             </div>
 
             <Button
-                type="submit"
-                className="flex w-full mt-4 justify-center"
-              >
+              type="submit"
+              className="flex w-full mt-4 justify-center"
+            >
               CRIAR CONTA
             </Button>
             <div

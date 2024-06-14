@@ -83,7 +83,7 @@ namespace jwtRegisterLogin.Services.AuthService
                 if (!_senhaInterface.VerificaSenhaHash(usuarioLogin.Senha, usuario.SenhaHash, usuario.SenhaSalt))
                 {
                     respostaServico.Status = 400;
-                    respostaServico.Mensagem = "Senha errada.";
+                    respostaServico.Mensagem = "Usuário ou senha incorretos.";
                     return respostaServico;
                 }
 

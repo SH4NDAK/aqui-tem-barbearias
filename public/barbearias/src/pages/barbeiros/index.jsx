@@ -240,17 +240,20 @@ export default function Barbeiros() {
 
                 // Todos os serviços
                 const servicos = await listService();
+                setServicos(servicos.dados)
+
+                // serviços ativos
+                const servicos_ativos = servicos.dados.filter(servico => !!servico.ativo);
 
                 // Serviços ja vinculados ao barbeiro
                 const servicos_barbeiro = await getServicos(barbeiro.id);
-                setServicos(servicos.dados.filter(servico => servico.ativo));
 
                 // Serviços que o barbeiro ainda nao tem vinculo
-                const servicos_filtrados = servicos.dados.filter(servico =>
+                const servicos_filtrados = servicos_ativos.filter(servico =>
                     !servicos_barbeiro.dados.some(vinculo => vinculo.id === servico.id)
                 );
 
-                const servicos_vinculados = servicos.dados.filter(servico =>
+                const servicos_vinculados = servicos_ativos.filter(servico =>
                     servicos_barbeiro.dados.some(vinculo => vinculo.id === servico.id)
                 );
 
@@ -265,8 +268,8 @@ export default function Barbeiros() {
             try {
                 const res = await linkServicoBarbeiro(servicoSelecionado, barbeiro.id);
                 notification.success({ message: "Tipo de serviço vinculado com sucesso" });
-                setServicosFiltrados(servicosFiltrados.filter(servico => servico.id != servicoSelecionado));
-                setServicosBarbeiro([...servicosBarbeiro, servicos.find(servico => servico.id == servicoSelecionado)]);
+                setServicosFiltrados(servicosFiltrados.filter(servico => !!servico.ativo && servico.id != servicoSelecionado));
+                setServicosBarbeiro([...servicosBarbeiro, servicos.find(servico => !!servico.ativo && servico.id == servicoSelecionado)]);
                 setServicoSelecionado(''); // Reseta a seleção
 
             } catch (error) {
