@@ -1,25 +1,20 @@
+import { Switch, notification } from 'antd';
 import Scheduler from 'devextreme-react/scheduler';
 import { locale } from 'devextreme/localization';
 import { ArrowLeftCircle, CloudUpload, Plus, X } from 'lucide-react';
-import React, { useDeferredValue, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import Col from '../components/Col';
-import FormContainer from '../components/FormContainer';
+import Header from '../components/Header';
 import InputText from '../components/InputText';
 import Row from '../components/Row';
 import Selectpicker from '../components/Selectpicker';
-import { useForm } from 'react-hook-form';
-import SideBar from '../components/SideBar';
-import LayoutPage from '../components/LayoutPage';
 import { editAgenda, listAgenda, saveAgenda } from '../services/agenda';
-import { Switch, notification } from 'antd';
-import { data } from './data';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { listByServico } from '../services/barbeiro';
 import { listService } from '../services/service';
-import Header from '../components/Header';
 import { ROLES } from '../utils/role';
-import { listByCargo, listByServico } from '../services/barbeiro';
-import Label from '../components/Label';
 
 const currentDate = new Date();
 const views = ['agenda', 'day'];
@@ -54,7 +49,6 @@ export default function AgendaPage() {
                 // Enviar a solicitação para editar a agenda com o novo valor de pago
                 const res = await editAgenda(findAgenda.id, { ...newAgenda, pago: newAgenda.pago.toString() });
 
-
                 if (newAgenda.pago) {
                     notification.success({
                         message: "Sucesso ao pagar",
@@ -71,22 +65,32 @@ export default function AgendaPage() {
         return (
             <div className='flex flex-row'>
                 <div>
-                    <div className="dx-scheduler-appointment-title">{findAgenda.nomeDoCliente}</div>
+                    <div className={`dx-scheduler-appointment-title ${findAgenda.nomeDoCliente == user.usuario ? 'text-red-600' : ''}`}>
+                        {findAgenda.nomeDoCliente}
+                        {findAgenda.nomeDoCliente == user.usuario ? (<small> (você)</small>) : ""}
+                    </div>
                     <div className="dx-scheduler-appointment-content-details">
-                        <div className="dx-scheduler-appointment-content-date">Horario {findAgenda.horario}</div>
-                        <div className="dx-scheduler-appointment-content-date pl-2">Duração {findAgenda.duracao}</div>
-                        <div className="dx-scheduler-appointment-content-date pl-2">{findAgenda.nome}</div>
+                        <div className="dx-scheduler-appointment-content-date">{findAgenda.nome}</div>
+                        <div className="dx-scheduler-appointment-content-date pl-2">{findAgenda.horario}h</div>
+                        <div className="dx-scheduler-appointment-content-date pl-2">{findAgenda.duracao}min</div>
                     </div>
                 </div>
-                <div className="dx-scheduler-agenda-appointment-right-layout">
-                    Pago? <Switch defaultChecked={agenda.pago} onChange={onChangePay} className='h-6' />
-                </div>
+                {
+                    user.cargo != ROLES.Cliente && (
+                        <div className="dx-scheduler-agenda-appointment-right-layout">
+                            Pago? <Switch defaultChecked={agenda.pago} onChange={onChangePay} className='h-6' />
+                        </div>
+                    )
+                }
             </div>
+
         );
     };
 
     const onAppointmentFormOpening = (e) => { // quando a edição de agenda estiver pronto retornar isso
         let findAgenda = agendas.find(i => i.id === e.appointmentData.assigneeId) || {};
+        if (user.cargo == ROLES.Cliente && findAgenda.nomeDoCliente != user.usuario) return;
+
         e.form.option('items', [
             {
                 label: {
@@ -157,6 +161,8 @@ export default function AgendaPage() {
 
     const onAppointmentFormDelete = async (e) => {
         let findAgenda = agendas.find(i => i.id === e.appointmentData.assigneeId) || {};
+        if (user.cargo == ROLES.Cliente && findAgenda.nomeDoCliente != user.usuario) return;
+
         try {
             // Alterar o valor de pago
             const newAgenda = {
@@ -181,8 +187,9 @@ export default function AgendaPage() {
     }
 
     const onAppointmentUpdated = async (e) => {
-        console.log(e.component._editAppointmentData);
         let findAgenda = agendas.find(i => i.id === e.appointmentData.assigneeId) || {};
+        if (user.cargo == ROLES.Cliente && findAgenda.nomeDoCliente != user.usuario) return;
+
         try {
             const { nomeDoCliente, servico, descricao, ativo, pago, preco, duracao, horario, dia } = e.component._editAppointmentData
             // Alterar o valor de pago
@@ -223,7 +230,7 @@ export default function AgendaPage() {
 
             await new Promise(async resolve => {
                 const usuario = JSON.parse(localStorage.getItem('usuario'));
-                console.log(usuario);
+
                 if (!usuario) {
                     navigate("/");
                 }
@@ -232,7 +239,7 @@ export default function AgendaPage() {
 
                 // Carrega a agenda do dia só se for o barbeiro acessando
                 if (usuario.cargo == ROLES.Barbeiro || usuario.cargo == ROLES.Administrador) {
-                    await handleCarregarAgenda();
+                    await handleCarregarAgenda(usuario.id);
                 }
 
                 // Se for cliente, carrega os tipos de serviço da barbearia
@@ -242,7 +249,6 @@ export default function AgendaPage() {
                         // Serviços da barbearia
                         const { dados } = await listService();
                         setServicos(dados);
-
 
                     })();
                 }
@@ -275,7 +281,7 @@ export default function AgendaPage() {
         }
 
         try {
-            const data = await listAgenda()
+            const data = await listAgenda(barbeiroSelecionado)
             setAgendas(data.dados)
         } catch (err) {
             console.log(err)
@@ -305,6 +311,12 @@ export default function AgendaPage() {
 
         return endDate;
     }
+
+    const handleAppointmentClick = (e) => {
+        if (e.appointmentData.clienteId !== user.id) {
+            return; // Retorna sem fazer nada se o compromisso não pertencer ao cliente atual
+        }
+    };
 
     return (
         <>
@@ -394,7 +406,7 @@ export default function AgendaPage() {
                                                 startDate: new Date(compromisso.data + 'T' + compromisso.horario),
                                                 endDate: calcularEndDate(compromisso.data, compromisso.horario, compromisso.duracao),
                                                 assigneeId: compromisso.id, // ou qualquer outra propriedade que desejar usar
-
+                                                clienteId: compromisso.clienteId,
                                                 priorityId: 1 // ou qualquer outra propriedade que desejar usar
                                             };
                                         })}
@@ -406,6 +418,7 @@ export default function AgendaPage() {
                                         onAppointmentDeleted={onAppointmentFormDelete}
                                         onAppointmentFormOpening={onAppointmentFormOpening}
                                         onAppointmentUpdated={onAppointmentUpdated}
+                                        onAppointmentClick={handleAppointmentClick}
                                     />
                                 </div>
                             </div>
@@ -417,6 +430,9 @@ export default function AgendaPage() {
             {abrirModalAgendamento && (
                 <ModalAgendamento
                     onClose={() => { setAbrirModalAgendamento(false) }}
+                    cliente={user.cargo == ROLES.Cliente ? user.usuario : ''}
+                    servico={user.cargo == ROLES.Cliente ? servicoSelecionado : ''}
+                    barbeiro={user.cargo == ROLES.Cliente ? barbeiros.find(barbeiro => barbeiro.id == barbeiroSelecionado) : user}
                 />
             )
             }
@@ -425,7 +441,7 @@ export default function AgendaPage() {
     )
 }
 
-const ModalAgendamento = ({ onClose }) => {
+const ModalAgendamento = ({ onClose, cliente, servico, barbeiro }) => {
     // trazendo as operações de formulário da biblioteca hook form
     const navigate = useNavigate()
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
@@ -433,17 +449,31 @@ const ModalAgendamento = ({ onClose }) => {
 
     useEffect(() => {
         (async () => {
-            try {
-                const { dados } = await listService()
-                setServicos(dados)
-            } catch (error) {
-                console.log(error);
-            }
-        })()
+            await new Promise(async resolve => {
+                try {
+                    const { dados } = await listService()
+                    setServicos(dados);
+
+                    if (servico) {
+                        setValue("servico", servico, { shouldValidate: true })
+                    }
+
+                    if (cliente) {
+                        setValue("nomeDoCliente", cliente)
+                    }
+
+                } catch (error) {
+                    console.log(error);
+                }
+                resolve();
+            })
+        })();
         locale('pt-BR')
     }, []);
 
     const onSubmit = async (data) => {
+        data.Id_usuario_dono = barbeiro.id;
+
         try {
             const res = await saveAgenda(data)
             notification.success({
@@ -462,45 +492,46 @@ const ModalAgendamento = ({ onClose }) => {
     }
 
     return (
-        <dialog
-            className='w-fit fixed top-1/2 bottom-1/2 z-10 bg-gray-50 shadow-sm shadow-[#242222] rounded-md p-2'
-            open="true"
-        >
-            <div className='w-full flex items-center gap-4 mb-2 justify-between'>
-                <div className='text-lg font-semibold capitalize'>
-                    Novo agendamento
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="fixed inset-0 bg-black opacity-50 pointer-events-none"></div>
+            <div className="relative w-full md:w-3/12 bg-white p-2 rounded-md shadow-sm shadow-[#242222] z-50">
+                <div className='w-full flex items-center justify-between'>
+                    <div className='text-lg font-semibold capitalize'>
+                        Novo agendamento - {barbeiro.usuario}
+                    </div>
+                    <div
+                        className='p-0.5 cursor-pointer transition-colors rounded-full hover:bg-gray-100'
+                        onClick={onClose}
+                    >
+                        <X className='text-gray-500' />
+                    </div>
                 </div>
-                <div
-                    className='p-0.5 cursor-pointer transition-colors rounded-full hover:bg-gray-100'
-                    onClick={onClose}
-                >
-                    <X className='text-gray-500' />
-                </div>
-            </div>
-            <FormContainer variant="modal">
                 <form onSubmit={handleSubmit(onSubmit)}>
-
-                    <Row>
-                        <Col>
+                    <div className='flex flex-col justify-center w-full gap-4'>
+                        <div className='w-full'>
                             <InputText
                                 type="text"
                                 label="Cliente"
                                 placeholder="Digite o nome do Cliente"
                                 {...register("nomeDoCliente")}
+                                disabled={!!cliente}
+                                className="pointer-events-none text-gray-500"
                                 errors={errors.nomeDoCliente}
                             />
-                        </Col>
-                        <Selectpicker
-                            label="Serviços"
-                            {...register("servico", { required: "Campo obrigatório" })}
-                        >
-                            {servicos.map(e =>
-                                <option value={e.id}>{e.nome}</option>
-                            )}
-                        </Selectpicker>
-                    </Row>
-                    <Row>
-                        <Col>
+                        </div>
+                        <div className='w-full'>
+                            <Selectpicker
+                                label="Serviço"
+                                value={servico}
+                                disabled={!!servico}
+                                {...register("servico", { required: "Campo obrigatório" })}
+                            >
+                                {servicos.map(e =>
+                                    <option value={e.id}>{e.nome}</option>
+                                )}
+                            </Selectpicker>
+                        </div>
+                        <div className='w-full'>
                             <InputText
                                 type="date"
                                 className="w-full"
@@ -511,8 +542,8 @@ const ModalAgendamento = ({ onClose }) => {
                                 })}
                                 errors={errors.data}
                             />
-                        </Col>
-                        <Col>
+                        </div>
+                        <div className='w-full'>
                             <InputText
                                 type="time"
                                 className="w-full"
@@ -527,10 +558,8 @@ const ModalAgendamento = ({ onClose }) => {
                                 })}
                                 errors={errors.horario}
                             />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
+                        </div>
+                        <div className='w-full'>
                             <InputText
                                 type="text"
                                 label="Observação (opcional)"
@@ -538,8 +567,26 @@ const ModalAgendamento = ({ onClose }) => {
                                 {...register("descricao")}
                                 errors={errors.descricao}
                             />
-                        </Col>
-                    </Row>
+                        </div>
+                        <div className='w-full gap-4 flex flex-col md:flex-row'>
+                            <Button
+                                variant="gray"
+                                type="button"
+                                icon={<ArrowLeftCircle className="me-1" />}
+                                onClick={onClose}
+                                className="w-full"
+                            >
+                                Voltar
+                            </Button>
+                            <Button
+                                type="submit"
+                                icon={<CloudUpload className='me-1' />}
+                                className="w-full"
+                            >
+                                Salvar
+                            </Button>
+                        </div>
+                    </div>
                     <Row>
                         <Col
                             variant={"full"}
@@ -547,28 +594,15 @@ const ModalAgendamento = ({ onClose }) => {
                             <div
                                 className="flex gap-4 justify-end"
                             >
-                                <Button
-                                    variant="gray"
-                                    type="button"
-                                    icon={<ArrowLeftCircle className="me-1" />}
-                                    onClick={onClose}
-                                >
-                                    Voltar
-                                </Button>
 
-                                <Button
-                                    type="submit"
-                                    icon={<CloudUpload className='me-1' />}
-                                >
-                                    Salvar
-                                </Button>
+
+
 
                             </div>
                         </Col>
                     </Row>
                 </form>
-
-            </FormContainer>
-        </dialog>
+            </div>
+        </div >
     )
 }

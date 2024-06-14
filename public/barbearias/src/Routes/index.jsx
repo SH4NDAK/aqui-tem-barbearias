@@ -11,6 +11,7 @@ import EditTipoServico from "../pages/ServiceType/edit/[id]"
 import Perfil from "../pages/perfil/index"
 import Barbeiros from "../pages/barbeiros"
 import BarbeirosForm from "../pages/barbeiros-add"
+import Agenda from "../pages/agenda"
 
 
 // isso é para registrar rotas do projeto, o primeiro pametro é a rota o 2 é o componente
@@ -45,7 +46,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/agenda",
-    element: <AgendaPage />
+    element: <Agenda />
   },
   {
     path: "/home",

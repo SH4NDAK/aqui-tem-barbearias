@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace jwtRegisterLogin.Controllers
 {
-    [Route("api/agenda")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AgendaController : ControllerBase
     {
@@ -24,19 +24,6 @@ namespace jwtRegisterLogin.Controllers
         {
             var response = await _agendaService.CriarAgendamento(agendaDTO);
 
-            if (response.Status == 405 )
-            {
-                return BadRequest(response);
-            }
-
-            return Ok(response);
-        }
-
-        [HttpGet("listar")]
-        public async Task<IActionResult> ListarAgenda()
-        {
-            var response = await _agendaService.ListarAgendamentos();
-    
             if (response.Status == 405)
             {
                 return BadRequest(response);
@@ -45,18 +32,31 @@ namespace jwtRegisterLogin.Controllers
             return Ok(response);
         }
 
-        [HttpPut("editar/{id}")]
-        public async Task<IActionResult> EditarAgenda(int id, AgendaCriacaoDto agendaDTO)
+        [HttpGet("verificar/{nome}")]
+        public async Task<IActionResult> VerificarCliente(string nome)
         {
+            var response = await _agendaService.VerificarCliente(nome);
 
-            var response = await _agendaService.EditarAgendamento(id, agendaDTO);
-
-            if (response.Status == 405)
+            if (response == null)
             {
                 return BadRequest(response);
             }
 
             return Ok(response);
         }
+
+        [HttpDelete("cancelar/{id}")]
+        public async Task<IActionResult> CancelarSolicitacao(int id)
+        {
+            var response = await _agendaService.CancelarSolicitacao(id);
+
+            if (response == null)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
     }
 }

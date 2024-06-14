@@ -5,7 +5,7 @@ namespace jwtRegisterLogin.Dtos
 {
     public class AgendaCriacaoDto
     {
-        public string Descricao { get; set; }
+        public string Observacao { get; set; }
 
         [Required(ErrorMessage = "O campo horario é obrigatório.")]
         public string Horario { get; set; }
@@ -17,10 +17,8 @@ namespace jwtRegisterLogin.Dtos
         public string NomeDoCliente { get; set; }
 
         [Required(ErrorMessage = "O campo Telefone do Cliente é obrigatório.")]
-        public string Servico { get; set; }
+        public int Id_tipo_servico { get; set; }
 
-        public string? Ativo { get; set; }
-
-        public string? Pago { get; set; }
+        public int Id_usuario_dono { get; set; }
     }
 }

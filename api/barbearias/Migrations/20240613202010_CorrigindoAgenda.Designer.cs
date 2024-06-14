@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using jwtRegisterLogin.Data;
 
@@ -11,9 +12,11 @@ using jwtRegisterLogin.Data;
 namespace jwtRegisterLogin.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240613202010_CorrigindoAgenda")]
+    partial class CorrigindoAgenda
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,25 +33,19 @@ namespace jwtRegisterLogin.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool?>("Aprovado")
-                        .HasColumnType("bit");
-
                     b.Property<bool?>("Ativo")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("Dat_Cad")
                         .HasColumnType("bit");
 
                     b.Property<string>("Data")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Descricao")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Horario")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Id_tipo_servico")
-                        .HasColumnType("int");
 
                     b.Property<int>("Id_usuario_dono")
                         .HasColumnType("int");
@@ -57,14 +54,13 @@ namespace jwtRegisterLogin.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Observacao")
+                    b.Property<bool?>("Pago")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Servico")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id_tipo_servico");
-
-                    b.HasIndex("Id_usuario_dono");
 
                     b.ToTable("Agenda");
                 });
@@ -255,23 +251,6 @@ namespace jwtRegisterLogin.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuario");
-                });
-
-            modelBuilder.Entity("jwtRegisterLogin.Models.AgendaModel", b =>
-                {
-                    b.HasOne("jwtRegisterLogin.Models.ServicoModel", "Servico")
-                        .WithMany()
-                        .HasForeignKey("Id_tipo_servico");
-
-                    b.HasOne("jwtRegisterLogin.Models.UsuarioModel", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("Id_usuario_dono")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Servico");
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("jwtRegisterLogin.Models.BarbeariaUsuarioModel", b =>

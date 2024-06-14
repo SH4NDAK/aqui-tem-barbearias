@@ -10,6 +10,7 @@ const Selectpicker = React.forwardRef(({ label, children, ...props }, ref) => {
             <div class="w-full">
                 <Label
                     label={label}
+                    {...props}
                 />
                 <select
                     ref={ref}
